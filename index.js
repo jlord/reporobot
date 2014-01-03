@@ -1,11 +1,12 @@
 var concat = require('concat-stream')
 var http = require('http');
+var fs = require('fs')
 
-module.exports = function() {
+module.exports = function(onHook) {
   var server = http.createServer(handler)
 
   function handler(req, res) {
-    console.log(req.url)
+    console.log(req.method, req.url)
     if (req.method === 'POST' && req.url === '/push') {
       return handleHook(req, res);
     }
@@ -20,9 +21,9 @@ module.exports = function() {
 
   function handleHook(req, res) {
     req.pipe(concat(function(buff) {
-      console.log('hook buff', buff.length)
       var hookObj = JSON.parse(buff)
-      console.log(hookObj)
+      if (onHook) onHook(hookObj.forkee.name)
+      // fs.writeFileSync('data.json', JSON.stringify(hookObj)) // on server
     }))
   };
 
