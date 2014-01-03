@@ -9,6 +9,6 @@
   "author": "",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "hubhook": "0.0.0"
+    "concat-stream": "~1.4.0"
   }
 }

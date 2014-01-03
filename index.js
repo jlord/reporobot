@@ -1,4 +1,4 @@
-var hook = require('hubhook')();
+var concat = require('concat-stream')
 var http = require('http');
 
 module.exports = function() {
@@ -7,7 +7,7 @@ module.exports = function() {
   function handler(req, res) {
     console.log(req.url)
     if (req.method === 'POST' && req.url === '/push') {
-      return hook.handle(req, res);
+      return handleHook(req, res);
     }
     res.statusCode = 404;
     res.setHeader('content-type', 'application/json');
@@ -18,8 +18,13 @@ module.exports = function() {
     }, true, 2));
   }
 
-  hook.on('payload', function (payload) {
-    console.log(payload);
+  function handleHook(req, res) {
+    req.pipe(concat(function(buff) {
+      console.log('hook buff', buff.length)
+      var hookObj = JSON.parse(buff)
+      console.log(hookObj)
+    }))
   });
+
   return server
 }
