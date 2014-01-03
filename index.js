@@ -5,6 +5,7 @@ module.exports = function() {
   var server = http.createServer(handler)
 
   function handler(req, res) {
+    console.log(req.url)
     if (req.method === 'POST' && req.url === '/push') {
       return hook.handle(req, res);
     }
