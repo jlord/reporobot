@@ -1,0 +1,14 @@
+{
+  "name": "reporobot",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "hubhook": "0.0.0"
+  }
+}
