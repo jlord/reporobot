@@ -24,7 +24,7 @@ module.exports = function() {
       var hookObj = JSON.parse(buff)
       console.log(hookObj)
     }))
-  });
+  };
 
   return server
 }
