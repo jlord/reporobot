@@ -1,3 +1,3 @@
 var bot = require("./index.js")
 
-bot().listen(5563)
+bot().listen(80)
