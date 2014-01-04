@@ -1,6 +1,6 @@
 # Repo Robot
 
-_ ////// WIP WIP WIP WIP WIP ////// Work in Progress ////// WIP WIP WIP WIP WIP ////// _
+_////// WIP WIP WIP WIP WIP ////// Work in Progress ////// WIP WIP WIP WIP WIP //////_
 
 This is the source code for a Repo Robot that lives on a server and interacts with particular repos involved with [Git-it](http://www.github.com/jlord/git-it) a beginers adventure! for learning Git and GitHub (through a series of challenges, users learn the basics like commits, remotes, branches, forking, pushing, pulling and pull requests). It has a GitHub account too, @reporobot.
 
