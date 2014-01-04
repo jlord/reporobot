@@ -9,6 +9,7 @@
   "author": "",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "concat-stream": "~1.4.0"
+    "concat-stream": "~1.4.0",
+    "github-api": "~0.7.0"
   }
 }
