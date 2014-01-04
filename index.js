@@ -22,8 +22,7 @@ module.exports = function(onHook) {
   function handleHook(req, res) {
     req.pipe(concat(function(buff) {
       var hookObj = JSON.parse(buff)
-      if (onHook) onHook(hookObj.forkee.name)
-      // fs.writeFileSync('data.json', JSON.stringify(hookObj)) // on server
+      if (onHook) onHook(hookObj, req)
     }))
   };
 

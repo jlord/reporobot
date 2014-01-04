@@ -1,3 +1,4 @@
-module.exports = function(name) {
- console.log("TOUCH", name)
+module.exports = function(obj, req) {
+ console.log("REQ", req)
+ console.log("OBJ", object)
 }

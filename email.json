@@ -1,0 +1,35 @@
+{
+  "headers": {
+    "Received": "from [192.168.0.104] (c-76-103-44-47.hsd1.ca.comcast.net [76.103.44.47]) by st11p06mm-asmtp002.mac.com (Oracle Communications Messaging Server 7u4-27.08(7.0.4.27.7) 64bit (built Aug 22 2013)) with ESMTPSA id <0MYU004LARZ8IQ70@st11p06mm-asmtp002.mac.com> for 60ebe73fdad8ee59d45c@cloudmailin.net; Fri, 03 Jan 2014 17:25:58 -0800",
+    "Date": "Fri, 03 Jan 2014 17:25:56 -0800",
+    "From": "JESSICA LORD <jessica.lord@me.com>",
+    "To": "60ebe73fdad8ee59d45c@cloudmailin.net",
+    "Message-ID": "<762D66BA-32F7-4E42-9018-9F528162EA79@me.com>",
+    "Subject": "hi",
+    "Mime-Version": "1.0",
+    "Content-Type": "text/plain; charset=us-ascii",
+    "Content-Transfer-Encoding": "7bit",
+    "X-Proofpoint-Virus-Version": "vendor=fsecure engine=2.50.10432:5.11.87,1.0.14,0.0.0000 definitions=2014-01-03_08:2014-01-03,2014-01-03,1970-01-01 signatures=0",
+    "X-Proofpoint-Spam-Details": "rule=notspam policy=default score=0 spamscore=0 suspectscore=1 phishscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1 engine=7.0.1-1308280000 definitions=main-1401030194",
+    "X-Mailer": "Apple Mail (2.1827)"
+  },
+  "envelope": {
+    "to": "60ebe73fdad8ee59d45c@cloudmailin.net",
+    "recipients": [
+      "60ebe73fdad8ee59d45c@cloudmailin.net"
+    ],
+    "from": "jessica.lord@me.com",
+    "helo_domain": "st11p06mm-asmtp002.mac.com",
+    "remote_ip": "17.172.124.250",
+    "spf": {
+      "result": "pass",
+      "domain": "me.com"
+    }
+  },
+  "plain": "cool\n",
+  "html": null,
+  "reply_plain": null,
+  "attachments": [
+
+  ]
+}
