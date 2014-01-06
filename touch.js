@@ -13,16 +13,17 @@ module.exports = function(object, request) {
                   + details.username + "/" 
                   + details.repo + ".git"
     console.log("{red}" + details.username, "added you as a contributor.{/red}")
-    cloneRepo(details)
+    writeRepo(details)
   }
   
-  function cloneRepo(details) {
+  function writeRepo(details) {
+
     var github = new Github({
-      type: "oauth",
-      token: ""
+      auth: "oauth",
+      token: process.env['REPOROBOT_TOKEN']
     })
     
-    var repo = github.getRepo('jlord', 'reporobot')
+    var repo = github.getRepo(details.username, details.repo)
     
     repo.write('master', 'hi.md', 'hello it is me', 'add file test', function(err) {
       if (err) console.log(err)
