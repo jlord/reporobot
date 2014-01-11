@@ -1,4 +1,4 @@
 var bot = require("./index.js")
 var touch =  require("./touch.js")
 
-bot(touch).listen(5563)
+bot(touch).listen(process.env.PORT || 5563)
