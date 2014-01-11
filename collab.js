@@ -7,11 +7,9 @@ module.exports = function(callback) {
       token: process.env['REPOROBOT_TOKEN']
     })
 
-  var repo = github.getRepo('jlord', 'sheetsee.js')
+  var repo = github.getRepo('jlord', 'patchwork')
 
   repo.show(function(err, repo) {
     console.log(repo)
   })
 }
-
-

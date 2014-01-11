@@ -7,9 +7,7 @@ module.exports = function(callback) {
       token: process.env['REPOROBOT_TOKEN']
     })
 
-  var issues = github.getIssues('jlord', 'sheetsee.js')
+  var issues = github.getIssues('jlord', 'patchwork')
 
   issues.list({username: 'jlord', repo: 'sheetsee.js'}, callback)
 }
-
-
