@@ -1,6 +1,7 @@
 var concat = require('concat-stream')
 var http = require('http')
 var fs = require('fs')
+
 var prStatus = require('./prcheck.js')
 var collab = require('./collab.js')
 
@@ -24,7 +25,7 @@ module.exports = function(onHook) {
         checkCollab(res, err, userRepos)
       })
     }
-    
+
     res.statusCode = 404
     res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
