@@ -1,6 +1,7 @@
 var Github = require('github-api')
 
-module.exports = function(callback) {
+module.exports = function(username, callback) {
+  console.log("I got this username", username)
 
   var github = new Github({
       auth: "oauth",

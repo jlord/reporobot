@@ -9,5 +9,5 @@ module.exports = function(callback) {
 
   var issues = github.getIssues('jlord', 'patchwork')
 
-  issues.list({username: 'jlord', repo: 'sheetsee.js'}, callback)
+  issues.list({username: 'jlord', repo: 'patchwork.js'}, callback)
 }

@@ -1,6 +1,8 @@
 var concat = require('concat-stream')
 var http = require('http')
 var fs = require('fs')
+var querystring = require('querystring')
+var url = require('url')
 
 var prStatus = require('./prcheck.js')
 var collab = require('./collab.js')
@@ -20,8 +22,11 @@ module.exports = function(onHook) {
       })
     }
 
-    if (req.method === 'POST' && req.url === '/collab') {
-      return collab(function(err, issues) {
+    if (req.method === 'POST' && req.url.match('/collab') {
+      var queryURL = url(req.url)
+      var username = querystring.parse(queryURL)
+      console.log('username', username)
+      return collab(username, function(err, issues) {
         checkCollab(res, err, userRepos)
       })
     }
@@ -38,7 +43,6 @@ module.exports = function(onHook) {
   function handleHook(req, res) {
     req.pipe(concat(function(buff) {
       var hookObj = JSON.parse(buff)
-      // fs.writeFileSync('email.json', JSON.stringify(hookObj))
       if (onHook) onHook(hookObj, req)
     }))
   }

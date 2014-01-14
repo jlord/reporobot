@@ -25,8 +25,16 @@ module.exports = function(object, request) {
     
     var repo = github.getRepo(details.username, details.repo)
     
-    repo.write('master', 'hi.md', 'hello it is me', 'add file test', function(err) {
+    repo.write('gh-pages', details.username + 'contributes.txt', details.username, 'created file for adding username', function(err) {
       if (err) console.log(err)
     }) 
   }
 }
+
+
+//function saveWorkshoppeeInfo(details) {
+//  fs.appendFile('message.txt', 'data to append', function (err) {
+//    if (err) throw err;
+//    console.log('The "data to append" was appended to file!');
+//  })
+//}
