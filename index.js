@@ -1,7 +1,6 @@
 var concat = require('concat-stream')
 var http = require('http')
 var fs = require('fs')
-var querystring = require('querystring')
 var url = require('url')
 
 var prStatus = require('./prcheck.js')
@@ -22,10 +21,9 @@ module.exports = function(onHook) {
       })
     }
 
-    if (req.method === 'POST' && req.url.match('/collab') {
-      var queryURL = url(req.url)
-      var username = querystring.parse(queryURL)
-      console.log('username', username)
+    if (req.method === 'POST' && req.url.match('/collab')) {
+      var queryURL = url.parse(req.url, true)
+      var username = queryURL.query.username
       return collab(username, function(err, issues) {
         checkCollab(res, err, userRepos)
       })
