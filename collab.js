@@ -10,6 +10,8 @@ module.exports = function(username, callback) {
   var repo = github.getRepo(username, 'patchwork')
 
   repo.show(function(err, repo) {
-    console.log("repo", repo)
+    var permissions = repo.permissions
+    if (permissions.push) console.log("true")
+    else console.log("reporobot doesn't have push access")
   })
 }
