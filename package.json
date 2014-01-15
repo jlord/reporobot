@@ -10,6 +10,7 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "concat-stream": "~1.4.0",
-    "github-api": "michael/github"
+    "github-api": "michael/github",
+    "asciify": "~1.3.3"
   }
 }
