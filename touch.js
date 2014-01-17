@@ -1,4 +1,5 @@
 var Github = require('github-api')
+var asciify = require('asciify')
 
 module.exports = function(object, request) {
   
@@ -12,29 +13,40 @@ module.exports = function(object, request) {
     details.repoURI = "https://www.github.com/" 
                   + details.username + "/" 
                   + details.repo + ".git"
-    console.log("{red}" + details.username, "added you as a contributor.{/red}")
-    writeRepo(details)
+    console.log(details.username, "added you as a contributor.")
+    asciiArt(details)
   }
   
-  function writeRepo(details) {
-
+  function asciiArt(details) {
+    asciify(details.username, {font:'isometric2'}, function(err, res){ 
+      if (err) console.log("ascii error", err)
+      var artwork = res
+      writeRepo(artwork, details)
+    })
+  }
+  
+  function writeRepo(artwork, details) {
+    
     var github = new Github({
       auth: "oauth",
       token: process.env['REPOROBOT_TOKEN']
     })
     
     var repo = github.getRepo(details.username, details.repo)
+
+    var branchName = "contributors/add-" + details.username
+    // for testing
+    // var branchName = 'master' 
+    var filePath = 'add-' + details.username + '.txt'
     
-    repo.write('gh-pages', details.username + 'contributes.txt', details.username, 'created file for adding username', function(err) {
+    // reporobot will overwrite the existing file which should just
+    // contain a username
+      
+    repo.write(branchName, filePath, 'hilowhi', 'drew picture', function(err) {
       if (err) console.log(err)
     }) 
   }
 }
 
 
-//function saveWorkshoppeeInfo(details) {
-//  fs.appendFile('message.txt', 'data to append', function (err) {
-//    if (err) throw err;
-//    console.log('The "data to append" was appended to file!');
-//  })
-//}
+

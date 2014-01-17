@@ -15,7 +15,9 @@ module.exports = function(onHook) {
       return handleHook(req, res)
     }
 
-    if (req.method === 'POST' && req.url === '/pr') {
+    if (req.method === 'POST' && req.url.match('/pr')) {
+      var queryURL = url.parse(req.url, true)
+      var username = queryURL.query.username
       return prStatus(function(err, issues) {
         checkPR(res, err, issues)
       })
@@ -45,15 +47,14 @@ module.exports = function(onHook) {
     }))
   }
 
-  function checkPR(res, err, issues) {
+  function checkPR(res, err, pr) {
     if (err) console.log(err)
     res.statusCode = 200
     res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
       error: 200,
-      issuesCount: issues.length
+      pr: pr
     }, true, 2))
-    console.log("i did it!", issues.length)
   }
 
   function checkCollab(res, err, userRepos) {
@@ -63,7 +64,6 @@ module.exports = function(onHook) {
     res.end(JSON.stringify({
       error: 200
     }, true, 2))
-    console.log("i did it!", userRepos)
   }
 
   return server
