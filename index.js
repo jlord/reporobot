@@ -4,7 +4,7 @@ var fs = require('fs')
 var url = require('url')
 
 var prStatus = require('./prcheck.js')
-var collab = require('./collab.js')
+var collabStatus = require('./collabcheck.js')
 
 module.exports = function(onHook) {
   var server = http.createServer(handler)
@@ -18,16 +18,16 @@ module.exports = function(onHook) {
     if (req.method === 'POST' && req.url.match('/pr')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
-      return prStatus(function(err, issues) {
-        checkPR(res, err, issues)
+      return prStatus(username, function(err, pr) {
+        checkPR(res, err, pr)
       })
     }
 
     if (req.method === 'POST' && req.url.match('/collab')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
-      return collab(username, function(err, issues) {
-        checkCollab(res, err, userRepos)
+      return collabStatus(username, function(err, collab) {
+        checkCollab(res, err, collab)
       })
     }
 
@@ -57,12 +57,14 @@ module.exports = function(onHook) {
     }, true, 2))
   }
 
-  function checkCollab(res, err, userRepos) {
+  function checkCollab(res, err, collab) {
     if (err) console.log(err)
+    console.log("collabs", collab)
     res.statusCode = 200
     res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
-      error: 200
+      error: 200,
+      collab: collab
     }, true, 2))
   }
 

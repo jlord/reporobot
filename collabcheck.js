@@ -11,7 +11,13 @@ module.exports = function(username, callback) {
 
   repo.show(function(err, repo) {
     var permissions = repo.permissions
-    if (permissions.push) console.log("true")
-    else console.log("reporobot doesn't have push access")
+    if (permissions.push) {
+      var collab = true
+      callback(err, collab)
+    }
+    else {
+      var collab = false
+      callback(err, collab)
+    }
   })
 }
