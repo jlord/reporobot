@@ -12,6 +12,7 @@
     "concat-stream": "~1.4.0",
     "github-api": "michael/github",
     "asciify": "~1.3.3",
-    "request": "~2.33.0"
+    "request": "~2.33.0",
+    "handlebars": "~1.3.0"
   }
 }

@@ -1,24 +1,23 @@
-// on new PR ->
-// verify pr content matches username
-// merge
-// on merge ->
-// rewrite index.html template
-// push
-// new gh-pages is launched
-
 var request = require('request')
 var asciify = require('asciify')
+var fs = require('fs')
+
+var addContributor = require('./contributors.js')
+var buildPage = require('./buildpage.js')
+
 var baseURL = 'https://api.github.com/repos/jlord/patchwork/'
 // are these bad as globals?
-var time = ""
-var username = ""
-var prNum = ""
+var stats = {}
+// var time = ""
+// var username = ""
+// var prNum = ""
+// var userArt = ""
 
 module.exports = function(pullreq, req) {
-  prNum = pullreq.number
+  stats.prNum = pullreq.number
   
   // make sure it's not a non-workshop, normal PR
-  if (pullreq.base.ref.match(user.login)) return
+  if (pullreq.base.ref.match(pullreq.user.login)) return
 
   var options = {
       url: baseURL +'pulls/' + prNum,
@@ -33,8 +32,8 @@ module.exports = function(pullreq, req) {
     if (error) console.log(error)
       if (!error && response.statusCode == 200) {
           var info = body
-          time = info.created_at
-          username = info.user.login
+          stats.time = info.created_at
+          stats.username = info.user.login
           getFile(prNum)
       }
   }
@@ -87,6 +86,7 @@ function verifyContent(prInfo) {
   asciify(username, {font:'isometric2'}, function(err, res){ 
     if (err) console.log(err)
     if (res.match(patch)) {
+      stats.userArt = patch
       console.log("Content: MATCH")
       mergePR(prNum)
     }
@@ -129,7 +129,9 @@ function mergePR(prNum) {
    if (error) console.log(error)
    if (!error && response.statusCode == 200) {
        console.log("MERGED")
-       // then build page
+       // then add data to file
+       addContributor(stats, buildPage)
+       // the generate page
    }
  })
 }
