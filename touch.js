@@ -42,7 +42,7 @@ module.exports = function(object, request) {
     // reporobot will overwrite the existing file which should just
     // contain a username
       
-    repo.write(branchName, filePath, 'hilowhi', 'drew picture', function(err) {
+    repo.write(branchName, filePath, artwork, 'drew picture', function(err) {
       if (err) console.log(err)
     }) 
   }

@@ -5,25 +5,30 @@ var url = require('url')
 
 var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
+var handlePr = require('./merge.js')
 
 module.exports = function(onHook) {
   var server = http.createServer(handler)
 
   function handler(req, res) {
     console.log(req.method, req.url)
-    if (req.method === 'POST' && req.url === '/push') {
+    if (req.url === '/push') {
       return handleHook(req, res)
     }
 
-    if (req.method === 'POST' && req.url.match('/pr')) {
+    if (req.url.match('/pr')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
       return prStatus(username, function(err, pr) {
         checkPR(res, err, pr)
       })
     }
+    
+    if (req.url.match('/orderin')) {
+      return getPR(req, res)
+    }
 
-    if (req.method === 'POST' && req.url.match('/collab')) {
+    if (req.url.match('/collab')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
       return collabStatus(username, function(err, collab) {
@@ -46,6 +51,13 @@ module.exports = function(onHook) {
       if (onHook) onHook(hookObj, req)
     }))
   }
+  
+  function getPR(req, res) {
+    req.pipe(concat(function(buff) {
+      var pullreq = JSON.parse(buff)
+      handlePr(pullreq, req)
+    }))
+  }
 
   function checkPR(res, err, pr) {
     if (err) console.log(err)
@@ -59,12 +71,20 @@ module.exports = function(onHook) {
 
   function checkCollab(res, err, collab) {
     if (err) console.log(err)
-    console.log("collabs", collab)
     res.statusCode = 200
     res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
       error: 200,
       collab: collab
+    }, true, 2))
+  }
+  
+  function mergedPr(res, err) {
+    if (err) console.log(err)
+    res.statusCode = 200
+    res.setHeader('content-type', 'application/json')
+    res.end(JSON.stringify({
+      error: 200,
     }, true, 2))
   }
 
