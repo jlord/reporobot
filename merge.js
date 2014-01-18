@@ -8,16 +8,20 @@
 
 var request = require('request')
 var asciify = require('asciify')
-
+var baseURL = 'https://api.github.com/repos/jlord/patchwork/'
+// are these bad as globals?
 var time = ""
 var username = ""
+var prNum = ""
 
 module.exports = function(pullreq, req) {
-  var prNum = pullreq.number
-  console.log('https://api.github.com/repos/jlord/patchwork/pulls/' + prNum)
+  prNum = pullreq.number
+  
+  // make sure it's not a non-workshop, normal PR
+  if (pullreq.base.ref.match(user.login)) return
 
   var options = {
-      url: 'https://api.github.com/repos/jlord/patchwork/pulls/' + prNum,
+      url: baseURL +'pulls/' + prNum,
       json: true,
       headers: {
           'User-Agent': 'request',
@@ -31,7 +35,6 @@ module.exports = function(pullreq, req) {
           var info = body
           time = info.created_at
           username = info.user.login
-          console.log(time, username)
           getFile(prNum)
       }
   }
@@ -40,7 +43,7 @@ module.exports = function(pullreq, req) {
   
   function getFile(prNum) {
     var options = {
-        url: 'https://api.github.com/repos/jlord/patchwork/pulls/' + prNum + '/files',
+        url: baseURL + 'pulls/' + prNum + '/files',
         json: true,
         headers: {
             'User-Agent': 'request',
@@ -52,8 +55,7 @@ module.exports = function(pullreq, req) {
       if (error) console.log(error)
         if (!error && response.statusCode == 200) {
             var prInfo = body[0]
-            // verifyContent(prInfo.patch)
-            writeComment(prNum)
+            verifyFilename(prInfo)
         }
     })
   }
@@ -63,46 +65,71 @@ function verifyPRContent(prInfo) {
   
 }
 
-function verifFilename(filename) {
+function verifyFilename(prInfo) {
   // add /contributors/ to filename
-  if (filename.match('add-' + username + '.md')) {
-    return true
+  var filename = prInfo.filename
+  // if (filename.match('/contributors/add-' + username + '.md')) {
+  if (filename.match('test.md')) {
+    console.log("Filename: MATCH")
+    verifyContent(prInfo)
   }
-  else console.error("Filename did not match expected pattern")
-  // what should I do when the filename is incorrect, create an issue
-  // or change it for the user?
-  // actually - verify that in the pr challange, that way you know 
-  // you'll get the right one eventually
+  else {
+    var message = 'Filename is different than expected: /contributors/add-' + username 
+    writeComment(message, prNum)
+  }
 }
 
-function verifyContent(patch) {
+function verifyContent(prInfo) {
   // pull out the actual pr content
-  var patchArray = patch.split('@@')
+  var patchArray = prInfo.patch.split('@@')
   var patch = patchArray.pop()
-  console.log(patch)
   // generate the expected content
   asciify(username, {font:'isometric2'}, function(err, res){ 
-    console.log(res)
-    if (res.match(patch)) console.log("true")
-    else console.log("no match")
+    if (err) console.log(err)
+    if (res.match(patch)) {
+      console.log("Content: MATCH")
+      mergePR(prNum)
+    }
+    else {
+      var message = "Ascii art wasn't as expected, did something change?"
+      writeComment(message, prNum)
+    }
   })
 }
 
-function writeComment(prNum) {
-  // /repos/:owner/:repo/issues/:number/comments
- 
-  var options = {
-      url: 'https://api.github.com/repos/jlord/patchwork/issues/' + prNum + '/comments',
+function writeComment(message, prNum) {
+  console.log("uh oh, writing comment")
+   var options = {
+      url: baseURL + 'issues/' + prNum + '/comments',
       headers: {
           'User-Agent': 'request',
           'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
       },
-      json: {'body': 'Hello internet.'}
+      json: {'body': message}
   }
   
   request.post(options, function done(error, response, body) {
     if (error) console.log(error)
-    // console.log(response)
   })
-  
+}
+
+function mergePR(prNum) {
+  console.log("Merging..")
+  var message = "Merging PR from @" + username
+  var options = {
+     url: baseURL + 'pulls/' + prNum + '/merge',
+     headers: {
+         'User-Agent': 'request',
+         'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+     },
+     json: {'commit_message': message}
+ }
+ 
+ request.put(options, function done(error, response, body) {
+   if (error) console.log(error)
+   if (!error && response.statusCode == 200) {
+       console.log("MERGED")
+       // then build page
+   }
+ })
 }
