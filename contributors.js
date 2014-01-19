@@ -1,9 +1,22 @@
 var fs = require('fs')
+var file = 'contributors.json'
 
 module.exports = function(stats, callback) {
-  fs.appendFile('contributors.json', stats, function (err) {
+  fs.readFile(file, function (err, data) {
     if (err) throw err
-    console.log('Added ' + stats.username + 'to the contributors!')
-    callback()
+    data = data.toString()
+    
+    if (data === "") var array = []
+    else var array = JSON.parse(data)
+    
+    array.push(stats)
+    writeFile(file, JSON.stringify(array), callback)
   })
+}
+
+function writeFile(file, array, callback) {
+  fs.writeFile(file, array, function (err) {
+    if (err) throw err
+    callback()
+  }) 
 }

@@ -20,7 +20,7 @@ module.exports = function(pullreq, req) {
   if (pullreq.base.ref.match(pullreq.user.login)) return
 
   var options = {
-      url: baseURL +'pulls/' + prNum,
+      url: baseURL +'pulls/' + stats.prNum,
       json: true,
       headers: {
           'User-Agent': 'request',
@@ -34,7 +34,7 @@ module.exports = function(pullreq, req) {
           var info = body
           stats.time = info.created_at
           stats.username = info.user.login
-          getFile(prNum)
+          getFile(stats.prNum)
       }
   }
   
@@ -60,10 +60,6 @@ module.exports = function(pullreq, req) {
   }
 }
 
-function verifyPRContent(prInfo) {
-  
-}
-
 function verifyFilename(prInfo) {
   // add /contributors/ to filename
   var filename = prInfo.filename
@@ -73,8 +69,8 @@ function verifyFilename(prInfo) {
     verifyContent(prInfo)
   }
   else {
-    var message = 'Filename is different than expected: /contributors/add-' + username 
-    writeComment(message, prNum)
+    var message = 'Filename is different than expected: /contributors/add-' + stats.username 
+    writeComment(message, stats.prNum)
   }
 }
 
@@ -83,16 +79,16 @@ function verifyContent(prInfo) {
   var patchArray = prInfo.patch.split('@@')
   var patch = patchArray.pop()
   // generate the expected content
-  asciify(username, {font:'isometric2'}, function(err, res){ 
+  asciify(stats.username, {font:'isometric2'}, function(err, res){ 
     if (err) console.log(err)
     if (res.match(patch)) {
-      stats.userArt = patch
+      stats.userArt = res
       console.log("Content: MATCH")
-      mergePR(prNum)
+      mergePR(stats.prNum)
     }
     else {
       var message = "Ascii art wasn't as expected, did something change?"
-      writeComment(message, prNum)
+      writeComment(message, stats.prNum)
     }
   })
 }
@@ -114,8 +110,8 @@ function writeComment(message, prNum) {
 }
 
 function mergePR(prNum) {
-  console.log("Merging..")
-  var message = "Merging PR from @" + username
+  addContributor(stats, buildPage)
+  var message = "Merging PR from @" + stats.username
   var options = {
      url: baseURL + 'pulls/' + prNum + '/merge',
      headers: {
