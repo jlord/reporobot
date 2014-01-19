@@ -56,6 +56,9 @@ module.exports = function(onHook) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
       handlePr(pullreq, req)
+      res.statusCode = 200
+      res.setHeader('content-type', 'application/json')
+      res.end()
     }))
   }
 

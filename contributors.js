@@ -10,7 +10,7 @@ module.exports = function(stats, callback) {
     else var array = JSON.parse(data)
     
     array.push(stats)
-    writeFile(file, JSON.stringify(array), callback)
+    writeFile(file, JSON.stringify(array, null, " "), callback)
   })
 }
 
