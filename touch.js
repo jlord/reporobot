@@ -2,7 +2,6 @@ var Github = require('github-api')
 var asciify = require('asciify')
 
 module.exports = function(object, request) {
-  
   getDetails(object)
 
   function getDetails(object) {
@@ -34,19 +33,14 @@ module.exports = function(object, request) {
     
     var repo = github.getRepo(details.username, details.repo)
 
-    var branchName = "contributors/add-" + details.username
-    // for testing
-    // var branchName = 'master' 
+    var branchName = "contributors/add-" + details.username 
     var filePath = 'add-' + details.username + '.txt'
     
     // reporobot will overwrite the existing file which should just
     // contain a username
       
-    repo.write(branchName, filePath, artwork, 'drew picture', function(err) {
+    repo.write(branchName, filePath, artwork, 'drew ur picture', function(err) {
       if (err) console.log(err)
     }) 
   }
 }
-
-
-

@@ -6,12 +6,9 @@ var addContributor = require('./contributors.js')
 var buildPage = require('./buildpage.js')
 
 var baseURL = 'https://api.github.com/repos/jlord/patchwork/'
-// are these bad as globals?
 var stats = {}
-// var time = ""
-// var username = ""
-// var prNum = ""
-// var userArt = ""
+
+// what happens when multiple people are doing this?!
 
 module.exports = function(pullreq, req) {
   stats.prNum = pullreq.number
@@ -125,9 +122,8 @@ function mergePR(prNum) {
    if (error) console.log(error)
    if (!error && response.statusCode == 200) {
        console.log("MERGED")
-       // then add data to file
+       // add contributor to file and rebuild page
        addContributor(stats, buildPage)
-       // the generate page
    }
  })
 }
