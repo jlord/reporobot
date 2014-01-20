@@ -9,9 +9,9 @@ module.exports = function(object, request) {
     // console.log("emailbody", object.plain)
     // add if not from github, don't do anything
     var subject = object.headers.Subject
+    console.log(["email subject", subject])
     
     if (!subject.match("added you to")) return
-    console.log(["email subject", subject])
     
     var detailsArray = subject.split(" added you to ")
     var details = { "username": detailsArray[0], 
