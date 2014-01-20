@@ -10,9 +10,10 @@ module.exports = function(stats, callback) {
     var oldData = data.toString()
     
     if (oldData === "") var array = []
-    else var array = JSON.parse(data)
+    else var array = JSON.parse(oldData)
     
     array.push(stats)
+    console.log(["array of all contribs before writing file", array])
     writeFile(file, JSON.stringify(array, null, " "), callback)
   })
 }
