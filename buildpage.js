@@ -8,7 +8,7 @@ module.exports = function() {
     if (err) console.log(err)
     
     var everyone = JSON.parse(data)
-    var newest = everyone.pop()
+    var newest = everyone[everyone.length - 1]
     
     var stats = {featured: newest, everyone: everyone}
     getTemplate(stats)

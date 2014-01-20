@@ -14,15 +14,12 @@ module.exports = function(stats, callback) {
     
     array.push(stats)
     console.log(["array of all contribs before writing file", array])
-    writeFile(file, JSON.stringify(array, null, " "), callback)
+    fs.writeFile(file, JSON.stringify(array), function(err) {
+      if (err) return console.error('error writing array', err)
+      var lastUser = array[array.length - 1]
+      if (lastUser) console.log(lastUser.username)
+      else console.log('no last user')
+      callback()
+    })
   })
-}
-
-function writeFile(file, array, callback) {
-  var newestcontributor = array.pop()
-  fs.writeFile(file, array, function (err) {
-    if (err) console.log(err)
-    console.log("Added" + newestcontributor.username + " to contributor file")
-    callback()
-  }) 
 }
