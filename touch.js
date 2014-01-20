@@ -37,14 +37,15 @@ module.exports = function(object, request) {
     
     var repo = github.getRepo(details.username, details.repo)
 
-    var branchName = "contributors/add-" + details.username 
-    var filePath = 'add-' + details.username + '.txt'
+    var branchName = "add-" + details.username 
+    var filePath = '/contributors/add-' + details.username + '.txt'
     
     // reporobot will overwrite the existing file which should just
     // contain a username
       
     repo.write(branchName, filePath, artwork, 'drew ur picture', function(err) {
-      if (err) console.log(err)
+      if (err) console.log("Error writing to repo", err)
+      console.log("Commited to a repo")
     }) 
   }
 }
