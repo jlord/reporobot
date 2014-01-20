@@ -19,6 +19,7 @@ module.exports = function(stats, callback) {
 function writeFile(file, array, callback) {
   fs.writeFile(file, array, function (err) {
     if (err) console.log(err)
+    console.log("Added" + stats.username + " to contributor file")
     callback()
   }) 
 }

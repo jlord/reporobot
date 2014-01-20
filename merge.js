@@ -53,9 +53,11 @@ module.exports = function(pullreq, req) {
     }
     
     request(options, function returnFiles(error, response, body) {
+      // add callback
       if (error) console.log(error)
       
         if (!error && response.statusCode == 200) {
+          console.log(["body", body])
           var prInfo = body[0]
           verifyFilename(prInfo)
         }
