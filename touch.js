@@ -2,10 +2,12 @@ var Github = require('github-api')
 var asciify = require('asciify')
 
 module.exports = function(object, request) {
-  
+
   getDetails(object)
 
   function getDetails(object) {
+    console.log("emailbody", object.plain)
+    // add if not from github, don't do anything
     var subject = object.headers.Subject
     var detailsArray = subject.split(" added you to ")
     var details = { "username": detailsArray[0], 
