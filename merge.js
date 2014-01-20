@@ -68,12 +68,12 @@ function verifyFilename(prInfo) {
   var filename = prInfo.filename
   console.log(["filename from PR", filename])
   // if (filename.match('/contributors/test.md')) {
-  if (filename.match('contributors/add-' + stats.username + '.md')) {
+  if (filename.match('contributors/add-' + stats.username + '.txt')) {
     console.log("Filename: MATCH")
     verifyContent(prInfo)
   }
   else {
-    var message = 'Filename is different than expected: contributors/add-' + stats.username 
+    var message = 'Filename is different than expected: contributors/add-' + stats.username + '.txt'
     writeComment(message, stats.prNum)
   }
 }
