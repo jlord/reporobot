@@ -11,9 +11,11 @@ var stats = {}
 // what happens when multiple people are doing this?!
 
 module.exports = function(pullreq, req) {
+  if (pullreq.action && pullreq.action === "closed") return
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   
   stats.prNum = pullreq.number
+  
   
   // make sure it's not a non-workshop, normal PR
   if (pullreq.base.ref.match(pullreq.user.login)) return
@@ -65,7 +67,7 @@ function verifyFilename(prInfo) {
   // add /contributors/ to filename
   var filename = prInfo.filename
   // if (filename.match('/contributors/test.md')) {
-  if (filename.match('/contributors/add-' + username + '.md')) {
+  if (filename.match('/contributors/add-' + stats.username + '.md')) {
     console.log("Filename: MATCH")
     verifyContent(prInfo)
   }
