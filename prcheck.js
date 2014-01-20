@@ -11,18 +11,18 @@ module.exports = function(username, callback) {
   var options = {username: 'jlord', repo: 'patchwork'}
   
   issues.list(options, function(err, issues) {
-    if (err) console.log(err)
+    if (err) return callback(err)
     
+    var pr = false
     issues.forEach(function(issue) {
-      var pr = issue.pull_request.html_url
-      if (issue.user.login.match(username) && pr != null) {
-        var pr = true
-        callback(err, pr)
-      }
-      else {
-        var pr = false
+      // what is the max number of issues that it returns?
+      var prStatus = issue.pull_request.html_url
+      if (issue.user.login.match(username) && prStatus != null) {
+        pr = true
+        console.log(username, " made a pull request.")
         callback(err, pr)
       }
     })
+    callback(err, pr)
   })
 }
