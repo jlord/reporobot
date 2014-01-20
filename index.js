@@ -68,31 +68,44 @@ module.exports = function(onHook) {
   }
 
   function checkPR(res, err, pr) {
-    if (err) console.log(err)
+    if (err) {
+      console.log(err)
+      res.statusCode = 500
+      res.end(JSON.stringify({error: err}))
+      return
+    }
     res.statusCode = 200
     res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
-      error: 200,
       pr: pr
     }, true, 2))
   }
 
   function checkCollab(res, err, collab) {
-    if (err) console.log(err)
+    if (err) {
+      console.log(err)
+      res.statusCode = 500
+      res.end(JSON.stringify({error: err}))
+      return
+    }
     res.statusCode = 200
     res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
-      error: 200,
       collab: collab
     }, true, 2))
   }
   
   function mergedPr(res, err) {
-    if (err) console.log(err)
+    if (err) {
+      console.log(err)
+      res.statusCode = 500
+      res.end(JSON.stringify({error: err}))
+      return
+    }
     res.statusCode = 200
     res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
-      error: 200,
+      merged: true,
     }, true, 2))
   }
 

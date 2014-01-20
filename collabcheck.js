@@ -10,6 +10,7 @@ module.exports = function(username, callback) {
   var repo = github.getRepo(username, 'patchwork')
 
   repo.show(function(err, repo) {
+    if (err) return callback(err)
     var permissions = repo.permissions
     if (permissions.push) {
       var collab = true
