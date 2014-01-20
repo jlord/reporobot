@@ -59,6 +59,7 @@ module.exports = function(onHook) {
   
   function getPR(req, res) {
     req.pipe(concat(function(buff) {
+      console.log(["buffstring", buff.toString()])
       var pullreq = JSON.parse(buff)
       handlePr(pullreq, req)
       res.statusCode = 200
