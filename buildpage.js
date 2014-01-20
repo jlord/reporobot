@@ -8,9 +8,9 @@ module.exports = function() {
     if (err) console.log(err)
     
     var everyone = JSON.parse(data)
-    var total = everyone.length
+    var newest = everyone.pop()
     
-    var stats = {featured: everyone[total], everyone: everyone}
+    var stats = {featured: newest, everyone: everyone}
     getTemplate(stats)
   })
 
