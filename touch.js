@@ -38,7 +38,7 @@ module.exports = function(object, request) {
     var repo = github.getRepo(details.username, details.repo)
 
     var branchName = "add-" + details.username 
-    var filePath = '/contributors/add-' + details.username + '.txt'
+    var filePath = 'contributors/add-' + details.username + '.txt'
     
     // reporobot will overwrite the existing file which should just
     // contain a username
