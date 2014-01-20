@@ -18,9 +18,11 @@ module.exports = function(stats, callback) {
 }
 
 function writeFile(file, array, callback) {
+  var totalcontributors = array.length
+  var newestcontributor = array[totalcontributors].username.toString()
   fs.writeFile(file, array, function (err) {
     if (err) console.log(err)
-    console.log("Added" + array[0].username + " to contributor file")
+    console.log("Added" + newestcontributor + " to contributor file")
     callback()
   }) 
 }
