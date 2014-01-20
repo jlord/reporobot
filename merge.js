@@ -11,6 +11,8 @@ var stats = {}
 // what happens when multiple people are doing this?!
 
 module.exports = function(pullreq, req) {
+  if (pullreq.pull_request) pullreq = pullreq.pull_request
+  
   stats.prNum = pullreq.number
   
   // make sure it's not a non-workshop, normal PR
