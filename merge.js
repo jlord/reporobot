@@ -27,11 +27,12 @@ module.exports = function(pullreq, req) {
   
   function getTime(error, response, body) {
     if (error) console.log(error)
+    
       if (!error && response.statusCode == 200) {
-          var info = body
-          stats.time = info.created_at
-          stats.username = info.user.login
-          getFile(stats.prNum)
+        var info = body
+        stats.time = info.created_at
+        stats.username = info.user.login
+        getFile(stats.prNum)
       }
   }
   
@@ -49,9 +50,10 @@ module.exports = function(pullreq, req) {
     
     request(options, function returnFiles(error, response, body) {
       if (error) console.log(error)
+      
         if (!error && response.statusCode == 200) {
-            var prInfo = body[0]
-            verifyFilename(prInfo)
+          var prInfo = body[0]
+          verifyFilename(prInfo)
         }
     })
   }
@@ -60,8 +62,8 @@ module.exports = function(pullreq, req) {
 function verifyFilename(prInfo) {
   // add /contributors/ to filename
   var filename = prInfo.filename
-  // if (filename.match('/contributors/add-' + username + '.md')) {
-  if (filename.match('test.md')) {
+  // if (filename.match('/contributors/test.md')) {
+  if (filename.match('/contributors/add-' + username + '.md')) {
     console.log("Filename: MATCH")
     verifyContent(prInfo)
   }

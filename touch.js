@@ -2,16 +2,18 @@ var Github = require('github-api')
 var asciify = require('asciify')
 
 module.exports = function(object, request) {
+  
   getDetails(object)
 
   function getDetails(object) {
     var subject = object.headers.Subject
     var detailsArray = subject.split(" added you to ")
     var details = { "username": detailsArray[0], 
-                    "repo": detailsArray[1] }
+                    "repo": detailsArray[1] 
+                  }
     details.repoURI = "https://www.github.com/" 
-                  + details.username + "/" 
-                  + details.repo + ".git"
+                    + details.username + "/" 
+                    + details.repo + ".git"
     console.log(details.username, "added you as a contributor.")
     asciiArt(details)
   }

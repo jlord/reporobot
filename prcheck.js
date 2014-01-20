@@ -11,6 +11,8 @@ module.exports = function(username, callback) {
   var options = {username: 'jlord', repo: 'patchwork'}
   
   issues.list(options, function(err, issues) {
+    if (err) console.log(err)
+    
     issues.forEach(function(issue) {
       var pr = issue.pull_request.html_url
       if (issue.user.login.match(username) && pr != null) {

@@ -12,10 +12,13 @@ module.exports = function(onHook) {
 
   function handler(req, res) {
     console.log(req.method, req.url)
+    
+    // when RR gets a push from email on collab
     if (req.url === '/push') {
       return handleHook(req, res)
     }
-
+    
+    // when git-it verifies user made a pr
     if (req.url.match('/pr')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
@@ -24,10 +27,12 @@ module.exports = function(onHook) {
       })
     }
     
+    // when a pr is made to patchwork repo  
     if (req.url.match('/orderin')) {
       return getPR(req, res)
     }
 
+    // when git-it verifies user added RR as collab
     if (req.url.match('/collab')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
@@ -35,15 +40,15 @@ module.exports = function(onHook) {
         checkCollab(res, err, collab)
       })
     }
-
-    res.statusCode = 404
-    res.setHeader('content-type', 'application/json')
-    res.end(JSON.stringify({
-      error: 404,
-      message: 'not_found',
-      hints: 'POST to /push'
-    }, true, 2))
-  }
+  
+  // when anything else goes to reporobot.jlord.us
+  res.statusCode = 404
+  res.setHeader('content-type', 'application/json')
+  res.end(JSON.stringify({
+    error: 404,
+    message: 'not_found'
+  }, true, 2))
+}
 
   function handleHook(req, res) {
     req.pipe(concat(function(buff) {

@@ -3,6 +3,7 @@ var fs = require('fs')
 var Github = require('github-api')
 
 module.exports = function() {
+  
   fs.readFile('contributors.json', function (err, data) {
     if (err) console.log(err)
     
@@ -18,7 +19,6 @@ module.exports = function() {
       data = data.toString()
       var template = hbs.compile(data)
       var HTML = template(stats)
-      console.log(HTML)
       writeRepo(HTML, stats)
     })
   }
