@@ -15,7 +15,7 @@ module.exports = function(object, request) {
     var subject = object.headers.Subject
     console.log([new Date(), "Recieved email:", subject])
     
-    if (!subject.match("added you to")) return
+    if (!subject.match("added you to patchwork")) return
     
     var detailsArray = subject.split(" added you to ")
     var details = { "username": detailsArray[0], 
