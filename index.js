@@ -3,7 +3,7 @@ var http = require('http')
 var fs = require('fs')
 var url = require('url')
 
-var prCheck = require('./prcheck.js')
+var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
 var mergePr = require('./merge.js')
 
