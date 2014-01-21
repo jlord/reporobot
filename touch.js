@@ -16,7 +16,7 @@ module.exports = function(object, request) {
     console.log([new Date(), "Recieved email:", subject])
     
     if (!subject.match("added you to patchwork")) {
-      console.log([new Date(), "non relevant email")
+      console.log([new Date(), "non relevant email"])
       return
     }
     
