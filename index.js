@@ -78,7 +78,7 @@ module.exports = function(onHook) {
       return
     }
     res.statusCode = 200
-    res.setHeader('content-type', 'application/json')
+    // res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
       pr: pr
     }, true, 2))
