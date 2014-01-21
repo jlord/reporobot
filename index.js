@@ -55,6 +55,8 @@ module.exports = function(onHook) {
       var hookObj = JSON.parse(buff)
       if (onHook) onHook(hookObj, req)
     }))
+    res.statusCode = 200
+    res.end("Thank you.")
   }
   
   function getPR(req, res) {
