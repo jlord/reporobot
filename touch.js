@@ -6,6 +6,7 @@ module.exports = function(object, request) {
   getDetails(object)
 
   function getDetails(object) {
+    console.log(["email", object.plain])
     // need callback
     // console.log("emailbody", object.plain)
     // add if not from github, don't do anything
