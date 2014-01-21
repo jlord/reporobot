@@ -8,14 +8,17 @@ module.exports = function(object, request) {
   getDetails(object)
 
   function getDetails(object) {
-    console.log(object)
+    // console.log(object)
     // console.log(["email", object.plain])
     // need callback
     // add if not from github, don't do anything
     var subject = object.headers.Subject
     console.log([new Date(), "Recieved email:", subject])
     
-    if (!subject.match("added you to patchwork")) return
+    if (!subject.match("added you to patchwork")) {
+      console.log([new Date(), "non relevant email")
+      return
+    }
     
     var detailsArray = subject.split(" added you to ")
     var details = { "username": detailsArray[0], 
