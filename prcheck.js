@@ -27,13 +27,15 @@
 //   })
 // }
 
+var request = require('request')
+
 module.exports = function(username, callback) {
 
-  var request = require('request')
+  
   var baseURL = 'https://api.github.com/repos/jlord/patchwork/issues?state=closed'
 
   var options = {
-      url: baseURL 
+      url: baseURL, 
       json: true,
       headers: {
           'User-Agent': 'request',
@@ -45,9 +47,10 @@ module.exports = function(username, callback) {
 
 
   function getIssues(error, response, body) {
-  
     console.log(body)
   }
+  
+  request(options, getIssues)
 
 }
 
