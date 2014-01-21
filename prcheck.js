@@ -13,8 +13,6 @@ module.exports = function(username, callback) {
       }
   }
 
-  request(options, getIssues)
-
   function getIssues(error, response, body) {
     var issues = body
     var pr = false
