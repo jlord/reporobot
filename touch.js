@@ -6,6 +6,7 @@ module.exports = function(object, request) {
   getDetails(object)
 
   function getDetails(object) {
+    console.log(object)
     console.log(["email", object.plain])
     // need callback
     // console.log("emailbody", object.plain)
