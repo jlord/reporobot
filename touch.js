@@ -2,14 +2,15 @@ var Github = require('github-api')
 var asciify = require('asciify')
 
 module.exports = function(object, request) {
+  // if it's not an email, return
+  if (!object.headers) return
 
   getDetails(object)
 
   function getDetails(object) {
     console.log(object)
-    console.log(["email", object.plain])
+    // console.log(["email", object.plain])
     // need callback
-    // console.log("emailbody", object.plain)
     // add if not from github, don't do anything
     var subject = object.headers.Subject
     console.log([new Date(), "Recieved email:", subject])
