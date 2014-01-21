@@ -19,7 +19,8 @@ module.exports = function(username, callback) {
     var issues = body
     var pr = false
     
-    issues.forEach(function(issue) {
+    for (var i = 0; i < issues.length; i++) {
+      var issue = issues[i]
       // what is the max number of issues that it returns?
       var prStatus = issue.pull_request.html_url
       if (issue.user.login.match(username) && prStatus != null) {
@@ -27,7 +28,7 @@ module.exports = function(username, callback) {
         console.log([new Date(), username, " made a pull request."])
         return callback(error, pr)
       }
-    })
+    }
     callback(error, pr)  
   }
   
