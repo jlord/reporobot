@@ -3,9 +3,9 @@ var http = require('http')
 var fs = require('fs')
 var url = require('url')
 
-var prStatus = require('./prcheck.js')
+var prCheck = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
-var handlePr = require('./merge.js')
+var mergePr = require('./merge.js')
 
 module.exports = function(onHook) {
   var server = http.createServer(handler)
@@ -63,7 +63,7 @@ module.exports = function(onHook) {
     req.pipe(concat(function(buff) {
       console.log(["buffstring", buff.toString()])
       var pullreq = JSON.parse(buff)
-      handlePr(pullreq, req)
+      mergePr(pullreq, req)
       res.statusCode = 200
       res.setHeader('content-type', 'application/json')
       res.end()

@@ -11,6 +11,7 @@ var stats = {}
 // what happens when multiple people are doing this?!
 
 module.exports = function(pullreq, req) {
+  console.log("PR", JSON.parse(pullreq, null, " "))
   if (pullreq.action && pullreq.action === "closed") return
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   
