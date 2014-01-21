@@ -8,15 +8,12 @@ var buildPage = require('./buildpage.js')
 var baseURL = 'https://api.github.com/repos/jlord/patchwork/'
 var stats = {}
 
-// what happens when multiple people are doing this?!
-
 module.exports = function(pullreq, req) {
-  console.log(["PR", pullreq])
+  // console.log(["PR", pullreq])
   if (pullreq.action && pullreq.action === "closed") return
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   
   stats.prNum = pullreq.number
-  
   
   // make sure it's not a non-workshop, normal PR
   if (pullreq.base.ref.match(pullreq.user.login)) return

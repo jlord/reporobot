@@ -5,3 +5,5 @@ issuesAPI.json
 repo.json
 pullreq.json
 prjson.json
+reopenedpr.json
+closedpr.json
