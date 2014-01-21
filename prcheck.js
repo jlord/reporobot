@@ -25,7 +25,7 @@ module.exports = function(username, callback) {
       if (issue.user.login.match(username) && prStatus != null) {
         pr = true
         console.log([new Date(), username, " made a pull request."])
-        callback(error, pr)
+        return callback(error, pr)
       }
     })
     callback(error, pr)  
