@@ -57,7 +57,7 @@ module.exports = function(pullreq, req) {
       if (error) console.log(error)
       
         if (!error && response.statusCode == 200) {
-          console.log(["body", body])
+          console.log(["body", JSON.parse(body, null, " ")])
           var prInfo = body[0]
           verifyFilename(prInfo)
         }
@@ -66,12 +66,10 @@ module.exports = function(pullreq, req) {
 }
 
 function verifyFilename(prInfo) {
-  // add /contributors/ to filename
   var filename = prInfo.filename
   console.log(["filename from PR", filename])
-  // if (filename.match('/contributors/test.md')) {
   if (filename.match('contributors/add-' + stats.username + '.txt')) {
-    console.log("Filename: MATCH")
+    console.log([ new Date(), stats.username, " Filename: MATCH"])
     verifyContent(prInfo)
   }
   else {
@@ -89,7 +87,7 @@ function verifyContent(prInfo) {
     if (err) console.log(err)
     if (res.match(patch)) {
       stats.userArt = res
-      console.log("Content: MATCH")
+      console.log([new Date(), stats.username, " Content: MATCH"])
       mergePR(stats.prNum)
     }
     else {
@@ -100,7 +98,7 @@ function verifyContent(prInfo) {
 }
 
 function writeComment(message, prNum) {
-  console.log("uh oh, writing comment")
+  console.log([new Date(), "uh oh, writing comment for ", stats.username])
    var options = {
       url: baseURL + 'issues/' + prNum + '/comments',
       headers: {
@@ -130,7 +128,7 @@ function mergePR(prNum) {
  request.put(options, function done(error, response, body) {
    if (error) console.log(error)
    if (!error && response.statusCode == 200) {
-       console.log("MERGED")
+       console.log([new Date(), "MERGED", stats.username, "pull request" ])
        // add contributor to file and rebuild page
        addContributor(stats, buildPage)
    }

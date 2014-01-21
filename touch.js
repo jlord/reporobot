@@ -6,10 +6,11 @@ module.exports = function(object, request) {
   getDetails(object)
 
   function getDetails(object) {
+    // need callback
     // console.log("emailbody", object.plain)
     // add if not from github, don't do anything
     var subject = object.headers.Subject
-    console.log(["email subject", subject])
+    console.log([new Date(), "Recieved email:", subject])
     
     if (!subject.match("added you to")) return
     
@@ -47,9 +48,9 @@ module.exports = function(object, request) {
     // reporobot will overwrite the existing file which should just
     // contain a username
       
-    repo.write(branchName, filePath, artwork, 'drew ur picture', function(err) {
+    repo.write(branchName, filePath, artwork, 'drew a picture', function(err) {
       if (err) console.log("Error writing to repo", err)
-      console.log("Commited to a repo")
+      console.log([new Date(), "Commited to a repo"])
     }) 
   }
 }

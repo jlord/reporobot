@@ -36,7 +36,7 @@ module.exports = function() {
   
     var commitMes = "rebuilt with @" + username + " added\!"
     repo.write('gh-pages', 'index.html', HTML, commitMes, function(err) {
-      console.log("REBUILT INDEX")
+      console.log([new Date(), "REBUILT INDEX with", username])
     })
   }
 }
