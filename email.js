@@ -54,7 +54,7 @@ module.exports = function(object, callback) {
     // contain a username
       
     repo.write(branchName, filePath, artwork, 'drew a picture', function(err) {
-      if (err) return callback(err, "Error collabing on forked repo."
+      if (err) return callback(err, "Error collabing on forked repo.")
       console.log([new Date(), "Commited to a repo"])
     }) 
   }
