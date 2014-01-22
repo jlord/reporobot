@@ -32,7 +32,7 @@ module.exports = function(object, callback) {
   
   function asciiArt(details) {
     asciify(details.username, {font:'isometric2'}, function(err, res){ 
-      if (err) callback(err, "Ascii art error")
+      if (err) return callback(err, "Ascii art error")
       var artwork = res
       writeRepo(artwork, details)
     })
@@ -54,7 +54,7 @@ module.exports = function(object, callback) {
     // contain a username
       
     repo.write(branchName, filePath, artwork, 'drew a picture', function(err) {
-      if (err) callback(err, "Error collabing on forked repo."
+      if (err) return callback(err, "Error collabing on forked repo."
       console.log([new Date(), "Commited to a repo"])
     }) 
   }

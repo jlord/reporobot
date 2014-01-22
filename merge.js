@@ -3,39 +3,36 @@ var asciify = require('asciify')
 var fs = require('fs')
 
 var addContributor = require('./contributors.js')
-var buildPage = require('./buildpage.js')
 
 var baseURL = 'https://api.github.com/repos/jlord/patchwork/'
 var stats = {}
 
-module.exports = function(pullreq, req) {
-  // console.log(["PR", pullreq])
+module.exports = function(pullreq, callback) {
+  // make sure not closed or non-workshop PR
   if (pullreq.action && pullreq.action === "closed") return
+  if (!pullreq.head.ref.match(pullreq.user.login)) return
+  // weird case
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   
   stats.prNum = pullreq.number
-  
-  // make sure it's not a non-workshop, normal PR
-  if (!pullreq.head.ref.match(pullreq.user.login)) return
 
   var options = {
       url: baseURL +'pulls/' + stats.prNum,
       json: true,
-      headers: {
-          'User-Agent': 'request',
-          'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-      }
+      headers: { 'User-Agent': 'request',
+                 'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+        }
   }
   
   function getTime(error, response, body) {
-    if (error) console.log(error)
+    if (error) return callback(error, "Error in request on PR via number")
     
-      if (!error && response.statusCode == 200) {
-        var info = body
-        stats.time = info.created_at
-        stats.username = info.user.login
-        getFile(stats.prNum)
-      }
+    if (!error && response.statusCode == 200) {
+      var info = body
+      stats.time = info.created_at
+      stats.username = info.user.login
+      getFile(stats.prNum)
+    }
   }
   
   request(options, getTime)
@@ -51,20 +48,18 @@ module.exports = function(pullreq, req) {
     }
     
     request(options, function returnFiles(error, response, body) {
-      // add callback
-      if (error) console.log(error)
-      // console.log(typeof body)
-        if (!error && response.statusCode == 200) {
-          var prInfo = body[0]
-          verifyFilename(prInfo)
-        }
+      if (error) return callback(error, "Error getting file from PR")
+      
+      if (!error && response.statusCode == 200) {
+        var prInfo = body[0]
+        verifyFilename(prInfo)
+      }
     })
   }
 }
 
 function verifyFilename(prInfo) {
   var filename = prInfo.filename
-  console.log(["filename from PR", filename])
   if (filename.match('contributors/add-' + stats.username + '.txt')) {
     console.log([ new Date(), "Filename: MATCH" + stats.username])
     verifyContent(prInfo)
@@ -81,7 +76,7 @@ function verifyContent(prInfo) {
   var patch = patchArray.pop()
   // generate the expected content
   asciify(stats.username, {font:'isometric2'}, function(err, res){ 
-    if (err) console.log(err)
+    if (err) callback(err, "Error generating ascii art to test against")
     if (res.match(patch)) {
       stats.userArt = res
       console.log([new Date(), " Content: MATCH" + stats.username])
@@ -95,7 +90,7 @@ function verifyContent(prInfo) {
 }
 
 function writeComment(message, prNum) {
-  console.log([new Date(), "uh oh, writing comment for ", stats.username])
+  console.log([new Date(), "uh oh, writing comment for " + stats.username])
    var options = {
       url: baseURL + 'issues/' + prNum + '/comments',
       headers: {
@@ -105,8 +100,8 @@ function writeComment(message, prNum) {
       json: {'body': message}
   }
   
-  request.post(options, function done(error, response, body) {
-    if (error) console.log(error)
+  request.post(options, function doneWriteComment(error, response, body) {
+    if (error) return callback(error, "Error writing comment on PR")
   })
 }
 
@@ -122,12 +117,12 @@ function mergePR(prNum) {
      json: {'commit_message': message}
  }
  
- request.put(options, function done(error, response, body) {
-   if (error) console.log(error)
+ request.put(options, function doneMerge(error, response, body) {
+   if (error) return callback(error, "Error merging PR")
    if (!error && response.statusCode == 200) {
        console.log([new Date(), "MERGED" + stats.username + "pull request" ])
-       // add contributor to file and rebuild page
-       addContributor(stats, buildPage)
+       // add contributor to file and then rebuild page
+       addContributor(stats, callback)
    }
  })
 }

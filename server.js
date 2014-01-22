@@ -1,5 +1,5 @@
 var bot = require("./index.js")
-var touch =  require("./touch.js")
+var touch =  require("./email.js")
 var asciify = require('asciify')
 
 bot(touch).listen(process.env.PORT || 5563)

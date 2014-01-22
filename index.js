@@ -19,6 +19,11 @@ module.exports = function(withEmail) {
       return handleEmail(req, res)
     }
     
+    // when a pr is made to patchwork repo  
+    if (req.url.match('/orderin')) {
+      return getPR(req, res)
+    }
+    
     // when git-it verifies user made a pr
     if (req.url.match('/pr')) {
       var queryURL = url.parse(req.url, true)
@@ -26,11 +31,6 @@ module.exports = function(withEmail) {
       return prStatus(username, function(err, pr) {
         checkPR(res, err, pr)
       })
-    }
-    
-    // when a pr is made to patchwork repo  
-    if (req.url.match('/orderin')) {
-      return getPR(req, res)
     }
 
     // when git-it verifies user added RR as collab
@@ -54,19 +54,24 @@ module.exports = function(withEmail) {
   function handleEmail(req, res) {
     req.pipe(concat(function(buff) {
       var emailObj = JSON.parse(buff)
+      
       if (onHook) withEmail(emailObj, function(err, message) {
         if (err) console.log([new Date(), message, err])
       })
     }))
+    
     res.statusCode = 200
     res.end("Thank you.")
   }
   
   function getPR(req, res) {
     req.pipe(concat(function(buff) {
-      // console.log(["buffstring", JSON.parse(buff.toString())])
       var pullreq = JSON.parse(buff)
-      mergePr(pullreq, req)
+      
+      mergePr(pullreq, function(err, message) {
+        if (err) console.log([new Date(), message, err])
+      })
+      
       res.statusCode = 200
       res.setHeader('content-type', 'application/json')
       res.end()
