@@ -61,7 +61,7 @@ module.exports = function(onHook) {
   
   function getPR(req, res) {
     req.pipe(concat(function(buff) {
-      console.log(["buffstring", buff.toString()])
+      console.log(["buffstring", JSON.parse(buff.toString())])
       var pullreq = JSON.parse(buff)
       mergePr(pullreq, req)
       res.statusCode = 200
