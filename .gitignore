@@ -1,11 +1,2 @@
 node_modules
-data.json
-email.json
-issuesAPI.json
-repo.json
-pullreq.json
-prjson.json
-reopenedpr.json
-closedpr.json
-correctpr.json
-jlordpr.json
+*.json
