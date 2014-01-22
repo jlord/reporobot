@@ -1,17 +1,14 @@
 var Github = require('github-api')
 var asciify = require('asciify')
 
-module.exports = function(object, request) {
+module.exports = function(object, callback) {
   // if it's not an email, return
   if (!object.headers) return
 
   getDetails(object)
 
   function getDetails(object) {
-    // console.log(object)
-    // console.log(["email", object.plain])
-    // need callback
-    // add if not from github, don't do anything
+    
     var subject = object.headers.Subject
     console.log([new Date(), "Recieved email:", subject])
     
@@ -27,13 +24,15 @@ module.exports = function(object, request) {
     details.repoURI = "https://www.github.com/" 
                     + details.username + "/" 
                     + details.repo + ".git"
-    console.log(details.username, "added you as a contributor.")
+    
+    console.log([new Date(), details.username + "added Reporobot as a contributor."])
+    
     asciiArt(details)
   }
   
   function asciiArt(details) {
     asciify(details.username, {font:'isometric2'}, function(err, res){ 
-      if (err) console.log("ascii error", err)
+      if (err) callback(err, "Ascii art error")
       var artwork = res
       writeRepo(artwork, details)
     })
@@ -55,7 +54,7 @@ module.exports = function(object, request) {
     // contain a username
       
     repo.write(branchName, filePath, artwork, 'drew a picture', function(err) {
-      if (err) console.log("Error writing to repo", err)
+      if (err) callback(err, "Error collabing on forked repo."
       console.log([new Date(), "Commited to a repo"])
     }) 
   }

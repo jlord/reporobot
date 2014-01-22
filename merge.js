@@ -16,7 +16,7 @@ module.exports = function(pullreq, req) {
   stats.prNum = pullreq.number
   
   // make sure it's not a non-workshop, normal PR
-  if (pullreq.base.ref.match(pullreq.user.login)) return
+  if (!pullreq.head.ref.match(pullreq.user.login)) return
 
   var options = {
       url: baseURL +'pulls/' + stats.prNum,
@@ -53,7 +53,7 @@ module.exports = function(pullreq, req) {
     request(options, function returnFiles(error, response, body) {
       // add callback
       if (error) console.log(error)
-      console.log(typeof body)
+      // console.log(typeof body)
         if (!error && response.statusCode == 200) {
           var prInfo = body[0]
           verifyFilename(prInfo)
@@ -66,7 +66,7 @@ function verifyFilename(prInfo) {
   var filename = prInfo.filename
   console.log(["filename from PR", filename])
   if (filename.match('contributors/add-' + stats.username + '.txt')) {
-    console.log([ new Date(), stats.username, " Filename: MATCH"])
+    console.log([ new Date(), "Filename: MATCH" + stats.username])
     verifyContent(prInfo)
   }
   else {
@@ -84,7 +84,7 @@ function verifyContent(prInfo) {
     if (err) console.log(err)
     if (res.match(patch)) {
       stats.userArt = res
-      console.log([new Date(), stats.username, " Content: MATCH"])
+      console.log([new Date(), " Content: MATCH" + stats.username])
       mergePR(stats.prNum)
     }
     else {
@@ -125,7 +125,7 @@ function mergePR(prNum) {
  request.put(options, function done(error, response, body) {
    if (error) console.log(error)
    if (!error && response.statusCode == 200) {
-       console.log([new Date(), "MERGED", stats.username, "pull request" ])
+       console.log([new Date(), "MERGED" + stats.username + "pull request" ])
        // add contributor to file and rebuild page
        addContributor(stats, buildPage)
    }

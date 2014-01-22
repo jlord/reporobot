@@ -7,7 +7,8 @@ var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
 var mergePr = require('./merge.js')
 
-module.exports = function(onHook) {
+module.exports = function(withEmail) {
+  
   var server = http.createServer(handler)
 
   function handler(req, res) {
@@ -15,7 +16,7 @@ module.exports = function(onHook) {
     
     // when RR gets a push from email on collab
     if (req.url === '/push') {
-      return handleHook(req, res)
+      return handleEmail(req, res)
     }
     
     // when git-it verifies user made a pr
@@ -50,10 +51,12 @@ module.exports = function(onHook) {
   }, true, 2))
 }
 
-  function handleHook(req, res) {
+  function handleEmail(req, res) {
     req.pipe(concat(function(buff) {
-      var hookObj = JSON.parse(buff)
-      if (onHook) onHook(hookObj, req)
+      var emailObj = JSON.parse(buff)
+      if (onHook) withEmail(emailObj, function(err, message) {
+        if (err) console.log([new Date(), message, err])
+      })
     }))
     res.statusCode = 200
     res.end("Thank you.")
@@ -61,7 +64,7 @@ module.exports = function(onHook) {
   
   function getPR(req, res) {
     req.pipe(concat(function(buff) {
-      console.log(["buffstring", JSON.parse(buff.toString())])
+      // console.log(["buffstring", JSON.parse(buff.toString())])
       var pullreq = JSON.parse(buff)
       mergePr(pullreq, req)
       res.statusCode = 200
