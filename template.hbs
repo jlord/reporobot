@@ -6,19 +6,18 @@
     <meta name="description" content="patchwork, git, github, open source">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Patchwork: Git, GitHub and the Pursuit of Open Source</title>
+    <link rel="shortcut icon" href="https://raw2.github.com/jlord/git-it/master/favicon.png"/>
     <link href='style.css' rel='stylesheet'>
   </head>
   <body>
    <div class="container">
-    <header>
-      <h3><strong>GitHub</strong> Patchwork</h3>
-      <ul class="nav"><li><a href="#about">About</a></li></ul>
-    </header>
     <div id="welcome-name">
       <h1>Congrats, you did it!</h1>
-      <pre><code>{{#featured}}{{userArt}}{{/featured}}</code></pre>
+      <div id="user-name" class="swing animated" style="display: block;">
+        <pre><code>{{#featured}}{{username}}{{/featured}}</code></pre>
+      </div>
       <h3>You now know alternate meanings for <strong>fork</strong> and <strong>branch</strong>. You've <strong>collaborated</strong> someone whose location you're unaware of. You, friend, <strong>pull request</strong> with the best of 'em.</h3>
-  
+    
       <h3><strong>Your pulling and pushing compatriots (give or take 4 million):</strong></h3>
     </div>
     <div id="compatriots">
@@ -30,16 +29,8 @@
     </div>
     <div id="about">
       <h3><strong>About</strong></h3>
-      <p>Everyone listed on this page has completed <a href="#">Git-it</a>, a terminal based app for learning Git and GitHub. </p>
+      <p>Everyone listed on this page has completed <strong><a href="http://www.github.com/jlord/git-it" target="_blank">Git-it</a></strong>, an open source terminal app for learning Git and GitHub.</p> <p>The <strong><a href="http://www.github.com/jlord/git-it" target="_blank">Git-it</a></strong> challenges are self directed so one can do it on their own, but it also makes for a great <strong><a href="http://nodeschool.io/" target="_blank">nodeschool.io</a></strong> type of workshop. Find out more about hosting and attending workshops <strong><a href="">here</a><strong>.</p> 
     </div>
    </div>
-   <script>
-     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-     function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-     e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-     e.src='//www.google-analytics.com/analytics.js';
-     r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-     ga('create','UA-XXXXX-X');ga('send','pageview');
-   </script>
   </body>
 </html>
