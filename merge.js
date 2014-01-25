@@ -11,6 +11,8 @@ module.exports = function(pullreq, callback) {
   // make sure not closed or non-workshop PR
   if (pullreq.action && pullreq.action === "closed") return
   if (pullreq.pull_request) pullreq = pullreq.pull_request
+  // if branch name doesn't include username, it may be
+  // a non git-it related, normal PR
   if (!pullreq.head.ref.match(pullreq.user.login)) return
   
   stats.prNum = pullreq.number
@@ -60,7 +62,7 @@ module.exports = function(pullreq, callback) {
 function verifyFilename(prInfo) {
   var filename = prInfo.filename
   if (filename.match('contributors/add-' + stats.username + '.txt')) {
-    console.log([ new Date(), "Filename: MATCH" + stats.username])
+    console.log([ new Date(), "Filename: MATCH " + stats.username])
     verifyContent(prInfo)
   }
   else {
@@ -78,7 +80,7 @@ function verifyContent(prInfo) {
     if (err) callback(err, "Error generating ascii art to test against")
     if (res.match(patch)) {
       stats.userArt = res
-      console.log([new Date(), " Content: MATCH" + stats.username])
+      console.log([new Date(), " Content: MATCH " + stats.username])
       mergePR(stats.prNum)
     }
     else {
@@ -89,7 +91,7 @@ function verifyContent(prInfo) {
 }
 
 function writeComment(message, prNum) {
-  console.log([new Date(), "uh oh, writing comment for " + stats.username])
+  console.log([new Date(), "Uh oh, writing comment for " + stats.username])
    var options = {
       url: baseURL + 'issues/' + prNum + '/comments',
       headers: {
@@ -118,7 +120,7 @@ function mergePR(prNum) {
  request.put(options, function doneMerge(error, response, body) {
    if (error) return callback(error, "Error merging PR")
    if (!error && response.statusCode == 200) {
-       console.log([new Date(), "MERGED" + stats.username + "pull request" ])
+       console.log([new Date(), "MERGED " + stats.username + " pull request" ])
        // add contributor to file and then rebuild page
        addContributor(stats, callback)
    }

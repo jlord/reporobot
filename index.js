@@ -12,7 +12,7 @@ module.exports = function(withEmail) {
   var server = http.createServer(handler)
 
   function handler(req, res) {
-    console.log(req.method, req.url)
+    console.log([new Date(), req.method, req.url])
     
     // when RR gets a push from email on collab
     if (req.url === '/push') {
