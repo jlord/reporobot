@@ -10,7 +10,7 @@ module.exports = function(callback) {
     var everyone = JSON.parse(data)
     var newest = everyone[everyone.length - 1]
     
-    var stats = {featured: newest, everyone: everyone.reverse()}
+    var stats = {featured: newest, everyone: everyone}
     getTemplate(stats)
   })
 
@@ -37,7 +37,7 @@ module.exports = function(callback) {
     
     repo.write('gh-pages', 'index.html', HTML, commitMes, function(err) {
       if (err) return callback(err, "Error writing new index to Patchwork.")
-      console.log([new Date(), "REBUILT INDEX with" + username])
+      console.log([new Date(), "Rebuilt index with" + username])
       
       repo.write('gh-pages', 'contributors.json', JSON.stringify(stats, null, " ") , "Added @" + username, function(err) {
         if (err) return callback(err, "Error writing contribs backup to Patchwork.")
