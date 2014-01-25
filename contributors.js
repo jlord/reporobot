@@ -1,6 +1,6 @@
 var fs = require('fs')
 
-var file = '~/contributors.json'
+var file = '../contributors.json'
 var buildPage = require('./buildpage.js')
 
 module.exports = function(stats, callback) {
