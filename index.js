@@ -7,7 +7,7 @@ var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
 var mergePr = require('./merge.js')
 
-module.exports = function(withEmail) {
+module.exports = function(onHook) {
   
   var server = http.createServer(handler)
 
