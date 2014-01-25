@@ -105,7 +105,6 @@ function writeComment(message, prNum) {
 }
 
 function mergePR(prNum) {
-  addContributor(stats, buildPage)
   var message = "Merging PR from @" + stats.username
   var options = {
      url: baseURL + 'pulls/' + prNum + '/merge',

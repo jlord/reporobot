@@ -1,13 +1,20 @@
 {
   "name": "reporobot",
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "a bot that interacts with git-it",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "author": "",
+  "author": "Jessica Lord",
   "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jlord/reporobot.git"
+  },
+  "bugs": {
+      "url": "https://github.com/jlord/reporobot/issues"
+    },
   "dependencies": {
     "concat-stream": "~1.4.0",
     "github-api": "michael/github",
