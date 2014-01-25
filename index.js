@@ -55,7 +55,7 @@ module.exports = function(onHook) {
     req.pipe(concat(function(buff) {
       var emailObj = JSON.parse(buff)
       
-      if (onHook) withEmail(emailObj, function(err, message) {
+      if (onHook) onHook(emailObj, function(err, message) {
         if (err) console.log([new Date(), message, err])
       })
     }))
