@@ -10,9 +10,8 @@ var stats = {}
 module.exports = function(pullreq, callback) {
   // make sure not closed or non-workshop PR
   if (pullreq.action && pullreq.action === "closed") return
-  if (!pullreq.head.ref.match(pullreq.user.login)) return
-  // weird case
   if (pullreq.pull_request) pullreq = pullreq.pull_request
+  if (!pullreq.head.ref.match(pullreq.user.login)) return
   
   stats.prNum = pullreq.number
 
