@@ -4,7 +4,7 @@ var Github = require('github-api')
 
 module.exports = function(callback) {
   
-  fs.readFile('contributors.json', function (err, data) {
+  fs.readFile('~/contributors.json', function (err, data) {
     if (err) return callback(err, "Error reading contribs file for building page.")
     
     var everyone = JSON.parse(data)
