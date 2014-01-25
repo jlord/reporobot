@@ -9,11 +9,13 @@ var stats = {}
 
 module.exports = function(pullreq, callback) {
   // make sure not closed or non-workshop PR
-  if (pullreq.action && pullreq.action === "closed") return
+  if (pullreq.action && pullreq.action === "closed") 
+    return console.log([new Date(), "Closed pull request."])
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
-  if (!pullreq.head.ref.match(pullreq.user.login)) return
+  if (!pullreq.head.ref.match(pullreq.user.login)) 
+    return console.log([new Date(), "Id'd via branch to not be a Git-it submission"])
   
   stats.prNum = pullreq.number
 
