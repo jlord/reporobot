@@ -11,7 +11,6 @@ module.exports = function(pullreq, callback) {
   // make sure not closed or non-workshop PR
   if (pullreq.action && pullreq.action === "closed") 
     return console.log([new Date(), "Closed pull request."])
-  console.log("Action ", pullreq.action, "on PR # ", pullreq.number )
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
@@ -29,7 +28,6 @@ module.exports = function(pullreq, callback) {
   }
   
   function getTime(error, response, body) {
-    console.log("Got Time", body)
     if (error) return callback(error, "Error in request on PR via number")
     
     if (!error && response.statusCode == 200) {
@@ -39,7 +37,6 @@ module.exports = function(pullreq, callback) {
       getFile(stats.prNum)
     } else callback(body)
   }
-  console.log("Getting time", options)
   request(options, getTime)
   
   function getFile(prNum) {
@@ -58,7 +55,6 @@ module.exports = function(pullreq, callback) {
       if (error || body.length === 0) return callback(error, "Error finding file in PR")
       
       if (!error && response.statusCode == 200) {
-        console.log("Pr Body", body)
         var prInfo = body[0]
         verifyFilename(prInfo)
       }

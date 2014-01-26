@@ -14,7 +14,7 @@ module.exports = function(callback) {
     getTemplate(stats, everyone)
   })
 
-  function getTemplate(stats,everyone) {
+  function getTemplate(stats, everyone) {
     fs.readFile('template.hbs', function (err, data) {
       if (err) return callback(err, "Error reading template file.")
       
