@@ -36,7 +36,7 @@ module.exports = function(pullreq, callback) {
       // RR is PRing on behalf of:
       stats.username = info.head.user.login
       console.log([new Date(), "Reporobot Pull Request on behalf of " + stats.username])
-      getFile(stats.prNum)
+      return getFile(stats.prNum)
     }
     
     if (!error && response.statusCode == 200 && pullreq.user.login != "reporobot") {
