@@ -16,7 +16,7 @@ module.exports = function(pullreq, callback) {
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
   if (!pullreq.head.ref.match(pullreq.user.login)) 
-    return console.log([new Date(), "Id\'d via branch to not be a Git-it submission"])
+    return callback(new Error("Id\'d via branch to not be a Git-it submission"))
   
   stats.prNum = pullreq.number
 
@@ -29,6 +29,7 @@ module.exports = function(pullreq, callback) {
   }
   
   function getTime(error, response, body) {
+    console.log("Got Time", body)
     if (error) return callback(error, "Error in request on PR via number")
     
     if (!error && response.statusCode == 200) {
@@ -38,7 +39,7 @@ module.exports = function(pullreq, callback) {
       getFile(stats.prNum)
     }
   }
-  
+  console.log("Getting time")
   request(options, getTime)
   
   function getFile(prNum) {
