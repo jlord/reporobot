@@ -25,7 +25,7 @@ module.exports = function(callback) {
     })
   }
 
-  function writeRepo(HTML, stats) {
+  function writeRepo(HTML, stats, everyone) {
     var github = new Github({
       auth: "oauth",
       token: process.env['REPOROBOT_TOKEN']
