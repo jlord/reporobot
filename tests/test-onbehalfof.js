@@ -71,10 +71,12 @@ function createPR() {
     title: "Testing",
     body: "Testing PR chain of events",
     base: "gh-pages",
-    head: "add-goldenrod"
+    head: "goldenrod" + ":" + "add-goldenrod"
   }
 
-  repo.createPullRequest(pull, function(err, pullRequest) {
+var pullReqRepo = github.getRepo('jlord', 'patchwork')
+
+  pullReqRepo.createPullRequest(pull, function(err, pullRequest) {
     if (err) return console.log(err, "error creating PR")
     console.log("Created Test PR")
   })
