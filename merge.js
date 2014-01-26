@@ -42,6 +42,7 @@ module.exports = function(pullreq, callback) {
   request(options, getTime)
   
   function getFile(prNum) {
+    
     var options = {
         url: baseURL + 'pulls/' + prNum + '/files',
         json: true,
@@ -52,9 +53,11 @@ module.exports = function(pullreq, callback) {
     }
     
     request(options, function returnFiles(error, response, body) {
+      console.log("Getting PR ", prNum, " files")
       if (error || body.length === 0) return callback(error, "Error finding file in PR")
       
       if (!error && response.statusCode == 200) {
+        console.log("Pr Body", body)
         var prInfo = body[0]
         verifyFilename(prInfo)
       }
