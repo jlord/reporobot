@@ -37,9 +37,9 @@ module.exports = function(pullreq, callback) {
       stats.time = info.created_at
       stats.username = info.user.login
       getFile(stats.prNum)
-    }
+    } else callback(body)
   }
-  console.log("Getting time")
+  console.log("Getting time", options)
   request(options, getTime)
   
   function getFile(prNum) {
