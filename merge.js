@@ -14,8 +14,8 @@ module.exports = function(pullreq, callback) {
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
-  if (!pullreq.head.ref.match(pullreq.user.login)) 
-    return callback(new Error("Id\'d via branch to not be a Git-it submission"))
+  if (!pullreq.head.ref.match(pullreq.user.login) && pullreq.user.login != "reporobot") 
+    return callback(new Error("Id\'d via branch to not be a Git-it submission or test"))
   
   stats.prNum = pullreq.number
 
@@ -29,8 +29,16 @@ module.exports = function(pullreq, callback) {
   
   function getTime(error, response, body) {
     if (error) return callback(error, "Error in request on PR via number")
+    // if a test pr is coming in
+    if (!error && reposnse.statusCode == 200 && pullreq.user.login === "reporobot") {
+      var info = body
+      stats.time = info.created_at
+      // RR is PRing on behalf of:
+      stats.username = info.head.user.login
+      getFile(stats.prNum)
+    }
     
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode == 200 && pullreq.user.login != "reporobot") {
       var info = body
       stats.time = info.created_at
       stats.username = info.user.login
