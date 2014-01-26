@@ -67,7 +67,7 @@ module.exports = function(onHook) {
   function getPR(req, res) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
-      
+      console.log("Sending to mergePr")
       mergePr(pullreq, function(err, message) {
         if (err) console.log([new Date(), message, err])
       })

@@ -15,26 +15,35 @@ var github = new Github({
 // get repository
 var repo = github.getRepo('jlord', 'patchwork')
 
-// make sure branch doesn't already exist, if it does, delete it
-repo.listBranches(function(err, branches) {
-  if (err) return console.log(err, "error reading branches")
-  branches.forEach(function (branch) {
-    if (branch.match("add-reporobot")) return deleteBranch()
-  })
-  createBranch()
+// make sure file doesn't already exist, if it does, delete it
+repo.delete('gh-pages', 'contributors/add-reporobot.txt', function(err) {
+  checkBranch()
 })
+
+// make sure branch doesn't already exist, if it does, delete it
+function checkBranch() {
+  repo.listBranches(function(err, branches) {
+    if (err) return console.log(err, "error reading branches")
+    for (var i = 0; i < branches.length; i++) {
+      if (branches[i].match("add-reporobot")) return deleteBranch()
+    }
+    createBranch()
+  })
+}
 
 // delete branch
 function deleteBranch() {
   repo.deleteRef('heads/add-reporobot', function(err) {
     if (err) return console.log(err, "error deleting ref")
     createBranch()
+    return console.log('Deleted branch')
   })
 }
 
 // create branch
 function createBranch() {
   repo.branch('gh-pages', 'add-reporobot', function(err) {
+    console.log("Create branch")
     if (err) return console.log(err, "error creating branch")
     createArt()
   })
