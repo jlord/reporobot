@@ -14,7 +14,7 @@
     <div id="welcome-name">
       <h1>Congrats, you did it!</h1>
       <div id="user-name" class="swing animated" style="display: block;">
-<pre><code>{{#featured}}{{username}}{{/featured}}</code></pre>
+<pre><code>{{#featured}}{{userArt}}{{/featured}}</code></pre>
       </div>
     </div>
   </div>
@@ -24,7 +24,7 @@
   
       <div id="compatriots">
         <ul class="compatriots-list">
-          {{#everyone}}<li><span class="userdetail"><a href="#">@{{username}}</a></span> <span class="userdate">{{time}}</span></li>{{/everyone}}
+          {{#everyone}}<li><span class="userdetail"><a href="http://www.gitub.com/{{username}}" target="_blank">@{{username}}</a></span> <span class="userdate">{{time}}</span></li>{{/everyone}}
         </ul>
       </div>
       
