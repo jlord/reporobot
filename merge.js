@@ -10,7 +10,7 @@ var stats = {}
 module.exports = function(pullreq, callback) {
   // make sure not closed or non-workshop PR
   if (pullreq.action && pullreq.action === "closed") 
-    return console.log([new Date(), "Closed pull request."])
+    return console.log([new Date(), "SKIPPING: Closed pull request."])
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
@@ -51,7 +51,6 @@ module.exports = function(pullreq, callback) {
     }
     
     request(options, function returnFiles(error, response, body) {
-      console.log("Getting PR ", prNum, " files")
       if (error || body.length === 0) return callback(error, "Error finding file in PR")
       
       if (!error && response.statusCode == 200) {
