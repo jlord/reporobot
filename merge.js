@@ -30,11 +30,12 @@ module.exports = function(pullreq, callback) {
   function getTime(error, response, body) {
     if (error) return callback(error, "Error in request on PR via number")
     // if a test pr is coming in
-    if (!error && reposnse.statusCode == 200 && pullreq.user.login === "reporobot") {
+    if (!error && response.statusCode == 200 && pullreq.user.login === "reporobot") {
       var info = body
       stats.time = info.created_at
       // RR is PRing on behalf of:
       stats.username = info.head.user.login
+      console.log([new Date(), "Reporobot Pull Request on behalf of " + stats.username])
       getFile(stats.prNum)
     }
     
