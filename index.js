@@ -12,7 +12,6 @@ var mergePr = require('./merge.js')
 var q = async.queue(function (pullreq, callback) {
   console.log("QUEUE", pullreq.number)
   mergePr(pullreq, function(err, message) {
-    console.log("merge pr callback")
     if (err) console.log([new Date(), message, err])
     setTimeout(function() { callback(err) }, 3000)
   })

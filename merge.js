@@ -10,7 +10,7 @@ var stats = {}
 module.exports = function(pullreq, callback) {
   // make sure not closed or non-workshop PR
   if (pullreq.action && pullreq.action === "closed") 
-    return console.log([new Date(), "SKIPPING: Closed pull request."])
+    return callback(null, "SKIPPING: Closed pull request.")
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
@@ -128,7 +128,6 @@ module.exports = function(pullreq, callback) {
    }
  
    request.put(options, function doneMerge(error, response, body) {
-       console.log("PR MERGE RES", response.body)
      if (error) return callback(error, "Error merging PR")
      if (!error && response.statusCode == 200) {
          console.log([new Date(), "MERGED " + stats.username + " pull request" ])
