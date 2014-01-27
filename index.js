@@ -22,7 +22,8 @@ module.exports = function(onHook) {
     
     // when a pr is made to patchwork repo  
     if (req.url.match('/orderin')) {
-      return getPR(req, res)
+      var q = async.queue(mergePr, 1)
+      return getPR(req, res, q)
     }
     
     // when git-it verifies user made a pr
@@ -65,12 +66,12 @@ module.exports = function(onHook) {
     res.end("Thank you.")
   }
   
-  function getPR(req, res) {
+  function getPR(req, res, q) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
       
       
-      var q = async.queue(mergePr, 1)
+      
       
       q.push(pullreq, function(err) {
           if (err) console.log([new Date(), message, err])
