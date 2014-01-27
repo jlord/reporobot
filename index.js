@@ -79,23 +79,18 @@ module.exports = function(onHook) {
   function getPR(req, res) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
-               
-      q.push(pullreq, function(err, message) {
+      
+      // make sure not closed or non-workshop PR
+      if (pullreq.action && pullreq.action === "closed") {
+        console.log("SKIPPING: CLOSED PULL REQUEST")
+      } 
+      else {
+        q.push(pullreq, function(err, message) {
           if (err) console.log([new Date(), message, err])
           console.log([new Date(), message, "Finished PR " + pullreq.number])
-      })
-      
-      
-      // q.push(pullreq, function finishedPR(err) {
-     //    if (err) console.log([new Date(), message, err])
-     //    console.log([new Date(), "Finished one PR"])
-     //  })
-      
-      
-      // mergePr(pullreq, function(err, message) {
-     //    if (err) console.log([new Date(), message, err])
-     //  })
-      
+        })
+      }
+               
       res.statusCode = 200
       res.setHeader('content-type', 'application/json')
       res.end()

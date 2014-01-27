@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var pr = require(__dirname + '/testonbehalfof.js')
-var accounts = ['jllord', 'goldenrod']
+var accounts = ['goldenrod']
 var sourceAccount = 'jlord'
 
 accounts.forEach(function (account) {

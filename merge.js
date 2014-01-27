@@ -8,9 +8,6 @@ var baseURL = 'https://api.github.com/repos/jlord/patchwork/'
 var stats = {}
 
 module.exports = function(pullreq, callback) {
-  // make sure not closed or non-workshop PR
-  if (pullreq.action && pullreq.action === "closed") 
-    return callback(null, "SKIPPING: Closed pull request.")
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
