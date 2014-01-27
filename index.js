@@ -75,7 +75,7 @@ module.exports = function(onHook) {
         console.log([new Date(), "Finished one PR"])
       }), 1)
       
-      q.saturated(function () { console.log("Queuing up")})
+      q.saturated = function () { console.log("Queuing up")}
       
       // q.push(pullreq, function finishedPR(err) {
      //    if (err) console.log([new Date(), message, err])
