@@ -9,9 +9,15 @@ var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
 var mergePr = require('./merge.js')
 
-var q = async.queue(mergePr(pullreq, function(err, message) {
-        if (err) console.log([new Date(), message, err])
-      }), 1)
+var q = async.queue(function (pullreq, callback) {
+  console.log("QUEUE", pullreq)
+  mergePr(pullreq, function(err, message) {
+    if (err) console.log([new Date(), message, err])
+    callback(err)
+  })
+}, 1)
+
+q.saturated = function() { console.log("Queuing up")}
 
 module.exports = function(onHook) {
   
@@ -79,7 +85,6 @@ module.exports = function(onHook) {
           console.log([new Date(), "Finished this PR"])
       })
       
-      q.saturated = function() { console.log("Queuing up")}
       
       // q.push(pullreq, function finishedPR(err) {
      //    if (err) console.log([new Date(), message, err])
