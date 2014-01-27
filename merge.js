@@ -134,7 +134,6 @@ module.exports = function(pullreq, callback) {
          console.log([new Date(), "MERGED " + stats.username + " pull request" ])
          // add contributor to file and then rebuild page
          addContributor(stats, callback)
-         return callback(null, "")
      }
    })
   }

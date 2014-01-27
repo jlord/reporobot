@@ -3,6 +3,7 @@ var http = require('http')
 var fs = require('fs')
 var url = require('url')
 var async = require('async')
+var q = async.queue(mergePr, 1)
 
 var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
@@ -22,8 +23,7 @@ module.exports = function(onHook) {
     
     // when a pr is made to patchwork repo  
     if (req.url.match('/orderin')) {
-      var q = async.queue(mergePr, 1)
-      return getPR(req, res, q)
+      return getPR(req, res)
     }
     
     // when git-it verifies user made a pr
@@ -66,7 +66,7 @@ module.exports = function(onHook) {
     res.end("Thank you.")
   }
   
-  function getPR(req, res, q) {
+  function getPR(req, res) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
       
