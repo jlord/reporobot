@@ -9,7 +9,9 @@ var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
 var mergePr = require('./merge.js')
 
-var q = async.queue(mergePr, 1)
+var q = async.queue(mergePr(pullreq, function(err, message) {
+        if (err) console.log([new Date(), message, err])
+      }), 1)
 
 module.exports = function(onHook) {
   
@@ -71,13 +73,10 @@ module.exports = function(onHook) {
   function getPR(req, res) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
-      
-      
-      
-      
+               
       q.push(pullreq, function(err) {
           if (err) console.log([new Date(), message, err])
-          console.log([new Date(), "Finished this push"])
+          console.log([new Date(), "Finished this PR"])
       })
       
       q.saturated = function() { console.log("Queuing up")}
@@ -89,8 +88,8 @@ module.exports = function(onHook) {
       
       
       // mergePr(pullreq, function(err, message) {
-      //   if (err) console.log([new Date(), message, err])
-      // })
+     //    if (err) console.log([new Date(), message, err])
+     //  })
       
       res.statusCode = 200
       res.setHeader('content-type', 'application/json')
