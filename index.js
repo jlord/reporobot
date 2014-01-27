@@ -70,7 +70,7 @@ module.exports = function(onHook) {
       var pullreq = JSON.parse(buff)
       
       
-      var q = async.queue(mergePr, 0)
+      var q = async.queue(mergePr, 1)
       
       q.push(pullreq, function(err) {
           if (err) console.log([new Date(), message, err])
