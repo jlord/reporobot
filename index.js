@@ -76,7 +76,7 @@ module.exports = function(onHook) {
       }), 1)
       
       q.push(pullreq, function (err) {
-          if (err) console.log([new Date(), message, err]))
+          if (err) console.log([new Date(), message, err])
           console.log([new Date(), "Finished this push"])
       })
       
