@@ -72,12 +72,12 @@ module.exports = function(onHook) {
       
       var q = async.queue(mergePr, 1)
       
-      q.push(pullreq, function (err) {
+      q.push(pullreq, function(err) {
           if (err) console.log([new Date(), message, err])
           console.log([new Date(), "Finished this push"])
       })
       
-      q.saturated = function () { console.log("Queuing up")}
+      q.saturated = function() { console.log("Queuing up")}
       
       // q.push(pullreq, function finishedPR(err) {
      //    if (err) console.log([new Date(), message, err])

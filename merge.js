@@ -69,27 +69,6 @@ module.exports = function(pullreq, callback) {
     })
   }
   
-  function mergePR(prNum) {
-    var message = "Merging PR from @" + stats.username
-    var options = {
-       url: baseURL + 'pulls/' + prNum + '/merge',
-       headers: {
-           'User-Agent': 'request',
-           'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-       },
-       json: {'commit_message': message}
-   }
- 
-   request.put(options, function doneMerge(error, response, body) {
-     if (error) return callback(error, "Error merging PR")
-     if (!error && response.statusCode == 200) {
-         console.log([new Date(), "MERGED " + stats.username + " pull request" ])
-         // add contributor to file and then rebuild page
-         addContributor(stats, callback)
-     }
-   })
-  }
-  
   function verifyFilename(prInfo) {
     var filename = prInfo.filename
     if (filename.match('contributors/add-' + stats.username + '.txt')) {
@@ -135,6 +114,28 @@ module.exports = function(pullreq, callback) {
     request.post(options, function doneWriteComment(error, response, body) {
       if (error) return callback(error, "Error writing comment on PR")
     })
+  }
+  
+  function mergePR(prNum) {
+    var message = "Merging PR from @" + stats.username
+    var options = {
+       url: baseURL + 'pulls/' + prNum + '/merge',
+       headers: {
+           'User-Agent': 'request',
+           'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+       },
+       json: {'commit_message': message}
+   }
+ 
+   request.put(options, function doneMerge(error, response, body) {
+     console.log("PR MERGE BODY", body)
+     if (error) return callback(error, "Error merging PR")
+     if (!error && response.statusCode == 200) {
+         console.log([new Date(), "MERGED " + stats.username + " pull request" ])
+         // add contributor to file and then rebuild page
+         addContributor(stats, callback)
+     }
+   })
   }
   
 }
