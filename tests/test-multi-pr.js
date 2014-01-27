@@ -1,2 +1,7 @@
-var pr = require('./test-pr.js')
-var accounts = ['jllord', 'reporobot', 'goldenrod']
+var pr = require('./test-onbehalfof.js')
+var accounts = ['jllord', 'goldenrod']
+var sourceAccount = 'jlord'
+
+accounts.forEach(function (account) {
+  pr(sourceAccount, account)
+})
