@@ -8,8 +8,7 @@ module.exports = function(sourceAccount, viaAccount) {
       token: process.env['REPOROBOT_TOKEN']
   })
   
-  cleanOrignal()
-  // deleteViaBranch()
+  deleteViaBranch()
 
   // get repository
   function cleanOrignal() {
@@ -95,8 +94,9 @@ module.exports = function(sourceAccount, viaAccount) {
     var repo = github.getRepo(viaAccount, 'patchwork') 
     
     repo.deleteRef('heads/add-' + viaAccount, function(err) {
-      if (err) return console.log(err, "error deleting ref on via")
-      return console.log('Deleted branch on ' + viaAccount)
+      if (err) console.log("error deleting ref on via")
+      console.log('Deleted branch on ' + viaAccount)
+      cleanOrignal()
     })
   }
   
