@@ -71,11 +71,11 @@ module.exports = function(onHook) {
       
       
       var q = async.queue(function (mergePr, callback) {
-          if (err) console.log([new Date(), message, err])
           callback()
       }, 1)
       
       q.push(pullreq, function finishedPR(err) {
+        if (err) console.log([new Date(), message, err])
         console.log([new Date(), "Finished one PR"])
       })
       
