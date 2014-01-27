@@ -1,7 +1,7 @@
 var Github = require('github-api')
 var asciify = require('asciify')
 
-module.exports function theMotions(sourceAccount, viaAccount) {
+module.exports = function theMotions(sourceAccount, viaAccount) {
 
   var github = new Github({
       auth: "oauth",
