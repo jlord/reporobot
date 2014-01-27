@@ -21,7 +21,7 @@ module.exports = function(stats, callback) {
       var lastUser = array[array.length - 1]
       if (lastUser) console.log([new Date(), "Added user " + lastUser.username + " to contributors.json"])
       else console.log('no last user')
-      buildPage(callback)
+      return buildPage(callback)
     })
   })
 }

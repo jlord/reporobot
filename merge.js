@@ -43,9 +43,12 @@ module.exports = function(pullreq, callback) {
       var info = body
       stats.time = info.created_at
       stats.username = info.user.login
-      getFile(stats.prNum)
-    } else callback(body)
+      return getFile(stats.prNum)
+    }  
+    
+    callback(body)
   }
+  
   request(options, getTime)
   
   function getFile(prNum) {
@@ -64,8 +67,10 @@ module.exports = function(pullreq, callback) {
       
       if (!error && response.statusCode == 200) {
         var prInfo = body[0]
-        verifyFilename(prInfo)
+        return verifyFilename(prInfo)
       }
+      
+      callback(body)
     })
   }
   
@@ -73,11 +78,11 @@ module.exports = function(pullreq, callback) {
     var filename = prInfo.filename
     if (filename.match('contributors/add-' + stats.username + '.txt')) {
       console.log([ new Date(), "Filename: MATCH " + stats.username])
-      verifyContent(prInfo)
+      return verifyContent(prInfo)
     }
     else {
       var message = 'Filename is different than expected: contributors/add-' + stats.username + '.txt'
-      writeComment(message, stats.prNum)
+      return writeComment(message, stats.prNum)
     }
   }
 
@@ -87,15 +92,15 @@ module.exports = function(pullreq, callback) {
     var patch = patchArray.pop()
     // generate the expected content
     asciify(stats.username, {font:'isometric2'}, function(err, res){ 
-      if (err) callback(err, "Error generating ascii art to test against")
+      if (err) return callback(err, "Error generating ascii art to test against")
       if (res.match(patch)) {
         stats.userArt = res
         console.log([new Date(), " Content: MATCH " + stats.username])
-        mergePR(stats.prNum)
+        return mergePR(stats.prNum)
       }
       else {
         var message = "Ascii art wasn't as expected, did something change?"
-        writeComment(message, stats.prNum)
+        return writeComment(message, stats.prNum)
       }
     })
   }
@@ -113,6 +118,7 @@ module.exports = function(pullreq, callback) {
   
     request.post(options, function doneWriteComment(error, response, body) {
       if (error) return callback(error, "Error writing comment on PR")
+      callback()
     })
   }
   
@@ -132,7 +138,9 @@ module.exports = function(pullreq, callback) {
      if (!error && response.statusCode == 200) {
          console.log([new Date(), "MERGED " + stats.username + " pull request" ])
          // add contributor to file and then rebuild page
-         addContributor(stats, callback)
+         return addContributor(stats, callback)
+     } else {
+       callback(error, body)
      }
    })
   }

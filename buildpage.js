@@ -11,7 +11,7 @@ module.exports = function(callback) {
     var newest = everyone[everyone.length - 1]
     
     var stats = {featured: newest, everyone: everyone}
-    getTemplate(stats, everyone)
+    return getTemplate(stats, everyone)
   })
 
   function getTemplate(stats, everyone) {
@@ -21,7 +21,7 @@ module.exports = function(callback) {
       data = data.toString()
       var template = hbs.compile(data)
       var HTML = template(stats)
-      writeRepo(HTML, stats, everyone)
+      return writeRepo(HTML, stats, everyone)
     })
   }
 
@@ -42,7 +42,7 @@ module.exports = function(callback) {
       repo.write('gh-pages', 'contributors.json', JSON.stringify(everyone, null, " ") , "Added @" + username, function(err) {
         if (err) return callback(err, "Error writing contribs backup to Patchwork.")
         console.log([new Date(), "Wrote contributors backup with " + username])
-        callback(null, "Done!")
+        return callback(null, "Done!")
       })
     })
   }
