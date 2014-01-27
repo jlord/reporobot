@@ -82,7 +82,7 @@ module.exports = function(onHook) {
                
       q.push(pullreq, function(err) {
           if (err) console.log([new Date(), message, err])
-          console.log([new Date(), "Finished this PR"])
+          console.log([new Date(), "Finished PR " + pullreq.number])
       })
       
       
