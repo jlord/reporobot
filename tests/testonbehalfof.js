@@ -9,6 +9,7 @@ module.exports = function(sourceAccount, viaAccount) {
   })
   
   cleanOrignal()
+  // deleteViaBranch()
 
   // get repository
   function cleanOrignal() {
@@ -87,7 +88,6 @@ module.exports = function(sourceAccount, viaAccount) {
     pullReqRepo.createPullRequest(pull, function(err, pullRequest) {
       if (err) return console.log(err, "error creating PR")
       console.log("Created Test PR for " + viaAccount)
-      deleteViaBranch()
     })
   }
   
