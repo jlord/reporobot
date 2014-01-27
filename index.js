@@ -80,9 +80,9 @@ module.exports = function(onHook) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
                
-      q.push(pullreq, function(err) {
+      q.push(pullreq, function(err, message) {
           if (err) console.log([new Date(), message, err])
-          console.log([new Date(), "Finished PR " + pullreq.number])
+          console.log([new Date(), message, "Finished PR " + pullreq.number])
       })
       
       
