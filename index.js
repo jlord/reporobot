@@ -10,14 +10,15 @@ var collabStatus = require('./collabcheck.js')
 var mergePr = require('./merge.js')
 
 var q = async.queue(function (pullreq, callback) {
-  console.log("QUEUE", pullreq)
+  console.log("QUEUE", pullreq.number)
   mergePr(pullreq, function(err, message) {
+    console.log("merge pr callback")
     if (err) console.log([new Date(), message, err])
     callback(err)
   })
 }, 1)
 
-q.saturated = function() { console.log("Queuing up")}
+q.drain = function() { console.log("Queue drain")}
 
 module.exports = function(onHook) {
   
