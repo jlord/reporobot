@@ -2,6 +2,7 @@ var concat = require('concat-stream')
 var http = require('http')
 var fs = require('fs')
 var url = require('url')
+var async = require('async')
 
 var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
@@ -67,9 +68,21 @@ module.exports = function(onHook) {
   function getPR(req, res) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
-      mergePr(pullreq, function(err, message) {
-        if (err) console.log([new Date(), message, err])
+      
+      
+      var q = async.queue(function (mergePr, callback) {
+          if (err) console.log([new Date(), message, err])
+          callback()
+      }, 1)
+      
+      q.push(pullreq, function finishedPR(err) {
+        console.log([next Date(), "Finished one PR"])
       })
+      
+      
+      // mergePr(pullreq, function(err, message) {
+      //   if (err) console.log([new Date(), message, err])
+      // })
       
       res.statusCode = 200
       res.setHeader('content-type', 'application/json')
