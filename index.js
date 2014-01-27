@@ -76,7 +76,7 @@ module.exports = function(onHook) {
       }, 1)
       
       q.push(pullreq, function finishedPR(err) {
-        console.log([next Date(), "Finished one PR"])
+        console.log([new Date(), "Finished one PR"])
       })
       
       
