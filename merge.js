@@ -128,7 +128,7 @@ module.exports = function(pullreq, callback) {
    }
  
    request.put(options, function doneMerge(error, response, body) {
-     console.log("PR MERGE BODY", body)
+       console.log("PR MERGE RES", response)
      if (error) return callback(error, "Error merging PR")
      if (!error && response.statusCode == 200) {
          console.log([new Date(), "MERGED " + stats.username + " pull request" ])
