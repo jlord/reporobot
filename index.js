@@ -3,11 +3,13 @@ var http = require('http')
 var fs = require('fs')
 var url = require('url')
 var async = require('async')
-var q = async.queue(mergePr, 1)
+
 
 var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
 var mergePr = require('./merge.js')
+
+var q = async.queue(mergePr, 1)
 
 module.exports = function(onHook) {
   
