@@ -2,7 +2,7 @@ var request = require('request')
 
 module.exports = function(username, callback) {
 
-  var baseURL = 'https://api.github.com/repos/jlord/patchwork/issues?state=closed'
+  var baseURL = 'https://api.github.com/repos/jlord/patchwork/issues?state=open'
 
   var options = {
       url: baseURL, 
