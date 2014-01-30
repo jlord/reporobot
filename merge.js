@@ -89,11 +89,12 @@ module.exports = function(pullreq, callback) {
     var patch = patchArray.pop()
     // generate the expected content
     asciify(stats.username, {font:'isometric2'}, function(err, res){
-      console.log("LOCAL ASCII ART FOR", stats.username)
-      console.log(res)
-      console.log(patch)
       if (err) return callback(err, "Error generating ascii art to test against")
-      if (res.match(patch)) {
+      var remoteFileLine = patch.split('\n')[0]
+      var localFileLine = res.split('\n')[0]
+      console.log(patch)
+      console.log(res)
+      if (remoteFileLine.indexOf(localFileLine) > -1) {
         stats.userArt = res
         console.log([new Date(), " Content: MATCH " + stats.username])
         return mergePR(stats.prNum)
