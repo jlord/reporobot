@@ -11,8 +11,7 @@ module.exports = function(pullreq, callback) {
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
-  console.log('USER.LOGIN', pullreq.user.login, pullreq.head.ref)
-  if (!pullreq.head.ref.match(pullreq.user.login) && pullreq.user.login != "reporobot") 
+  if (!pullreq.head.ref.toLowerCase().match(pullreq.user.login.toLowerCase()) && pullreq.user.login != "reporobot") 
     return callback(new Error("Id\'d via branch to not be a Git-it submission or test"))
   
   stats.prNum = pullreq.number
