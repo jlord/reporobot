@@ -4,7 +4,7 @@ var asciify = require('asciify')
 module.exports = function(object, callback) {
   // if it's not an email, return
   if (!object.headers) return
-  console.log(["EMAIL OBJ", objects])
+  console.log(["EMAIL OBJ", object])
   getDetails(object)
 
   function getDetails(object) {
