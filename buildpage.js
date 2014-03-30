@@ -10,7 +10,7 @@ module.exports = function(callback) {
     var everyone = JSON.parse(data)
     var newest = everyone[everyone.length - 1]
     
-    var stats = {featured: newest, everyone: everyone}
+    var stats = {featured: newest, everyone: everyone.reverse()}
     return getTemplate(stats, everyone)
   })
 
