@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 
 var pr = require(__dirname + '/test-onbehalfof.js')
-var accounts = ['jlord','goldenrod']
+var runParallel = require('run-parallel')
+
+var accounts = ['goldenrod']
 var sourceAccount = 'jlord'
 
-accounts.forEach(function (account) {
-  console.log("Sending " + account + " on..")
-  pr(sourceAccount, account)
-  // setTimeout(pr(sourceAccount, account), 3000)
+var functionsToDo = accounts.map(function(account) {
+    return function(cb) {
+      pr(sourceAccount, account)
+    }
+  })
+
+runParallel(functionsToDo, function(err) {
+  console.log("Done with all")
 })
