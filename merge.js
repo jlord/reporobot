@@ -32,7 +32,7 @@ module.exports = function(pullreq, callback) {
       stats.time = info.created_at
       // RR is PRing on behalf of:
       stats.username = info.head.user.login
-      console.log([new Date(), "Reporobot Pull Request on behalf of " + stats.username + stats.prNum])
+      console.log([new Date(), "Reporobot Pull Request on behalf of " + stats.username + " " + stats.prNum])
       return getFile(stats.prNum)
     }
 

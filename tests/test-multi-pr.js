@@ -3,15 +3,10 @@
 var pr = require(__dirname + '/test-onbehalfof.js')
 var runParallel = require('run-parallel')
 
-var accounts = ['goldenrod']
+var accounts = ['jllord']
+// var accounts = ['goldenrod', 'maxogden', 'jllord', 'eviljlord']
 var sourceAccount = 'jlord'
 
-var functionsToDo = accounts.map(function(account) {
-    return function(cb) {
-      pr(sourceAccount, account)
-    }
-  })
-
-runParallel(functionsToDo, function(err) {
-  console.log("Done with all")
+accounts.forEach(function(account) {
+  pr(sourceAccount, account)
 })
