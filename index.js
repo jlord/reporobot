@@ -13,29 +13,29 @@ var q = async.queue(function (pullreq, callback) {
   console.log("QUEUE", pullreq.number)
   mergePr(pullreq, function(err, message) {
     if (err) console.log([new Date(), message, err])
-    setTimeout(function() { callback(err) }, 3000)
+    setTimeout(function() { callback(err) }, 5000)
   })
 }, 1)
 
 q.drain = function() { console.log("Queue drain")}
 
 module.exports = function(onHook) {
-  
+
   var server = http.createServer(handler)
 
   function handler(req, res) {
     console.log([new Date(), req.method, req.url])
-    
+
     // when RR gets a push from email on collab
     if (req.url === '/push') {
       return handleEmail(req, res)
     }
-    
-    // when a pr is made to patchwork repo  
+
+    // when a pr is made to patchwork repo
     if (req.url.match('/orderin')) {
       return getPR(req, res)
     }
-    
+
     // when git-it verifies user made a pr
     if (req.url.match('/pr')) {
       var queryURL = url.parse(req.url, true)
@@ -53,7 +53,7 @@ module.exports = function(onHook) {
         checkCollab(res, err, collab)
       })
     }
-  
+
   // when anything else goes to reporobot.jlord.us
   res.statusCode = 404
   res.setHeader('content-type', 'application/json')
@@ -66,31 +66,31 @@ module.exports = function(onHook) {
   function handleEmail(req, res) {
     req.pipe(concat(function(buff) {
       var emailObj = JSON.parse(buff)
-      
+
       if (onHook) onHook(emailObj, function(err, message) {
         if (err) console.log([new Date(), message, err])
       })
     }))
-    
+
     res.statusCode = 200
     res.end("Thank you.")
   }
-  
+
   function getPR(req, res) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
-      
+
       // make sure not closed or non-workshop PR
       if (pullreq.action && pullreq.action === "closed") {
         console.log("SKIPPING: CLOSED PULL REQUEST")
-      } 
+      }
       else {
         q.push(pullreq, function(err, message) {
           if (err) console.log([new Date(), message, err])
           console.log([new Date(), message, "Finished PR " + pullreq.number])
         })
       }
-               
+
       res.statusCode = 200
       res.setHeader('content-type', 'application/json')
       res.end()
@@ -124,7 +124,7 @@ module.exports = function(onHook) {
       collab: collab
     }, true, 2))
   }
-  
+
   function mergedPr(res, err) {
     if (err) {
       console.log(err)
