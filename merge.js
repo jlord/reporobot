@@ -11,9 +11,9 @@ module.exports = function(pullreq, callback) {
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
-  if (!pullreq.head.ref.toLowerCase().match(pullreq.user.login.toLowerCase()) && pullreq.user.login != "reporobot") 
+  if (!pullreq.head.ref.toLowerCase().match(pullreq.user.login.toLowerCase()) && pullreq.user.login != "reporobot")
     return callback(new Error("Id\'d via branch to not be a Git-it submission or test"))
-  
+
   stats.prNum = pullreq.number
 
   var options = {
@@ -23,7 +23,7 @@ module.exports = function(pullreq, callback) {
                  'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
         }
   }
-  
+
   function getTime(error, response, body) {
     if (error) return callback(error, "Error in request on PR via number")
     // if a test pr is coming in
@@ -32,24 +32,24 @@ module.exports = function(pullreq, callback) {
       stats.time = info.created_at
       // RR is PRing on behalf of:
       stats.username = info.head.user.login
-      console.log([new Date(), "Reporobot Pull Request on behalf of " + stats.username])
-      return getFile(stats.prNum) 
+      console.log([new Date(), "Reporobot Pull Request on behalf of " + stats.username + stats.prNum])
+      return getFile(stats.prNum)
     }
-    
+
     if (!error && response.statusCode == 200 && pullreq.user.login != "reporobot") {
       var info = body
       stats.time = info.created_at
       stats.username = info.user.login
       return getFile(stats.prNum)
-    }  
-    
+    }
+
     callback(body)
   }
-  
+
   request(options, getTime)
-  
+
   function getFile(prNum) {
-    
+
     var options = {
         url: baseURL + 'pulls/' + prNum + '/files',
         json: true,
@@ -58,19 +58,19 @@ module.exports = function(pullreq, callback) {
             'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
         }
     }
-    
+
     request(options, function returnFiles(error, response, body) {
       if (error || body.length === 0) return callback(error, "Error finding file in PR")
-      
+
       if (!error && response.statusCode == 200) {
         var prInfo = body[0]
         return verifyFilename(prInfo)
       }
-      
+
       callback(body)
     })
   }
-  
+
   function verifyFilename(prInfo) {
     var filename = prInfo.filename
     if (filename.match('contributors/add-' + stats.username + '.txt')) {
@@ -114,13 +114,13 @@ module.exports = function(pullreq, callback) {
         },
         json: {'body': message}
     }
-  
+
     request.post(options, function doneWriteComment(error, response, body) {
       if (error) return callback(error, "Error writing comment on PR")
       callback()
     })
   }
-  
+
   function mergePR(prNum) {
     var message = "Merging PR from @" + stats.username
     var options = {
@@ -131,9 +131,10 @@ module.exports = function(pullreq, callback) {
        },
        json: {'commit_message': message}
    }
- 
+
    request.put(options, function doneMerge(error, response, body) {
      if (error) return callback(error, "Error merging PR")
+     cb(null, "Merge Body", body)
      if (!error && response.statusCode == 200) {
          console.log([new Date(), "MERGED " + stats.username + " pull request" ])
          // add contributor to file and then rebuild page
@@ -143,8 +144,5 @@ module.exports = function(pullreq, callback) {
      }
    })
   }
-  
+
 }
-
-
-
