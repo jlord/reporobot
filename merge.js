@@ -137,7 +137,7 @@ module.exports = function(pullreq, callback) {
      if (response.statusCode != 200) {
       console.log(new Date(), prNum, "ERROR MERGING", response.statusCode, body.message)
       console.log(new Date(), prNum, "TRYING AGAIN")
-      setTimeout(mergePr(), 2000)
+      setTimeout(mergePR(prNum), 2000)
      }
      if (!error && response.statusCode == 200) {
          console.log(new Date(), "PR " , prNum , "MERGED" , stats.username)
