@@ -134,7 +134,11 @@ module.exports = function(pullreq, callback) {
 
    request.put(options, function doneMerge(error, response, body) {
      if (error) return callback(error, "Error merging PR")
-     if (response.statusCode != 200) console.log(new Date(), prNum, "ERROR MERGING", response.statusCode, body.message)
+     if (response.statusCode != 200) {
+      console.log(new Date(), prNum, "ERROR MERGING", response.statusCode, body.message)
+      console.log(new Date(), prNum, "TRYING AGAIN")
+      setTimeout(mergePr(), 2000)
+     }
      if (!error && response.statusCode == 200) {
          console.log(new Date(), "PR " , prNum , "MERGED" , stats.username)
          // add contributor to file and then rebuild page

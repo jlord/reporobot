@@ -13,8 +13,7 @@ var q = async.queue(function (pullreq, callback) {
   console.log("QUEUE", pullreq.number)
   mergePr(pullreq, function(err, message) {
     if (err) console.log(new Date(), message, err)
-    // setTimeout(function() { callback(err) }, 10000)
-    callback(err)
+    setTimeout(function() { callback(err) }, 10000)
   })
 }, 1)
 
