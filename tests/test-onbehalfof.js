@@ -30,14 +30,13 @@ module.exports = function(sourceAccount, viaAccount, n) {
       // })
       // console.log("Branch not there.")
       // cleanOriginal()
-      console.log(branches)
       for (var i = 0; i < branches.length; i++) {
         if (branches[i].match(branchname)) {
-          console.log(n, 1 + "Branch exists on " + viaAccount + " deleting...")
+          console.log(n, 1 , "Branch exists on " + viaAccount + " deleting...")
           return deleteViaBranch()
         }
         if (branches.length === i + 1 && !branches[i].match(branchname)) {
-          console.log(n, 1 + "No existing branch on " + viaAccount)
+          console.log(n, 1 , "No existing branch on " + viaAccount)
           return cleanOriginal()
         }
       }
@@ -46,7 +45,7 @@ module.exports = function(sourceAccount, viaAccount, n) {
     function deleteViaBranch() {
       repo.deleteRef('heads/add-' + viaAccount, function(err) {
         if (err && err.error != '422') return console.log(err, "error deleting ref on via")
-        console.log(n, 1 + '...Deleted branch on ' + viaAccount)
+        console.log(n, 1 , '...Deleted branch on ' + viaAccount)
         cleanOriginal()
       })
     }
@@ -71,11 +70,11 @@ module.exports = function(sourceAccount, viaAccount, n) {
 
       for (var i = 0; i < files.length; i++) {
         if (files[i].name.match(filename)) {
-          console.log(n, 2 + "File exists on " + sourceAccount + " deleting...")
+          console.log(n, 2 , "File exists on " + sourceAccount + " deleting...")
           return deleteFile()
         }
         if (files.length === i + 1 && !files[i].name.match(filename)) {
-          console.log(n, 2 + "Found no matching file on " + sourceAccount)
+          console.log(n, 2 , "Found no matching file on " + sourceAccount)
           return createViaBranch()
         }
       }
@@ -96,7 +95,7 @@ module.exports = function(sourceAccount, viaAccount, n) {
     function deleteFile() {
       origRepo.delete('gh-pages', 'contributors/add-' + viaAccount + '.txt', function(err) {
         if (err) return console.log(err.responseText, "Error deleting " + viaAccount + '.txt on original')
-        console.log(n, 2 + "Deleted file contributors/add-" + viaAccount + '.txt on source ' + sourceAccount)
+        console.log(n, 2 , "Deleted file contributors/add-" + viaAccount + '.txt on source ' + sourceAccount)
         createViaBranch()
       })
     }
@@ -130,7 +129,7 @@ module.exports = function(sourceAccount, viaAccount, n) {
 
     repo.branch('gh-pages', 'add-' + viaAccount, function(err) {
       if (err) return console.log(err, "error creating branch on via")
-      console.log(n, 3 + "Created branch add-" + viaAccount + " on " + viaAccount)
+      console.log(n, 3 , "Created branch add-" + viaAccount + " on " + viaAccount)
 
       createArt()
     })
@@ -180,7 +179,7 @@ module.exports = function(sourceAccount, viaAccount, n) {
   function createArt(repo) {
     asciify(viaAccount, {font:'isometric2'}, function(err, res){
       if (err) callback(err, "Error generating ascii art to test against")
-      console.log(n, 4 + "((@))((@))((@)) Drew art for " + viaAccount)
+      console.log(n, 4 , "Drew art for " + viaAccount)
       writeFile(res)
     })
   }
@@ -192,7 +191,7 @@ module.exports = function(sourceAccount, viaAccount, n) {
 
     repo.write('add-' + viaAccount, 'contributors/add-' + viaAccount + '.txt', art, 'TEST add-' + viaAccount, function(err) {
       if (err) return console.log(err, "error writing file")
-      console.log(n, 5 + "Wrote file contributors/add-" + viaAccount + ".txt to " + viaAccount)
+      console.log(n, 5 , "Wrote file contributors/add-" + viaAccount + ".txt to " + viaAccount)
       createPR()
     })
   }
@@ -211,7 +210,7 @@ module.exports = function(sourceAccount, viaAccount, n) {
 
     pullReqRepo.createPullRequest(pull, function(err, pullRequest) {
       if (err) return console.log(err, "error creating PR")
-      console.log(n, 6 + "Created Test PR for " + viaAccount)
+      console.log(n, 6, "Created Test PR for " + viaAccount)
     })
   }
 }

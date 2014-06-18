@@ -32,7 +32,7 @@ module.exports = function(pullreq, callback) {
       stats.time = info.created_at
       // RR is PRing on behalf of:
       stats.username = info.head.user.login
-      console.log([new Date(), "Reporobot Pull Request on behalf of " + stats.username + " " + stats.prNum])
+      console.log(new Date(), "PR " +  stats.prNum + "Reporobot Pull Request on behalf of " + stats.username)
       return getFile(stats.prNum)
     }
 
@@ -74,7 +74,7 @@ module.exports = function(pullreq, callback) {
   function verifyFilename(prInfo) {
     var filename = prInfo.filename
     if (filename.match('contributors/add-' + stats.username + '.txt')) {
-      console.log([ new Date(), "Filename: MATCH " + stats.username])
+      console.log(new Date(), "PR " +  stats.prNum + "Filename: MATCH " + stats.username)
       return verifyContent(prInfo)
     }
     else {
@@ -94,7 +94,7 @@ module.exports = function(pullreq, callback) {
       console.log(res)
       if (patch !== stats.username) {
         stats.userArt = res
-        console.log([new Date(), " Content: MATCH " + stats.username])
+        console.log(new Date(), "PR " +  stats.prNum + "Content: MATCH " + stats.username)
         return mergePR(stats.prNum)
       }
       else {
@@ -105,7 +105,7 @@ module.exports = function(pullreq, callback) {
   }
 
   function writeComment(message, prNum) {
-    console.log([new Date(), "Uh oh, writing comment for " + stats.username])
+    console.log(new Date(), "PR " +  prNum + "Uh oh, writing comment for " + stats.username)
      var options = {
         url: baseURL + 'issues/' + prNum + '/comments',
         headers: {
@@ -136,7 +136,7 @@ module.exports = function(pullreq, callback) {
      if (error) return callback(error, "Error merging PR")
      console.log("Merge Body", body)
      if (!error && response.statusCode == 200) {
-         console.log([new Date(), "MERGED " + stats.username + " pull request" ])
+         console.log(new Date(), "PR " + prNum + "MERGED " + stats.username)
          // add contributor to file and then rebuild page
          return addContributor(stats, callback)
      } else {

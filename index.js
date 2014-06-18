@@ -12,12 +12,12 @@ var mergePr = require('./merge.js')
 var q = async.queue(function (pullreq, callback) {
   console.log("QUEUE", pullreq.number)
   mergePr(pullreq, function(err, message) {
-    if (err) console.log([new Date(), message, err])
+    if (err) console.log(new Date(), message, err)
     setTimeout(function() { callback(err) }, 5000)
   })
 }, 1)
 
-q.drain = function() { console.log("Queue drain")}
+q.drain = function() {console.log("Queue drain")}
 
 module.exports = function(onHook) {
 
@@ -68,7 +68,7 @@ module.exports = function(onHook) {
       var emailObj = JSON.parse(buff)
 
       if (onHook) onHook(emailObj, function(err, message) {
-        if (err) console.log([new Date(), message, err])
+        if (err) console.log(new Date(), message, err)
       })
     }))
 
@@ -86,8 +86,8 @@ module.exports = function(onHook) {
       }
       else {
         q.push(pullreq, function(err, message) {
-          if (err) console.log([new Date(), message, err])
-          console.log([new Date(), message, "Finished PR " + pullreq.number])
+          if (err) console.log(new Date(), message, err)
+          console.log(new Date(), pullreq.number, message, "Finished PR" )
         })
       }
 

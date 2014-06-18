@@ -3,8 +3,8 @@
 var pr = require(__dirname + '/test-onbehalfof.js')
 var runParallel = require('run-parallel')
 
-var accounts = ['jllord']
-// var accounts = ['goldenrod', 'maxogden', 'jllord', 'eviljlord']
+// var accounts = ['jllord', 'goldenrod', 'maxogden']
+var accounts = ['goldenrod', 'jllord', 'eviljlord']
 var sourceAccount = 'jlord'
 var n = 0
 accounts.forEach(function(account) {
