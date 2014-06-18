@@ -32,7 +32,7 @@ module.exports = function(pullreq, callback) {
       stats.time = info.created_at
       // RR is PRing on behalf of:
       stats.username = info.head.user.login
-      console.log(new Date(), "PR " +  stats.prNum + "Reporobot Pull Request on behalf of " + stats.username)
+      console.log(new Date(), "PR " ,  stats.prNum , "Reporobot Pull Request on behalf of " , stats.username)
       return getFile(stats.prNum)
     }
 
@@ -74,7 +74,7 @@ module.exports = function(pullreq, callback) {
   function verifyFilename(prInfo) {
     var filename = prInfo.filename
     if (filename.match('contributors/add-' + stats.username + '.txt')) {
-      console.log(new Date(), "PR " +  stats.prNum + "Filename: MATCH " + stats.username)
+      console.log(new Date(), "PR " , stats.prNum , "Filename: MATCH " , stats.username)
       return verifyContent(prInfo)
     }
     else {
@@ -94,7 +94,7 @@ module.exports = function(pullreq, callback) {
       console.log(res)
       if (patch !== stats.username) {
         stats.userArt = res
-        console.log(new Date(), "PR " +  stats.prNum + "Content: MATCH " + stats.username)
+        console.log(new Date(), "PR " , stats.prNum , "Content: MATCH " , stats.username)
         return mergePR(stats.prNum)
       }
       else {
@@ -134,9 +134,9 @@ module.exports = function(pullreq, callback) {
 
    request.put(options, function doneMerge(error, response, body) {
      if (error) return callback(error, "Error merging PR")
-     console.log("Merge Body", body)
+     if (response.statusCode != 200) console.log(new Date(), prNum, "ERROR MERGING", response.statusCode, body.message)
      if (!error && response.statusCode == 200) {
-         console.log(new Date(), "PR " + prNum + "MERGED " + stats.username)
+         console.log(new Date(), "PR " , prNum , "MERGED" , stats.username)
          // add contributor to file and then rebuild page
          return addContributor(stats, callback)
      } else {
