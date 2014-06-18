@@ -154,6 +154,7 @@ module.exports = function(pullreq, callback) {
          }
        })
      }
-   }
+   })
   }
+
 }
