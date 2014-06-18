@@ -95,7 +95,7 @@ module.exports = function(pullreq, callback) {
       if (patch !== stats.username) {
         stats.userArt = res
         console.log(new Date(), "PR " , stats.prNum , "Content: MATCH " , stats.username)
-        return mergePR(stats.prNum)
+        return setTimeout(mergePR(stats.prNum), 5000)
       }
       else {
         var message = "Ascii art wasn't as expected, did something change? Close and re-open please."
