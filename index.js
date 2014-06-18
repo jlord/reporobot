@@ -13,7 +13,7 @@ var q = async.queue(function (pullreq, callback) {
   console.log("QUEUE", pullreq.number)
   mergePr(pullreq, function(err, message) {
     if (err) console.log(new Date(), message, err)
-    setTimeout(function() { callback(err) }, 5000)
+    setTimeout(function() { callback(err) }, 8000)
   })
 }, 1)
 
@@ -24,7 +24,7 @@ module.exports = function(onHook) {
   var server = http.createServer(handler)
 
   function handler(req, res) {
-    console.log([new Date(), req.method, req.url])
+    console.log(">>>>>", new Date(), req.method, req.url)
 
     // when RR gets a push from email on collab
     if (req.url === '/push') {

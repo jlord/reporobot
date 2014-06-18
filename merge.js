@@ -78,7 +78,7 @@ module.exports = function(pullreq, callback) {
       return verifyContent(prInfo)
     }
     else {
-      var message = 'Filename is different than expected: contributors/add-' + stats.username + '.txt'
+      var message = 'Filename is different than expected: contributors/add-' + stats.username + '.txt. Close the pull request, rename your file and try again!'
       return writeComment(message, stats.prNum)
     }
   }
@@ -98,7 +98,7 @@ module.exports = function(pullreq, callback) {
         return mergePR(stats.prNum)
       }
       else {
-        var message = "Ascii art wasn't as expected, did something change?"
+        var message = "Ascii art wasn't as expected, did something change? Close and re-open please."
         return writeComment(message, stats.prNum)
       }
     })

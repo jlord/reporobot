@@ -70,7 +70,7 @@ module.exports = function(sourceAccount, viaAccount, n) {
 
       for (var i = 0; i < files.length; i++) {
         if (files[i].name.match(filename)) {
-          console.log(n, 2 , "File exists on " + sourceAccount + " deleting...")
+          console.log(n, 2 , "File contributors/add-" + viaAccount + " exists on " + sourceAccount + " deleting...")
           return deleteFile()
         }
         if (files.length === i + 1 && !files[i].name.match(filename)) {
@@ -94,7 +94,7 @@ module.exports = function(sourceAccount, viaAccount, n) {
     // Delete file
     function deleteFile() {
       origRepo.delete('gh-pages', 'contributors/add-' + viaAccount + '.txt', function(err) {
-        if (err) return console.log(err.responseText, "Error deleting " + viaAccount + '.txt on original')
+        if (err) return console.log(err.request.responseText, "Error deleting " + viaAccount + '.txt on original')
         console.log(n, 2 , "Deleted file contributors/add-" + viaAccount + '.txt on source ' + sourceAccount)
         createViaBranch()
       })
