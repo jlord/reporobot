@@ -132,29 +132,20 @@ module.exports = function(pullreq, callback) {
        json: {'commit_message': message}
    }
 
-   // see if it has been merged, trigger rebuild
-   request.get(options, function isItMerged(error, response, body){
-     if (error) return callback(error, "Error checking PR state")
-     console.log("GET Merge", body)
-     if (response.statusCode == 404) {
-       // try to merge
-       request.put(options, function doneMerge(error, response, body) {
-         if (error) return callback(error, "Error merging PR")
-         if (response.statusCode != 200) {
-          console.log(new Date(), prNum, "ERROR MERGING", response.statusCode, body.message)
-          // console.log(new Date(), prNum, "TRYING AGAIN")
-          // setTimeout(mergePR(prNum), 2000)
-         }
-         if (!error && response.statusCode == 200) {
-             console.log(new Date(), "PR " , prNum , "MERGED" , stats.username)
-             // add contributor to file and then rebuild page
-             return addContributor(stats, callback)
-         } else {
-           callback(error, body)
-         }
-       })
-     }
-   })
+    request.put(options, function doneMerge(error, response, body) {
+      if (error) return callback(error, "Error merging PR")
+      if (response.statusCode != 200) {
+        console.log(new Date(), prNum, "ERROR MERGING", response.statusCode, body.message)
+        console.log(new Date(), prNum, "TRYING AGAIN")
+        setTimeout(mergePR(prNum), 3000)
+      }
+      if (!error && response.statusCode == 200) {
+        console.log(new Date(), "PR " , prNum , "MERGED" , stats.username)
+        // add contributor to file and then rebuild page
+        return addContributor(stats, callback)
+      } else {
+       callback(error, body)
+      }
+    })
   }
-
 }
