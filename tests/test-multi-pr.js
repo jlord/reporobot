@@ -6,7 +6,9 @@ var runParallel = require('run-parallel')
 var accounts = ['jllord']
 // var accounts = ['goldenrod', 'maxogden', 'jllord', 'eviljlord']
 var sourceAccount = 'jlord'
-
+var n = 0
 accounts.forEach(function(account) {
-  pr(sourceAccount, account)
+  n++
+  console.log("Running for " + account)
+  pr(sourceAccount, account, n)
 })

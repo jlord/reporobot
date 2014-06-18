@@ -2,7 +2,7 @@ var Github = require('github-api')
 var asciify = require('asciify')
 var request = require('request')
 
-module.exports = function(sourceAccount, viaAccount) {
+module.exports = function(sourceAccount, viaAccount, n) {
 
   var github = new Github({
       auth: "oauth",
@@ -19,24 +19,39 @@ module.exports = function(sourceAccount, viaAccount) {
     // does branch exist?
     repo.listBranches(function(err, branches) {
       if (err) return console.log(err, "error reading branches from " + viaAccount)
-      branches.map(function(branch, i) {
-        if (branch.match("add-" + viaAccount)) return deleteViaBranch()
-        if (branches.length === i + 1) {
-          console.log("Branch already not on " + viaAccount)
+      var branchname = "add-" + viaAccount
+      // branches.forEach(function(branch, i) {
+      //   console.log(branches.length, i)
+      //   console.log(branch, branchname)
+      //   if (branch.match(branchname)) {
+      //     console.log("Match")
+      //     return deleteViaBranch(repo)
+      //   }
+      // })
+      // console.log("Branch not there.")
+      // cleanOriginal()
+      console.log(branches)
+      for (var i = 0; i < branches.length; i++) {
+        if (branches[i].match(branchname)) {
+          console.log(n, 1 + "Branch exists on " + viaAccount + " deleting...")
+          return deleteViaBranch()
+        }
+        if (branches.length === i + 1 && !branches[i].match(branchname)) {
+          console.log(n, 1 + "No existing branch on " + viaAccount)
           return cleanOriginal()
         }
-      })
+      }
     })
 
-  function deleteViaBranch() {
-    repo.deleteRef('heads/add-' + viaAccount, function(err) {
-      if (err && err.error != '422') return console.log(err, "error deleting ref on via")
-      console.log('Branch on ' + viaAccount + " is deleted.")
-      cleanOriginal()
-    })
+    function deleteViaBranch() {
+      repo.deleteRef('heads/add-' + viaAccount, function(err) {
+        if (err && err.error != '422') return console.log(err, "error deleting ref on via")
+        console.log(n, 1 + '...Deleted branch on ' + viaAccount)
+        cleanOriginal()
+      })
+    }
   }
 
-}
 
   // STEP TWO
   // Find and delete merged-in contributors/add-username.txt from sourceAccount
@@ -52,15 +67,28 @@ module.exports = function(sourceAccount, viaAccount) {
     request(url, {json: true, headers: headers}, function matchFile(error, response, body) {
       if (error) return console.log(error, "Error getting branch contents")
       var files = body
+      var filename = 'add-' + viaAccount + '.txt'
 
-      files.map(function(file, i) {
-        var filename = 'add-' + viaAccount + '.txt'
-        if (file.name.match(filename)) return deleteFile()
-        if (files.length === i + 1) {
-          console.log("checked no match on source")
+      for (var i = 0; i < files.length; i++) {
+        if (files[i].name.match(filename)) {
+          console.log(n, 2 + "File exists on " + sourceAccount + " deleting...")
+          return deleteFile()
+        }
+        if (files.length === i + 1 && !files[i].name.match(filename)) {
+          console.log(n, 2 + "Found no matching file on " + sourceAccount)
           return createViaBranch()
         }
-      })
+      }
+
+      // files.forEach(function(file, i) {
+      //   if (file.name.match(filename)) {
+      //     return deleteFile()
+      //   }
+      //   if (files.length === i + 1) {
+      //     console.log("Checked no matching file on " + sourceAccount)
+      //     return // createViaBranch()
+      //   }
+      // })
     })
 
     // STEP TWO.ONE
@@ -68,8 +96,8 @@ module.exports = function(sourceAccount, viaAccount) {
     function deleteFile() {
       origRepo.delete('gh-pages', 'contributors/add-' + viaAccount + '.txt', function(err) {
         if (err) return console.log(err.responseText, "Error deleting " + viaAccount + '.txt on original')
-        console.log("Deleted file contributors/add-" + viaAccount + '.txt on source ' + sourceAccount)
-        // createViaBranch()
+        console.log(n, 2 + "Deleted file contributors/add-" + viaAccount + '.txt on source ' + sourceAccount)
+        createViaBranch()
       })
     }
   }
@@ -102,7 +130,7 @@ module.exports = function(sourceAccount, viaAccount) {
 
     repo.branch('gh-pages', 'add-' + viaAccount, function(err) {
       if (err) return console.log(err, "error creating branch on via")
-      console.log("Created branch add-" + viaAccount + " on " + viaAccount)
+      console.log(n, 3 + "Created branch add-" + viaAccount + " on " + viaAccount)
 
       createArt()
     })
@@ -152,7 +180,7 @@ module.exports = function(sourceAccount, viaAccount) {
   function createArt(repo) {
     asciify(viaAccount, {font:'isometric2'}, function(err, res){
       if (err) callback(err, "Error generating ascii art to test against")
-      console.log("Drew art for " + viaAccount)
+      console.log(n, 4 + "((@))((@))((@)) Drew art for " + viaAccount)
       writeFile(res)
     })
   }
@@ -164,7 +192,7 @@ module.exports = function(sourceAccount, viaAccount) {
 
     repo.write('add-' + viaAccount, 'contributors/add-' + viaAccount + '.txt', art, 'TEST add-' + viaAccount, function(err) {
       if (err) return console.log(err, "error writing file")
-      console.log("Wrote file contributors/add-" + viaAccount + ".txt to " + viaAccount)
+      console.log(n, 5 + "Wrote file contributors/add-" + viaAccount + ".txt to " + viaAccount)
       createPR()
     })
   }
@@ -179,11 +207,11 @@ module.exports = function(sourceAccount, viaAccount) {
       head: viaAccount + ":" + "add-" + viaAccount
     }
 
-  var pullReqRepo = github.getRepo(sourceAccount, 'patchwork')
+    var pullReqRepo = github.getRepo(sourceAccount, 'patchwork')
 
     pullReqRepo.createPullRequest(pull, function(err, pullRequest) {
       if (err) return console.log(err, "error creating PR")
-      console.log("Created Test PR for " + viaAccount)
+      console.log(n, 6 + "Created Test PR for " + viaAccount)
     })
   }
 }
