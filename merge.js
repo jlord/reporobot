@@ -135,7 +135,7 @@ module.exports = function(pullreq, callback) {
    // see if it has been merged, trigger rebuild
    request.get(options, function isItMerged(error, response, body){
      if (error) return callback(error, "Error checking PR state")
-
+     console.log("GET Merge", body)
      if (response.statusCode == 404) {
        // try to merge
        request.put(options, function doneMerge(error, response, body) {

@@ -210,7 +210,7 @@ module.exports = function(sourceAccount, viaAccount, n) {
 
     pullReqRepo.createPullRequest(pull, function(err, pullRequest) {
       if (err) return console.log(err, "error creating PR")
-      console.log(n, 6, "Created Test PR for " + viaAccount)
+      console.log(n, 6, "Created Test PR for " + viaAccount, pullRequest.number)
     })
   }
 }
