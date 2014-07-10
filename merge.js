@@ -29,7 +29,7 @@ module.exports = function(pullreq, callback) {
     // if a test pr is coming in
     if (!error && response.statusCode == 200 && pullreq.user.login === "reporobot") {
       var info = body
-      stats.time = info.created_at
+      stats.time = info.created_at.toLocaleString()
       // RR is PRing on behalf of:
       stats.username = info.head.user.login
       console.log(new Date(), "PR " ,  stats.prNum , "Reporobot Pull Request on behalf of " , stats.username)
