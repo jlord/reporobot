@@ -122,30 +122,40 @@ module.exports = function(pullreq, callback) {
   }
 
   function mergePR(prNum) {
-    var message = "Merging PR from @" + stats.username
-    var options = {
-       url: baseURL + 'pulls/' + prNum + '/merge',
-       headers: {
-           'User-Agent': 'request',
-           'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-       },
-       json: {'commit_message': message}
-   }
+    var tries = 0
+    var limit = 25
+    tryMerge()
+    function tryMerge() {
+      var message = "Merging PR from @" + stats.username
+        var options = {
+           url: baseURL + 'pulls/' + prNum + '/merge',
+           headers: {
+               'User-Agent': 'request',
+               'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+           },
+           json: {'commit_message': message}
+       }
 
-    request.put(options, function doneMerge(error, response, body) {
-      if (error) return callback(error, "Error merging PR")
-      if (response.statusCode != 200) {
-        console.log(new Date(), prNum, "ERROR MERGING", response.statusCode, body.message)
-        console.log(new Date(), prNum, "TRYING AGAIN")
-        return setTimeout(mergePR(prNum), 3000)
+        request.put(options, function doneMerge(error, response, body) {
+          if (error) return callback(error, "Error merging PR")
+          if (response.statusCode != 200) {
+            console.log(new Date(), prNum, "ERROR MERGING", response.statusCode, body.message)
+            console.log(new Date(), prNum, "TRYING AGAIN")
+            if (tries <= limit) {
+              tries++
+              return setTimeout(tryMerge(prNum), 3000)
+            } else {
+              callback(null, new Date() + "Could not merge after " + limit + " tries " + prNum)
+            }
+          }
+          if (!error && response.statusCode == 200) {
+            console.log(new Date(), "PR " , prNum , "MERGED" , stats.username)
+            // add contributor to file and then rebuild page
+            return addContributor(stats, callback)
+          } else {
+           callback(error, body)
+          }
+        })
       }
-      if (!error && response.statusCode == 200) {
-        console.log(new Date(), "PR " , prNum , "MERGED" , stats.username)
-        // add contributor to file and then rebuild page
-        return addContributor(stats, callback)
-      } else {
-       callback(error, body)
-      }
-    })
-  }
+    }
 }
