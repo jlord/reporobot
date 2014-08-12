@@ -7,7 +7,7 @@ module.exports = function(callback) {
   fs.readFile( process.env['CONTRIBUTORS'], function (err, data) {
     if (err) return callback(err, "Error reading contribs file for building page.")
 
-    var everyone = JSON.parse(data).reverse()
+    var everyone = JSON.parse(data)
     var newest = everyone[everyone.length - 1]
 
     var stats = {featured: newest, everyone: everyone.reverse(), total: everyone.length}
