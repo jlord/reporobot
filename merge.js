@@ -72,8 +72,8 @@ module.exports = function(pullreq, callback) {
   }
 
   function verifyFilename(prInfo) {
-    var filename = prInfo.filename
-    if (filename.match('contributors/add-' + stats.username + '.txt')) {
+    var filename = prInfo.filename.toLowerCase()
+    if (filename.match('contributors/add-' + stats.username.toLowerCase() + '.txt')) {
       console.log(new Date(), "PR " , stats.prNum , "Filename: MATCH " , stats.username)
       return verifyContent(prInfo)
     }
