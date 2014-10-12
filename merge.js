@@ -63,7 +63,20 @@ module.exports = function(pullreq, callback) {
       if (error || body.length === 0) return callback(error, "Error finding file in PR")
 
       if (!error && response.statusCode == 200) {
+        if (body.length > 1) {
+          console.log(new Date(), "PR " , stats.prNum , "MORE THAN ONE FILE " , stats.username)
+          var message = "Uh oh, I see two files, there should be one. Delete the extra and try again!"
+          return writeComment(message, stats.prNum)
+        }
+
         var prInfo = body[0]
+
+        if (prInfo === undefined ) {
+          console.log(new Date(), "PR " , stats.prNum , "FILE IS EMPTY " , stats.username)
+          var message = "File is empty, try again!"
+          return writeComment(message, stats.prNum)
+        }
+
         return verifyFilename(prInfo)
       }
 
