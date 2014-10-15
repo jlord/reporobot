@@ -65,7 +65,7 @@ module.exports = function(pullreq, callback) {
       if (!error && response.statusCode == 200) {
         if (body.length > 1) {
           console.log(new Date(), "PR " , stats.prNum , "MORE THAN ONE FILE " , stats.username)
-          var message = "Uh oh, I see two files, there should be one. Delete the extra and try again!"
+          var message = 'Uh oh, I see too many files, there should be one.\n1. Delete the extra file on your computer.\n2. Add and commit that change with `git add -A && git commit -m "delete extra file"\n3. Then push those changes\n 4. Check back here to see if it merged.'
           return writeComment(message, stats.prNum)
         }
 
