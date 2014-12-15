@@ -7,10 +7,8 @@ if (!token) throw new Error("Missing REPOROBOT_TOKEN")
 var contributors = process.env['CONTRIBUTORS']
 if (!contributors) throw new Error("Missing CONTRIBUTORS")
 
-console.log('Env', {token: token, contributors: contributors})
-
 bot(touch).listen(process.env.PORT || 5563)
-asciify('reporobot', {font:'isometric2'}, function(err, res){ 
+asciify('reporobot', {font:'isometric2'}, function(err, res){
   if (err) console.log(err)
   console.log("Starting @reporobot server...")
   console.log(res)
