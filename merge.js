@@ -68,7 +68,7 @@ module.exports = function(pullreq, callback) {
       if (!error && response.statusCode == 200) {
         if (body.length > 1) {
           console.log(new Date(), "PR " , stats.prNum , "MORE THAN ONE FILE " , stats.username)
-          var message = 'Uh oh, I see too many files, there should be one.\n1. Delete the extra file on your computer.\n2. Add and commit that change with `git add -A && git commit -m "delete extra file"\n3. Then push those changes\n4. Check back here to see if it merged.'
+          var message = '**Uh oh, I see too many files, there should be one:** `contributors/add-' + stats.username + '`.\n\n- Delete the extra file on your computer.\n- Add and commit that change with these commands in terminal:\n```bash\n$ git add -A && git commit -m "delete extra file"\n```\n- Then push those changes to your branch:\n```bash\n$ git push origin add-' + stats.username + '\n```\n- Check back here to see if it was merged.'
           return writeComment(message, stats.prNum)
         }
 
