@@ -11,8 +11,12 @@ module.exports = function(pullreq, callback) {
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
-  if (!pullreq.head.ref.toLowerCase().match(pullreq.user.login.toLowerCase()) && pullreq.user.login != "reporobot")
+  if (!pullreq.head.ref.toLowerCase().match(pullreq.user.login.toLowerCase()) && pullreq.user.login != "reporobot") {
+    var message = "### Hello! The name of the branch with this Pull Request is not of the `add-USERNAME` pattern so I'm skipping reviewing it for the Git-it challenges.\nIf you are completing the Git-it challenges, you'll need to close this Pull Request, rename your branch, push it to your fork of Patchwork on GitHub and then start a new Pull Request. Here's how to rename a branch and push it to GitHub from terminal:\n```bash\n$ git branch -m add-USERNAME\n$ git push origin add-USERNAME\n```\n_Make sure to replace USERNAME with your actual GitHub username, with capitals exactly as they apepar on GitHub_."
+    writeComment(message, pullreq.number)
     return callback(new Error("Id\'d via branch to not be a Git-it submission or test"))
+  }
+
 
   stats.prNum = pullreq.number
 
@@ -65,7 +69,7 @@ module.exports = function(pullreq, callback) {
       if (!error && response.statusCode == 200) {
         if (body.length > 1) {
           console.log(new Date(), "PR " , stats.prNum , "MORE THAN ONE FILE " , stats.username)
-          var message = 'Uh oh, I see too many files, there should be one.\n1. Delete the extra file on your computer.\n2. Add and commit that change with `git add -A && git commit -m "delete extra file"\n3. Then push those changes\n 4. Check back here to see if it merged.'
+          var message = 'Uh oh, I see too many files, there should be one.\n1. Delete the extra file on your computer.\n2. Add and commit that change with `git add -A && git commit -m "delete extra file"\n3. Then push those changes\n4. Check back here to see if it merged.'
           return writeComment(message, stats.prNum)
         }
 
@@ -118,6 +122,7 @@ module.exports = function(pullreq, callback) {
   }
 
   function writeComment(message, prNum) {
+    stats.username = stats.username || "a skipped PR"
     console.log(new Date(), "PR " +  prNum + "Uh oh, writing comment for " + stats.username)
      var options = {
         url: baseURL + 'issues/' + prNum + '/comments',
