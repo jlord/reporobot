@@ -13,8 +13,7 @@ module.exports = function(pullreq, callback) {
   // a non git-it related, normal PR
   if (!pullreq.head.ref.toLowerCase().match(pullreq.user.login.toLowerCase()) && pullreq.user.login != "reporobot") {
     var message = "### Hello! The name of the branch with this Pull Request is not of the `add-USERNAME` pattern so I'm skipping reviewing it for the Git-it challenges.\nIf you are completing the Git-it challenges, you'll need to close this Pull Request, rename your branch, push it to your fork of Patchwork on GitHub and then start a new Pull Request. Here's how to rename a branch and push it to GitHub from terminal:\n```bash\n$ git branch -m add-USERNAME\n$ git push origin add-USERNAME\n```\n_Make sure to replace USERNAME with your actual GitHub username, with capitals exactly as they apepar on GitHub_."
-    writeComment(message, pullreq.number)
-    return callback(new Error("Id\'d via branch to not be a Git-it submission or test"))
+    return writeComment(message, pullreq.number)
   }
 
 
