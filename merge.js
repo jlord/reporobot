@@ -7,6 +7,15 @@ var addContributor = require('./contributors.js')
 var baseURL = 'https://api.github.com/repos/jlord/patchwork/'
 var stats = {}
 
+// When a new, open Pull Request comes in via the webhook set on jlord/patchwork
+// the request is queued and one by one sent here to verify the PR is a part of
+// the Git-it challenges (and not a real, other one) and to verify the file
+// contents of the PR and merge, making comments when needed.
+// called by:
+// mergePR(pullreq, function(err, message) { if (err) console.log(new Date(), message, err)
+  // callback(err)
+// })
+
 module.exports = function(pullreq, callback) {
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
