@@ -17,6 +17,7 @@ var stats = {}
 // })
 
 module.exports = function(pullreq, callback) {
+
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
@@ -26,7 +27,6 @@ module.exports = function(pullreq, callback) {
     return writeComment(message, pullreq.number)
   }
 
-
   stats.prNum = pullreq.number
 
   var options = {
@@ -34,12 +34,12 @@ module.exports = function(pullreq, callback) {
       json: true,
       headers: { 'User-Agent': 'request',
                  'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-        }
+      }
   }
 
   function getTime(error, response, body) {
     if (error) return callback(error, "Error in request on PR via number")
-    // if a test pr is coming in
+    // if a test pr is coming in from @RR
     if (!error && response.statusCode == 200 && pullreq.user.login === "reporobot") {
       var info = body
       stats.time = info.created_at.toLocaleString()
@@ -61,8 +61,8 @@ module.exports = function(pullreq, callback) {
 
   request(options, getTime)
 
-  function getFile(prNum) {
 
+  function getFile(prNum) {
     var options = {
         url: baseURL + 'pulls/' + prNum + '/files',
         json: true,
@@ -92,7 +92,7 @@ module.exports = function(pullreq, callback) {
 
         return verifyFilename(prInfo)
       }
-
+      // huh? why sending this back to function(err, message)?
       callback(body)
     })
   }
@@ -104,7 +104,7 @@ module.exports = function(pullreq, callback) {
       return verifyContent(prInfo)
     }
     else {
-      var message = 'Filename is different than expected: contributors/add-' + stats.username + '.txt. Close the pull request, rename your file and try again!'
+      var message = 'Filename is different than expected: contributors/add-' + stats.username + '.txt. Close the pull request, rename your file or move it into the `contributors/` folder and try again!'
       return writeComment(message, stats.prNum)
     }
   }
@@ -151,15 +151,17 @@ module.exports = function(pullreq, callback) {
   function mergePR(prNum) {
     var tries = 0
     var limit = 25
+
     tryMerge()
+
     function tryMerge() {
       var message = "Merging PR from @" + stats.username
-        var options = {
-           url: baseURL + 'pulls/' + prNum + '/merge',
-           headers: {
-               'User-Agent': 'request',
-               'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-           },
+      var options = {
+            url: baseURL + 'pulls/' + prNum + '/merge',
+            headers: {
+                'User-Agent': 'request',
+                'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+            },
            json: {'commit_message': message}
        }
 
