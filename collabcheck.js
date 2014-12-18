@@ -14,18 +14,18 @@ module.exports = function(username, callback) {
   })
 
   var repo = github.getRepo(username, 'patchwork')
+  var collab = false
 
   repo.show(function(err, repo) {
     if (err) return callback(err)
-    
+
     var permissions = repo.permissions
     if (permissions.push) {
-      var collab = true
-      callback(err, collab)
-    }
-    else {
-      var collab = false
-      callback(err, collab)
+      collab = true
+      callback(null, collab)
+    } else {
+      collab = false
+      callback(null, collab)
     }
   })
 }
