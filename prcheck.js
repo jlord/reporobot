@@ -10,7 +10,6 @@ var request = require('request')
 module.exports = function(username, callback) {
 
   var baseURL = 'https://api.github.com/repos/jlord/patchwork/issues?state=closed'
-
   var options = {
       url: baseURL,
       json: true,
@@ -21,6 +20,8 @@ module.exports = function(username, callback) {
   }
 
   function getIssues(error, response, body) {
+    if (error) return callback(error, null)
+
     var issues = body
     var pr = false
 
@@ -32,9 +33,10 @@ module.exports = function(username, callback) {
       if (user.match(username.toLowerCase()) && prStatus != null) {
         pr = true
         console.log([new Date(), username, " made a pull request."])
-        return callback(error, pr)
+        return callback(null, pr)
       }
     }
+    // why this here, shouldn't it fail early?
     callback(error, pr)
   }
 
