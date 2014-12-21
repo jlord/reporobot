@@ -9,11 +9,13 @@ var prStatus = require('./prcheck.js')
 var collabStatus = require('./collabcheck.js')
 var mergePr = require('./merge.js')
 
+// q to slow it down enough for the GitHub API
 var q = async.queue(function (pullreq, callback) {
   console.log("QUEUE", pullreq.number)
   mergePr(pullreq, function(err, message) {
     if (err) console.log(new Date(), message, err)
     // setTimeout(function() { callback(err) }, 1000)
+    // what is this cb doing with err
     callback(err)
   })
 }, 1)
@@ -24,20 +26,25 @@ module.exports = function(onHook) {
 
   var server = http.createServer(handler)
 
+  // handler routes the requests to RR
+  // to the appropriate places
   function handler(req, res) {
     console.log(">>>>>", new Date(), req.method, req.url)
 
-    // when RR gets a push from email on collab
+    // When RR gets a push from email when added as collab
+    // Email from GitHub -> cloudmail.in -> here
     if (req.url === '/push') {
       return handleEmail(req, res)
     }
 
-    // when a pr is made to patchwork repo
+    // When a PR is made to patchwork repo
+    // Comes from a GitHub webhook Patchwork repo
     if (req.url.match('/orderin')) {
       return getPR(req, res)
     }
 
-    // when git-it verifies user made a pr
+    // When Git-it verifies user made a PR
+    // Comes from verify step in Git-it challenge #10
     if (req.url.match('/pr')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
@@ -47,6 +54,7 @@ module.exports = function(onHook) {
     }
 
     // when git-it verifies user added RR as collab
+    // When Git-it verifies user added RR as collab
     if (req.url.match('/collab')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
@@ -81,7 +89,7 @@ module.exports = function(onHook) {
     req.pipe(concat(function(buff) {
       var pullreq = JSON.parse(buff)
 
-      // make sure not closed or non-workshop PR
+      // Check if it's a closed PR
       if (pullreq.action && pullreq.action === "closed") {
         console.log("SKIPPING: CLOSED PULL REQUEST")
       }
@@ -106,7 +114,6 @@ module.exports = function(onHook) {
       return
     }
     res.statusCode = 200
-    // res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
       pr: pr
     }, true, 2))
@@ -126,6 +133,7 @@ module.exports = function(onHook) {
     }, true, 2))
   }
 
+  // does this ever get called?
   function mergedPr(res, err) {
     if (err) {
       console.log(err)
