@@ -92,8 +92,8 @@ module.exports = function(onHook) {
       // Check if it's a closed PR
       if (pullreq.action && pullreq.action === "closed") {
         console.log("SKIPPING: CLOSED PULL REQUEST")
-      }
-      else {
+      } else {
+        // send open PR to the queue
         q.push(pullreq, function(err, message) {
           if (err) console.log(new Date(), message, err)
           console.log(new Date(), pullreq.number, message, "Finished PR" )
