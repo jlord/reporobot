@@ -53,8 +53,8 @@ module.exports = function(onHook) {
       })
     }
 
-    // when git-it verifies user added RR as collab
     // When Git-it verifies user added RR as collab
+    // Comes from verify step in Git-it challenge #8
     if (req.url.match('/collab')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
