@@ -11,8 +11,8 @@ var mergePr = require('./merge.js')
 
 // q to slow it down enough for the GitHub API
 var q = async.queue(function (pullreq, callback) {
-  console.log("QUEUE", pullreq.number)
-  mergePr(pullreq, function(err, message) {
+  console.log(new Date(), "QUEUE", pullreq.number)
+  mergePR(pullreq, function(err, message) {
     if (err) console.log(new Date(), message, err)
     // setTimeout(function() { callback(err) }, 1000)
     // what is this cb doing with err
