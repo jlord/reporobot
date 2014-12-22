@@ -4,9 +4,9 @@ var fs = require('fs')
 var url = require('url')
 var async = require('async')
 
-
-var prStatus = require('./prcheck.js')
-var collabStatus = require('./collabcheck.js')
+// local requires
+var checkPR = require('./prcheck.js')
+var checkCollab = require('./collabcheck.js')
 var mergePr = require('./merge.js')
 
 // q to slow it down enough for the GitHub API
@@ -48,8 +48,9 @@ module.exports = function(onHook) {
     if (req.url.match('/pr')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
-      return prStatus(username, function(err, pr) {
-        checkPR(res, err, pr)
+      return checkPR(username, function(err, pr) {
+        // where does this res come from? The req.
+        prStatus(res, err, pr)
       })
     }
 
@@ -58,19 +59,19 @@ module.exports = function(onHook) {
     if (req.url.match('/collab')) {
       var queryURL = url.parse(req.url, true)
       var username = queryURL.query.username
-      return collabStatus(username, function(err, collab) {
-        checkCollab(res, err, collab)
+      return checkCollab(username, function(err, collab) {
+        collabStatus(res, err, collab)
       })
     }
 
-  // when anything else goes to reporobot.jlord.us
-  res.statusCode = 404
-  res.setHeader('content-type', 'application/json')
-  res.end(JSON.stringify({
-    error: 404,
-    message: 'not_found'
-  }, true, 2))
-}
+    // When any other request goes to reporobot.jlord.us
+    res.statusCode = 404
+    res.setHeader('content-type', 'application/json')
+    res.end(JSON.stringify({
+      error: 404,
+      message: 'not_found'
+    }, true, 2))
+  }
 
   function handleEmail(req, res) {
     req.pipe(concat(function(buff) {
@@ -106,7 +107,7 @@ module.exports = function(onHook) {
     }))
   }
 
-  function checkPR(res, err, pr) {
+  function prStatus(res, err, pr) {
     if (err) {
       console.log(err)
       res.statusCode = 500
@@ -119,7 +120,7 @@ module.exports = function(onHook) {
     }, true, 2))
   }
 
-  function checkCollab(res, err, collab) {
+  function collabStatus(res, err, collab) {
     if (err) {
       console.log(err)
       res.statusCode = 500
