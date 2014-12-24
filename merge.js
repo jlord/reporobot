@@ -2,6 +2,7 @@ var request = require('request')
 var asciify = require('asciify')
 var fs = require('fs')
 
+var messages = require('./messages.json')
 var addContributor = require('./contributors.js')
 
 var baseURL = 'https://api.github.com/repos/jlord/patchwork/'
