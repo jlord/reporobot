@@ -30,8 +30,6 @@ module.exports = function(pullreq, callback) {
     return writeComment(messages.antipattern_branch, stats.prNum)
   }
 
-  stats.prNum = pullreq.number
-
   var options = {
       url: baseURL +'pulls/' + stats.prNum,
       json: true,
@@ -47,15 +45,13 @@ module.exports = function(pullreq, callback) {
       var info = body
       stats.time = info.created_at.toLocaleString()
       // RR is PRing on behalf of:
-      stats.username = info.head.user.login
-      console.log(new Date(), "PR " ,  stats.prNum , "Reporobot Pull Request on behalf of " , stats.username)
+      console.log(new Date(), "PR " ,  stats.prNum , "Reporobot Pull Request on behalf of " , stats.user)
       return getFile(stats.prNum)
     }
 
     if (!error && response.statusCode == 200 && pullreq.user.login != "reporobot") {
       var info = body
       stats.time = info.created_at
-      stats.username = info.user.login
       return getFile(stats.prNum)
     }
 
@@ -63,7 +59,6 @@ module.exports = function(pullreq, callback) {
   }
 
   request(options, getTime)
-
 
   function getFile(prNum) {
     var options = {
@@ -114,13 +109,13 @@ module.exports = function(pullreq, callback) {
     var patchArray = prInfo.patch.split('@@')
     var patch = patchArray.pop()
     // generate the expected content
-    asciify(stats.username, {font:'isometric2'}, function(err, res){
+    asciify(stats.user, {font:'isometric2'}, function(err, res){
       if (err) return callback(err, "Error generating ascii art to test against")
       console.log(patch)
       console.log(res)
-      if (patch !== stats.username) {
+      if (patch !== stats.user) {
         stats.userArt = res
-        console.log(new Date(), "PR " , stats.prNum , "Content: MATCH " , stats.username)
+        console.log(new Date(), "PR " , stats.prNum , "Content: MATCH " , stats.user)
         return setTimeout(mergePR(stats.prNum), 5000)
       }
       else {
@@ -154,7 +149,7 @@ module.exports = function(pullreq, callback) {
     tryMerge()
 
     function tryMerge() {
-      var message = "Merging PR from @" + stats.username
+      var message = "Merging PR from @" + stats.user
       var options = {
             url: baseURL + 'pulls/' + prNum + '/merge',
             headers: {
@@ -177,7 +172,7 @@ module.exports = function(pullreq, callback) {
             }
           }
           if (!error && response.statusCode == 200) {
-            console.log(new Date(), "PR " , prNum , "MERGED" , stats.username)
+            console.log(new Date(), "PR " , prNum , "MERGED" , stats.user)
             // add contributor to file and then rebuild page
             return addContributor(stats, callback)
           } else {
