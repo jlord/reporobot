@@ -95,8 +95,8 @@ module.exports = function(pullreq, callback) {
 
   function verifyFilename(prInfo) {
     var filename = prInfo.filename.toLowerCase()
-    if (filename.match('contributors/add-' + stats.username.toLowerCase() + '.txt')) {
-      console.log(new Date(), "PR " , stats.prNum , "Filename: MATCH " , stats.username)
+    if (filename.match('contributors/add-' + stats.user.toLowerCase() + '.txt')) {
+      console.log(new Date(), "PR " , stats.prNum , "Filename: MATCH " , stats.user)
       return verifyContent(prInfo)
     }
     else {
@@ -125,8 +125,8 @@ module.exports = function(pullreq, callback) {
   }
 
   function writeComment(message, prNum) {
-    stats.username = stats.username || "a skipped PR"
-    console.log(new Date(), "PR " +  prNum + "Uh oh, writing comment for " + stats.username)
+    stats.user = stats.user || "a skipped PR"
+    console.log(new Date(), "PR " +  prNum + "Uh oh, writing comment for " + stats.user)
      var options = {
         url: baseURL + 'issues/' + prNum + '/comments',
         headers: {
