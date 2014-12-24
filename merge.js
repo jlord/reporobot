@@ -20,6 +20,10 @@ var stats = {}
 module.exports = function(pullreq, callback) {
 
   if (pullreq.pull_request) pullreq = pullreq.pull_request
+  var prBranch = pullreq.head.ref.toLowerCase()
+  stats.user = pullreq.user.login
+  stats.prNum = pullreq.number
+
   // if branch name doesn't include username, it may be
   // a non git-it related, normal PR
   if (!pullreq.head.ref.toLowerCase().match(pullreq.user.login.toLowerCase()) && pullreq.user.login != "reporobot") {
