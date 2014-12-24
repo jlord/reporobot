@@ -25,11 +25,9 @@ module.exports = function(pullreq, callback) {
   stats.prNum = pullreq.number
 
   // if branch name doesn't include username, it may be
-  // a non git-it related, normal PR
-  if (!pullreq.head.ref.toLowerCase().match(pullreq.user.login.toLowerCase()) && pullreq.user.login != "reporobot") {
-    // TO DO get username here and use it in the message
-    var message = "**Hello! The name of the branch with this Pull Request is not of the `add-USERNAME` pattern so I'm skipping reviewing it for the Git-it challenges.**\nIf you are completing the Git-it challenges, you'll need to close this Pull Request, rename your branch, push it to your fork of Patchwork on GitHub and then start a new Pull Request. Here's how to rename a branch and push it to GitHub from terminal:\n```bash\n$ git branch -m add-USERNAME\n$ git push origin add-USERNAME\n```\n_Make sure to replace USERNAME with your actual GitHub username, with capitals exactly as they apepar on GitHub_."
-    return writeComment(message, pullreq.number)
+  // a non git-it related normal PR
+  if (!prBranch.match(stats.user.toLowerCase()) && stats.user != "reporobot") {
+    return writeComment(messages.antipattern_branch, stats.prNum)
   }
 
   stats.prNum = pullreq.number
@@ -82,17 +80,15 @@ module.exports = function(pullreq, callback) {
 
       if (!error && response.statusCode == 200) {
         if (body.length > 1) {
-          console.log(new Date(), "PR " , stats.prNum , "MORE THAN ONE FILE " , stats.username)
-          var message = '**Uh oh, I see too many files, there should be one:** `contributors/add-' + stats.username + '`.\n\n- Delete the extra file on your computer.\n- Add and commit that change with these commands in terminal:\n```bash\n$ git add -A && git commit -m "delete extra file"\n```\n- Then push those changes to your branch:\n```bash\n$ git push origin add-' + stats.username + '\n```\n- Check back here to see if it was merged.'
-          return writeComment(message, stats.prNum)
+          console.log(new Date(), "PR " , stats.prNum , "MORE THAN ONE FILE " , stats.user)
+          return writeComment(message.multi_files, stats.prNum)
         }
 
         var prInfo = body[0]
 
         if (prInfo === undefined ) {
-          console.log(new Date(), "PR " , stats.prNum , "FILE IS EMPTY " , stats.username)
-          var message = "File is empty, try again!"
-          return writeComment(message, stats.prNum)
+          console.log(new Date(), "PR " , stats.prNum , "FILE IS EMPTY " , stats.user)
+          return writeComment(message.empty_file, stats.prNum)
         }
 
         return verifyFilename(prInfo)
@@ -109,8 +105,7 @@ module.exports = function(pullreq, callback) {
       return verifyContent(prInfo)
     }
     else {
-      var message = 'Filename is different than expected: contributors/add-' + stats.username + '.txt. Close the pull request, rename your file or move it into the `contributors/` folder and try again!'
-      return writeComment(message, stats.prNum)
+      return writeComment(message.bad_filename, stats.prNum)
     }
   }
 
@@ -129,8 +124,7 @@ module.exports = function(pullreq, callback) {
         return setTimeout(mergePR(stats.prNum), 5000)
       }
       else {
-        var message = "Ascii art wasn't as expected, did something change? Close and re-open please."
-        return writeComment(message, stats.prNum)
+        return writeComment(message.bad_ascii, stats.prNum)
       }
     })
   }
