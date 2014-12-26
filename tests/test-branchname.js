@@ -9,6 +9,7 @@ var github = new Github({
 
 var fork = github.getRepo('reporobot', 'patchwork')
 var upstream = github.getRepo('jlord', 'patchwork')
+var prnum
 
 tape("Test wrong branch name", function(t) {
 
@@ -32,11 +33,12 @@ tape("Test wrong branch name", function(t) {
 
     upstream.createPullRequest(pull, function(err, pr) {
       if (err) return t.error(err, "error creating PR")
-      fetchPR(pr.number)
+      prnum = pr.number
+      fetchPR()
     })
   }
 
-  function fetchPR(prnum) {
+  function fetchPR() {
     var baseURL = 'https://api.github.com/repos/jlord/patchwork/issues/'
     var prURL = baseURL + prnum + '/comments'
 
