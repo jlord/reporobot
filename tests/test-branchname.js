@@ -2,15 +2,15 @@ var Github = require('github-api')
 var request = require('request')
 var tape = require('tape')
 
+var github = new Github({
+  auth: "oauth",
+  token: process.env['REPOROBOT_TOKEN']
+})
+
+var fork = github.getRepo('reporobot', 'patchwork')
+var upstream = github.getRepo('jlord', 'patchwork')
+
 tape("Test wrong branch name", function(t) {
-
-  var github = new Github({
-    auth: "oauth",
-    token: process.env['REPOROBOT_TOKEN']
-  })
-
-  var fork = github.getRepo('reporobot', 'patchwork')
-  var upstream = github.getRepo('jlord', 'patchwork')
 
   createBranch()
 
@@ -56,10 +56,9 @@ tape("Test wrong branch name", function(t) {
 
 tape("Test cleanup", function(t) {
   function deleteViaBranch() {
-    repo.deleteRef('heads/add-' + viaAccount, function(err) {
-      if (err && err.error != '422') return console.log(err, "error deleting ref on via")
-        console.log(n, 1 , '...Deleted branch on ' + viaAccount)
-        cleanOriginal()
+    fork.deleteRef('heads/wrongbranch', function(err) {
+      if (err && err.error != '422') return t.error(err, "error deleting branch")
+      console.log("Branch deleted on RR fork. Cleaned up!")
       })
     }
 })
