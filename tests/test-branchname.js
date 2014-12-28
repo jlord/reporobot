@@ -18,9 +18,16 @@ tape("Test wrong branch name", function(t) {
   // create new branch on jlord/Patchwork fork
   function createBranch() {
     fork.branch('gh-pages', 'wrongname', function(err) {
-      if (err) return t.error(err, "error creating branch on RRs fork")
-      makePR()
+      if (err) return t.error(err, "Error creating branch on RRs fork")
+      createDiff()
     })
+  }
+
+  fucntion createDiff() {
+    fork.write('wrongname', 'test.md', 'This is a test', '[TEST] Create diff', function(err) {
+        if (err) return t.error(err, "Error creating new file to make diff")
+        makePR()
+      })
   }
 
   function makePR() {
@@ -59,8 +66,24 @@ tape("Test wrong branch name", function(t) {
 tape("Test cleanup", function(t) {
   function deleteViaBranch() {
     fork.deleteRef('heads/wrongbranch', function(err) {
-      if (err && err.error != '422') return t.error(err, "error deleting branch")
-      console.log("Branch deleted on RR fork. Cleaned up!")
+      if (err && err.error != '422') return t.error(err, "Error deleting branch")
+      console.log("Branch deleted on RR fork.")
+      closePR()
+      })
+    }
+
+    function closePR() {
+      var options = {
+        url: 'https://api.gihtub.com/repos/jlord/patchwork/pulls/' + prnum,
+        json: true,
+        body: {
+          'state': 'closed'
+        }
+      }
+      request.patch(options, function(err) {
+        if (err) t.error(err, "Error closing PR")
+        console.log("Deleted test PR")
+        t.end()
       })
     }
 })
