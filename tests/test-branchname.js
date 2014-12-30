@@ -35,7 +35,7 @@ tape("Test wrong branch name", function(t) {
       title: "[TESTING] Wrong branch name",
       body: "Running a test on a PR with a wrong branch name",
       base: "gh-pages",
-      head: "reporobot:" + "wrongbranch"
+      head: "reporobot:" + "wrongname"
     }
 
     upstream.createPullRequest(pull, function(err, pr) {
@@ -65,7 +65,8 @@ tape("Test wrong branch name", function(t) {
 
 tape("Test cleanup", function(t) {
   function deleteViaBranch() {
-    fork.deleteRef('heads/wrongbranch', function(err) {
+    console.log("⬢ Deleting branch")
+    fork.deleteRef('heads/wrongname', function(err) {
       if (err && err.error != '422') return t.error(err, "Error deleting branch")
       console.log("Branch deleted on RR fork.")
       closePR()
