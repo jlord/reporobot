@@ -12,6 +12,10 @@ var fork = github.getRepo('reporobot', 'patchwork')
 var upstream = github.getRepo('jlord', 'patchwork')
 var prnum
 
+// Create a branch on RR's fork of Patchwork. Then create a file on that
+// branch so that you can create a PR. Check to see if RR commented on that PR.
+// Delete branch when finished (or have failed).
+
 tape("Test wrong branch name", function(t) {
 
   createBranch()
