@@ -1,6 +1,5 @@
 # Reporobot
 
-
 This is the source code for @reporobot who lives on a server and interacts with
 repositories on behalf of [Git-it](http://www.github.com/jlord/git-it). Git-it is a
 beginners adventure(!) for learning Git and GitHub, of the
@@ -42,4 +41,3 @@ and is deployed with [maxogden/taco](http://www.github.com/maxogden/taco).
   Git-it users fork and pull request against) with the latest completer.
 
 Busy robot.
-
