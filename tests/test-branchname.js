@@ -26,7 +26,6 @@ tape("Test wrong branch name", function(t) {
 
   createBranch()
 
-  // create new branch on jlord/Patchwork fork
   function createBranch() {
     debug("⬢ Creating branch")
     fork.branch('gh-pages', 'wrongname', function(err) {
