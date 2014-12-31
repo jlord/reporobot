@@ -8,6 +8,12 @@ var github = new Github({
   token: process.env['REPOROBOT_TOKEN']
 })
 
+var reqHeaders = {
+  'User-Agent': 'request',
+  'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+}
+
+var baseURL = 'https://api.github.com/repos/'
 var fork = github.getRepo('reporobot', 'patchwork')
 var upstream = github.getRepo('jlord', 'patchwork')
 var prnum
@@ -53,8 +59,9 @@ tape("Test wrong branch name", function(t) {
   }
 
   function fetchPR() {
-    var baseURL = 'https://api.github.com/repos/jlord/patchwork/issues/'
-    var prURL = baseURL + prnum + '/comments'
+    debug("⬢ Fetching PR")
+    var prURL = baseURL + 'jlord/patchwork/issues/' + prnum + '/comments'
+    var options = { headers: reqHeaders, json: true, url: prURL }
 
     request(prURL, function(err, res) {
       if (err) return t.error(err, "error fetching PR")
