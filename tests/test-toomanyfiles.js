@@ -127,7 +127,7 @@ tape("Test too many files", function(t) {
         return t.end()
       }
       // Give RR time to respond to PR
-      setTimeout(function() { getComment(res,body) }, 15000)
+      setTimeout(function() { getComment(res,body) }, 20000)
     })
   }
 
