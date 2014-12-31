@@ -7,7 +7,7 @@ var async = require('async')
 // local requires
 var checkPR = require('./prcheck.js')
 var checkCollab = require('./collabcheck.js')
-var mergePr = require('./merge.js')
+var mergePR = require('./merge.js')
 
 // q to slow it down enough for the GitHub API
 var q = async.queue(function (pullreq, callback) {
