@@ -4,7 +4,8 @@
   "description": "a bot that interacts with git-it",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "wrongname": "DEBUG=* node tests/test-wrongname.js"
   },
   "author": "Jessica Lord",
   "license": "BSD-2-Clause",
