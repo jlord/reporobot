@@ -82,10 +82,17 @@ tape("Test wrong branch name", function(t) {
     var prURL = baseURL + 'jlord/patchwork/issues/' + prnum + '/comments'
     var options = { headers: reqHeaders, json: true, url: prURL }
 
-    request(prURL, function(err, res) {
-      if (err) return t.error(err, "error fetching PR")
-      if (res.length === 0) return t.fail("No comment created")
-      setTimeout(getComment(res), 5000)
+    request(options, function(err, res, body) {
+      if (err) {
+        t.error(err, "error fetching PR")
+        return t.end()
+      }
+      if (res.length === 0) {
+        t.fail("No PR created")
+        return t.end()
+      }
+      // Give RR time to respond to PR
+      setTimeout(function() { getComment(res,body) }, 15000)
     })
   }
 
