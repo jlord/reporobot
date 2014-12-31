@@ -65,7 +65,7 @@ tape("Test too many files", function(t) {
     })
   }
 
-  function createFirstFile() {
+  function createSecondFile() {
     var options = {
       headers: reqHeaders,
       url: baseURL + "reporobot/patchwork/contents/file_two.md",
