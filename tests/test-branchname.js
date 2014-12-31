@@ -1,10 +1,10 @@
+var debug = require('debug')('TEST')
 var Github = require('github-api')
 var request = require('request')
-var debug = require('debug')('TEST')
 var tape = require('tape')
 
 var github = new Github({
-  auth: "oauth",
+  auth: 'oauth',
   token: process.env['REPOROBOT_TOKEN']
 })
 
@@ -13,9 +13,9 @@ var reqHeaders = {
   'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
 }
 
-var baseURL = 'https://api.github.com/repos/'
 var fork = github.getRepo('reporobot', 'patchwork')
 var upstream = github.getRepo('jlord', 'patchwork')
+var baseURL = 'https://api.github.com/repos/'
 var prnum
 
 // Create a branch on RR's fork of Patchwork. Then create a file on that
@@ -57,6 +57,7 @@ tape("Test wrong branch name", function(t) {
         t.error(err, "Error making new file on branch", body)
         return t.end()
       }
+      // Give GitHub some time
       setTimeout(function() { makePR() }, 5000)
     })
   }
@@ -95,7 +96,7 @@ tape("Test wrong branch name", function(t) {
         return t.end()
       }
       // Give RR time to respond to PR
-      setTimeout(function() { getComment(res,body) }, 15000)
+      setTimeout(function() { getComment(res,body) }, 10000)
     })
   }
 
