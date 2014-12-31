@@ -71,7 +71,10 @@ tape("Test wrong branch name", function(t) {
     }
 
     upstream.createPullRequest(pull, function(err, pr) {
-      if (err) return t.error(err, "error creating PR")
+      if (err) {
+        t.error(err, "error creating PR")
+        return t.end()
+      }
       prnum = pr.number
       fetchPR()
     })
