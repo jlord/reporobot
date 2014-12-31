@@ -99,7 +99,7 @@ tape("Test wrong branch name", function(t) {
         return t.end()
       }
       // Give RR time to respond to PR
-      setTimeout(function() { getComment(res,body) }, 10000)
+      setTimeout(function() { getComment(res,body) }, 15000)
     })
   }
 
