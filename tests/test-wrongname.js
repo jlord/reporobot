@@ -107,7 +107,7 @@ tape("Test wrong branch name", function(t) {
     debug("⬢ Getting comment")
     if (body.length < 1) {
       t.fail("Less than one comment")
-      t.end()
+      return t.end()
     }
     var lastComment = body[body.length - 1]
     // TODO check actuall comment content
