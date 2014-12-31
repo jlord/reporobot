@@ -1,5 +1,6 @@
 var Github = require('github-api')
 var request = require('request')
+var debug = require('debug')('TEST')
 var tape = require('tape')
 
 var github = new Github({
@@ -17,6 +18,7 @@ tape("Test wrong branch name", function(t) {
 
   // create new branch on jlord/Patchwork fork
   function createBranch() {
+    debug("⬢ Creating branch")
     fork.branch('gh-pages', 'wrongname', function(err) {
       if (err) return t.error(err, "Error creating branch on RRs fork")
       createDiff()
@@ -31,6 +33,7 @@ tape("Test wrong branch name", function(t) {
   }
 
   function makePR() {
+    debug("⬢ Creating PR")
     var pull = {
       title: "[TESTING] Wrong branch name",
       body: "Running a test on a PR with a wrong branch name",
@@ -65,7 +68,7 @@ tape("Test wrong branch name", function(t) {
 
 tape("Test cleanup", function(t) {
   function deleteViaBranch() {
-    console.log("⬢ Deleting branch")
+    debug("⬢ Deleting branch")
     fork.deleteRef('heads/wrongname', function(err) {
       if (err && err.error != '422') return t.error(err, "Error deleting branch")
       console.log("Branch deleted on RR fork.")
