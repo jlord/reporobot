@@ -110,27 +110,18 @@ tape("Test wrong branch name", function(t) {
 })
 
 tape("Test cleanup", function(t) {
+
+  deleteViaBranch()
+
   function deleteViaBranch() {
     debug("⬢ Deleting branch")
     fork.deleteRef('heads/wrongname', function(err) {
-      if (err && err.error != '422') return t.error(err, "Error deleting branch")
-      console.log("Branch deleted on RR fork.")
-      closePR()
-      })
-    }
-
-    function closePR() {
-      var options = {
-        url: 'https://api.gihtub.com/repos/jlord/patchwork/pulls/' + prnum,
-        json: true,
-        body: {
-          'state': 'closed'
-        }
+      if (err && err.error != '422') {
+        t.error(err, "Error deleting branch")
+        return t.end()
       }
-      request.patch(options, function(err) {
-        if (err) t.error(err, "Error closing PR")
-        console.log("Deleted test PR")
-        t.end()
-      })
-    }
+      debug("⬢ Branch deleted on RR fork.")
+      t.end()
+    })
+  }
 })
