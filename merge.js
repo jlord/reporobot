@@ -26,7 +26,7 @@ module.exports = function(pullreq, callback) {
 
   // if branch name doesn't include username, it may be
   // a non git-it related normal PR
-  if (!prBranch.match(stats.user.toLowerCase()) && stats.user != "reporobot") {
+  if (!prBranch.match(stats.user.toLowerCase())) {
     return writeComment(messages.antipattern_branch, stats.prNum)
   }
 
