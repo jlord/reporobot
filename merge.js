@@ -76,14 +76,14 @@ module.exports = function(pullreq, callback) {
       if (!error && response.statusCode == 200) {
         if (body.length > 1) {
           console.log(new Date(), "PR " , stats.prNum , "MORE THAN ONE FILE " , stats.user)
-          return writeComment(message.multi_files, stats.prNum)
+          return writeComment(messages.multi_files, stats.prNum)
         }
 
         var prInfo = body[0]
 
         if (prInfo === undefined ) {
           console.log(new Date(), "PR " , stats.prNum , "FILE IS EMPTY " , stats.user)
-          return writeComment(message.empty_file, stats.prNum)
+          return writeComment(messages.empty_file, stats.prNum)
         }
 
         return verifyFilename(prInfo)
@@ -100,7 +100,7 @@ module.exports = function(pullreq, callback) {
       return verifyContent(prInfo)
     }
     else {
-      return writeComment(message.bad_filename, stats.prNum)
+      return writeComment(messages.bad_filename, stats.prNum)
     }
   }
 
@@ -119,7 +119,7 @@ module.exports = function(pullreq, callback) {
         return setTimeout(mergePR(stats.prNum), 5000)
       }
       else {
-        return writeComment(message.bad_ascii, stats.prNum)
+        return writeComment(messages.bad_ascii, stats.prNum)
       }
     })
   }
