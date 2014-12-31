@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "wrongname": "DEBUG=* node tests/test-wrongname.js"
+    "wrongname": "DEBUG=* node tests/test-wrongname.js",
+    "manyfiles": "DEBUG=* node tests/test-toomanyfiles.js",
+    "test": "npm run wrongname && npm run manyfiles"
   },
   "author": "Jessica Lord",
   "license": "BSD-2-Clause",
