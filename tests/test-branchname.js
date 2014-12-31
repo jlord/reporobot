@@ -31,7 +31,7 @@ tape("Test wrong branch name", function(t) {
     debug("⬢ Creating branch")
     fork.branch('gh-pages', 'wrongname', function(err) {
       if (err) return t.error(err, "Error creating branch on RRs fork")
-      createDiff()
+      setTimeout(createDiff(), 5000)
     })
   }
 
