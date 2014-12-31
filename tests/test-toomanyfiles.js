@@ -1,3 +1,4 @@
+var messages = require('../messages.json')
 var debug = require('debug')('TEST')
 var Github = require('github-api')
 var request = require('request')
@@ -138,8 +139,8 @@ tape("Test too many files", function(t) {
       return t.end()
     }
     var lastComment = body[body.length - 1]
-    // TODO check actuall comment content
     t.equal(lastComment.user.login, "reporobot")
+    t.equal(lastComment.body, messages.multi_files)
     t.end()
   }
 })
