@@ -126,7 +126,7 @@ module.exports = function(pullreq, callback) {
 
   function writeComment(message, prNum) {
     stats.user = stats.user || "a skipped PR"
-    console.log(new Date(), "PR " +  prNum + "Uh oh, writing comment for " + stats.user)
+    console.log(new Date(), "PR " +  prNum + " Uh oh, writing comment for " + stats.user)
      var options = {
         url: baseURL + 'issues/' + prNum + '/comments',
         headers: {
