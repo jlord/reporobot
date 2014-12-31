@@ -34,11 +34,31 @@ tape("Test wrong branch name", function(t) {
     })
   }
 
-  fucntion createDiff() {
-    fork.write('wrongname', 'test.md', 'This is a test', '[TEST] Create diff', function(err) {
-        if (err) return t.error(err, "Error creating new file to make diff")
-        makePR()
-      })
+  function createDiff() {
+    var options = {
+      headers: reqHeaders,
+      url: baseURL + "reporobot/patchwork/contents/test.md",
+      json: true,
+      body: {
+        "path": "test.md",
+        "branch": "wrongname",
+        "message": "TEST",
+        "content": "bXkgbmV3IGZpbGUgY29udGVudHM=",
+        "committer": {
+          "name": "reporobot",
+          "email": "60ebe73fdad8ee59d45c@cloudmailin.net"
+        }
+      }
+    }
+
+    request.put(options, function(err, res, body) {
+      debug("⬢ Creating diff")
+      if (err) {
+        t.error(err, "Error making new file on branch", body)
+        return t.end()
+      }
+      setTimeout(function() { makePR() }, 5000)
+    })
   }
 
   function makePR() {
