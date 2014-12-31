@@ -1,8 +1,3 @@
-Testing @reporobot
+See the [tracking issue for tests](https://github.com/jlord/reporobot/issues/23).
 
-## Test Scenarios
-
-1. Correct Pull Request
-2. Incorrect PR: Wrong branch name
-3. Incorrect PR: File is empty
-4. Incorrect PR: Wrong Filename
+:cat:
