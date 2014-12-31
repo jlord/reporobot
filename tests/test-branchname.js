@@ -29,7 +29,10 @@ tape("Test wrong branch name", function(t) {
   function createBranch() {
     debug("⬢ Creating branch")
     fork.branch('gh-pages', 'wrongname', function(err) {
-      if (err) return t.error(err, "Error creating branch on RRs fork")
+      if (err) {
+        t.error(err, "Error creating branch on RRs fork")
+        return t.end()
+      }
       setTimeout(createDiff(), 5000)
     })
   }
