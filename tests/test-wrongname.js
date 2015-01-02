@@ -1,3 +1,4 @@
+var messages = require('../messages.json')
 var debug = require('debug')('TEST')
 var Github = require('github-api')
 var request = require('request')
@@ -112,6 +113,7 @@ tape("Test wrong branch name", function(t) {
     var lastComment = body[body.length - 1]
     // TODO check actuall comment content
     t.equal(lastComment.user.login, "reporobot")
+    t.equal(lastComment.body, messages.antipattern_branch)
     t.end()
   }
 })
