@@ -29,7 +29,7 @@ tape("Test wrong branch name", function(t) {
 
   function createBranch() {
     debug("⬢ Creating branch")
-    fork.branch('gh-pages', 'wrongname', function(err) {
+    fork.branch('gh-pages', 'wrongbranch', function(err) {
       if (err) {
         t.error(err, "Error creating branch on RRs fork")
         return t.end()
@@ -45,7 +45,7 @@ tape("Test wrong branch name", function(t) {
       json: true,
       body: {
         "path": "test.md",
-        "branch": "wrongname",
+        "branch": "wrongbranch",
         "message": "TEST",
         "content": "bXkgbmV3IGZpbGUgY29udGVudHM=",
         "committer": {
@@ -72,7 +72,7 @@ tape("Test wrong branch name", function(t) {
       title: "[TESTING] Wrong branch name",
       body: "Running a test on a PR with a wrong branch name",
       base: "gh-pages",
-      head: "reporobot:" + "wrongname"
+      head: "reporobot:" + "wrongbranch"
     }
 
     upstream.createPullRequest(pull, function(err, pr) {
@@ -124,7 +124,7 @@ tape("Test cleanup", function(t) {
 
   function deleteViaBranch() {
     debug("⬢ Deleting branch")
-    fork.deleteRef('heads/wrongname', function(err) {
+    fork.deleteRef('heads/wrongbranch', function(err) {
       if (err && err.error != '422') {
         t.error(err, "Error deleting branch")
         return t.end()
