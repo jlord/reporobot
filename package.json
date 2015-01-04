@@ -5,9 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "wrongname": "DEBUG=* node tests/test-wrongname.js",
+    "wrongbranch": "DEBUG=* node tests/test-wrongbranch.js",
     "manyfiles": "DEBUG=* node tests/test-toomanyfiles.js",
-    "test": "npm run wrongname && npm run manyfiles"
+    "test": "npm run wrongbranch && npm run manyfiles"
   },
   "author": "Jessica Lord",
   "license": "BSD-2-Clause",
