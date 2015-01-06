@@ -23,13 +23,13 @@ var prnum
 // branch so that you can create a PR. Check to see if RR commented on that PR.
 // Delete branch when finished (or have failed).
 
-tape("Test wrong branch name", function(t) {
+tape("Test PR with empty file", function(t) {
 
   createBranch()
 
   function createBranch() {
     debug("⬢ Creating branch")
-    fork.branch('gh-pages', 'wrongbranch', function(err) {
+    fork.branch('gh-pages', 'emptyfile', function(err) {
       if (err) {
         t.error(err, "Error creating branch on RRs fork")
         return t.end()
@@ -45,9 +45,9 @@ tape("Test wrong branch name", function(t) {
       json: true,
       body: {
         "path": "test.md",
-        "branch": "wrongbranch",
+        "branch": "emptyfile",
         "message": "TEST",
-        "content": "bXkgbmV3IGZpbGUgY29udGVudHM=",
+        "content": "",
         "committer": {
           "name": "reporobot",
           "email": "60ebe73fdad8ee59d45c@cloudmailin.net"
@@ -69,10 +69,10 @@ tape("Test wrong branch name", function(t) {
   function makePR() {
     debug("⬢ Creating PR")
     var pull = {
-      title: "[TESTING] Wrong branch name",
-      body: "Running a test on a PR with a wrong branch name",
+      title: "[TESTING] Empty file",
+      body: "Running a test on a PR with an empty file",
       base: "gh-pages",
-      head: "reporobot:" + "wrongbranch"
+      head: "reporobot:" + "emptyfile"
     }
 
     upstream.createPullRequest(pull, function(err, pr) {
@@ -111,9 +111,8 @@ tape("Test wrong branch name", function(t) {
       return t.end()
     }
     var lastComment = body[body.length - 1]
-    // TODO check actuall comment content
     t.equal(lastComment.user.login, "reporobot")
-    t.equal(lastComment.body, messages.antipattern_branch)
+    t.equal(lastComment.body, messages.empty_file)
     t.end()
   }
 })
