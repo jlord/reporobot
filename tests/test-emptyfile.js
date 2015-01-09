@@ -123,7 +123,7 @@ tape("Test cleanup", function(t) {
 
   function deleteViaBranch() {
     debug("⬢ Deleting branch")
-    fork.deleteRef('heads/wrongbranch', function(err) {
+    fork.deleteRef('heads/emptyfile', function(err) {
       if (err && err.error != '422') {
         t.error(err, "Error deleting branch")
         return t.end()
