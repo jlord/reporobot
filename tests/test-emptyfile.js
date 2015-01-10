@@ -29,7 +29,7 @@ tape("Test PR with empty file", function(t) {
 
   function createBranch() {
     debug("⬢ Creating branch")
-    fork.branch('gh-pages', 'emptyfile', function(err) {
+    fork.branch('gh-pages', 'add-reporobot', function(err) {
       if (err) {
         t.error(err, "Error creating branch on RRs fork")
         return t.end()
@@ -45,7 +45,7 @@ tape("Test PR with empty file", function(t) {
       json: true,
       body: {
         "path": "test.md",
-        "branch": "emptyfile",
+        "branch": "add-reporobot",
         "message": "TEST",
         "content": "",
         "committer": {
@@ -72,7 +72,7 @@ tape("Test PR with empty file", function(t) {
       title: "[TESTING] Empty file",
       body: "Running a test on a PR with an empty file",
       base: "gh-pages",
-      head: "reporobot:" + "emptyfile"
+      head: "reporobot:" + "add-reporobot"
     }
 
     upstream.createPullRequest(pull, function(err, pr) {
@@ -123,7 +123,7 @@ tape("Test cleanup", function(t) {
 
   function deleteViaBranch() {
     debug("⬢ Deleting branch")
-    fork.deleteRef('heads/emptyfile', function(err) {
+    fork.deleteRef('heads/add-reporobot', function(err) {
       if (err && err.error != '422') {
         t.error(err, "Error deleting branch")
         return t.end()
