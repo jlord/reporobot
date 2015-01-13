@@ -111,7 +111,6 @@ tape("Test wrong branch name", function(t) {
       return t.end()
     }
     var lastComment = body[body.length - 1]
-    // TODO check actuall comment content
     t.equal(lastComment.user.login, "reporobot")
     t.equal(lastComment.body, messages.antipattern_branch)
     t.end()
