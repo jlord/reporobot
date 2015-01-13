@@ -82,8 +82,8 @@ tape("Test PR with empty file", function(t) {
       }
       prnum = pr.number
       // Give GitHub some time
-      setTimeout(function() { makePR() }, 5000)
-      
+      setTimeout(function() { fetchPR() }, 5000)
+
     })
   }
 
