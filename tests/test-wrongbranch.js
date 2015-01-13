@@ -81,7 +81,9 @@ tape("Test wrong branch name", function(t) {
         return t.end()
       }
       prnum = pr.number
-      fetchPR()
+      // Give RR time to respond to PR
+      setTimeout(function() { fetchPR(res,body) }, 15000)
+
     })
   }
 
@@ -99,8 +101,7 @@ tape("Test wrong branch name", function(t) {
         t.fail("No PR created")
         return t.end()
       }
-      // Give RR time to respond to PR
-      setTimeout(function() { getComment(res,body) }, 15000)
+      getComment(res,body)
     })
   }
 
