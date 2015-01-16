@@ -1,3 +1,4 @@
+var rebuildpage = require('./buildpage.js')
 var messages = require('../messages.json')
 var debug = require('debug')('TEST')
 var Github = require('github-api')
@@ -107,11 +108,19 @@ tape("Test a correct PR", function(t) {
   function checkClosed(res, body) {
     debug("⬢ Getting comment")
     console.log(body)
+    // did the pr get merged?
   }
 })
 
 // TODO tear down @reporobot in /patchworks
 // rebuild /patchwork
+
+// get contributors.json file from upstream
+// parse it and delete RR as last entry
+// or check the last five entries to be RR
+// rebuild page based
+// push the edited file back upstream
+//
 
 // tape("Test cleanup", function(t) {
 //
