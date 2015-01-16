@@ -31,6 +31,16 @@ module.exports = function(onHook) {
   function handler(req, res) {
     console.log(">>>>>", new Date(), req.method, req.url)
 
+
+    // End point to latest data
+    if (req.url.match('/data')) {
+      fs.readFile(process.env['CONTRIBUTORS'], function(err, data) {
+        if (err) return console.log(new Date(), err)
+        res.statusCode = 200
+        res.end(JSON.stringify(JSON.parse(data)))
+      })
+    }
+
     // When RR gets a push from email when added as collab
     // Email from GitHub -> cloudmail.in -> here
     if (req.url === '/push') {
