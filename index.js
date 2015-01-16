@@ -33,11 +33,13 @@ module.exports = function(onHook) {
 
 
     // End point to latest data
-    if (req.url.match('/data')) {
-      fs.readFile(process.env['CONTRIBUTORS'], function(err, data) {
+    if (req.url === ('/data')) {
+      console.log("DATA REQ")
+     return fs.readFile(process.env['CONTRIBUTORS'], function(err, data) {
         if (err) return console.log(new Date(), err)
+	console.log("READ FILE")
         res.statusCode = 200
-        res.end(JSON.stringify(JSON.parse(data)))
+        res.end(JSON.stringify(JSON.parse(data.toString())))
       })
     }
 
