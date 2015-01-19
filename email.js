@@ -58,10 +58,12 @@ module.exports = function(object, callback) {
 
     request.get(options, function(err, res, body) {
       if (err) return callback(err, "Error fetching SHA")
+      console.log("body on sha req", body)
+      if (res.statusCode !== 200) return console.log("Didn't get SHA", body.message)
       options.body.sha = body.sha
       request.put(options, function(err, res, body) {
         if (err) return callback(err, "Error collabing on forked repo.")
-        if (res.statusCode !== 200) return console.log("Didn't collab", res)
+        if (res.statusCode !== 200) return console.log("Didn't collab", body.message)
         console.log(new Date(), "Commited to a repo")
       })
     })
