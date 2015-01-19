@@ -1,5 +1,6 @@
 var Github = require('github-api')
 var asciify = require('asciify')
+var btoa = require('btoa')
 
 module.exports = function(object, callback) {
   // if it's not an email, return
@@ -7,7 +8,7 @@ module.exports = function(object, callback) {
   getDetails(object)
 
   function getDetails(object) {
-
+    var baseURL = 'https://api.github.com/repos/'
     var subject = object.headers.Subject
     console.log(new Date(), "Recieved email:", subject)
 
@@ -18,14 +19,12 @@ module.exports = function(object, callback) {
 
     var detailsArray = subject.split(" added you to ")
     var details = { "username": detailsArray[0],
-                    "repo": detailsArray[1]
-                  }
-    details.repoURI = "https://www.github.com/"
-                    + details.username + "/"
-                    + details.repo + ".git"
+                    "repo": detailsArray[1] }
+    details.repoURI = baseURL + details.username + "/"
+                    + details.repo + "/contents"
+                    + "add-" + details.username
 
-    console.log([new Date(), details.username + "added Reporobot as a contributor."])
-
+    console.log(new Date(), details.username, "added Reporobot as a collaborator.")
     asciiArt(details)
   }
 
@@ -38,22 +37,31 @@ module.exports = function(object, callback) {
 
   function writeRepo(artwork, details) {
 
-    var github = new Github({
-      auth: "oauth",
-      token: process.env['REPOROBOT_TOKEN']
-    })
+    var reqHeaders = {
+      'User-Agent': 'request',
+      'Authorization': 'token ' + process.env['REPOROBOT_TOKEN'] }
 
-    var repo = github.getRepo(details.username, details.repo)
+    var options = {
+      headers: reqHeaders,
+      url: details.repoURI,
+      json: true,
+      body: {
+        "branch": "add-" + details.username,
+        "path": "contributors/" + "add-" + details.username + ".txt",
+        "committer": {
+          "name": "reporobot",
+          "email": "60ebe73fdad8ee59d45c@cloudmailin.net" },
+        "sha": "",
+        "content": btoa(artwork),
+        "message": "drew a picture :art:" }}
 
-    var branchName = "add-" + details.username
-    var filePath = 'contributors/add-' + details.username + '.txt'
-
-    // reporobot will overwrite the existing file which should just
-    // contain a username
-
-    repo.write(branchName, filePath, artwork, 'drew a picture', function(err) {
-      if (err) return callback(err, "Error collabing on forked repo.")
-      console.log([new Date(), "Commited to a repo"])
+    request.get(options, function(err, res, body) {
+      if (err) return callback(err, "Error fetching SHA")
+      options.body.sha = body.sha
+      request.put(options, function(err, res, body) {
+        if (err) return callback(err, "Error collabing on forked repo.")
+        console.log(new Date(), "Commited to a repo")
+      })
     })
   }
 }
