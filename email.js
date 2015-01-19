@@ -9,10 +9,10 @@ module.exports = function(object, callback) {
   function getDetails(object) {
 
     var subject = object.headers.Subject
-    console.log([new Date(), "Recieved email:", subject])
+    console.log(new Date(), "Recieved email:", subject)
 
     if (!subject.match("added you to patchwork")) {
-      console.log([new Date(), "non relevant email"])
+      console.log(new Date(), "non relevant email")
       return
     }
 
@@ -32,8 +32,7 @@ module.exports = function(object, callback) {
   function asciiArt(details) {
     asciify(details.username, {font:'isometric2'}, function(err, res){
       if (err) return callback(err, "Ascii art error")
-      var artwork = res
-      writeRepo(artwork, details)
+      writeRepo(res, details)
     })
   }
 
