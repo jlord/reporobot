@@ -6,7 +6,6 @@ var request = require('request')
 module.exports = function(object, callback) {
   // if it's not an email, return
   if (!object.headers) return
-  console.log(object)
   getDetails(object)
 
   function getDetails(object) {
@@ -23,8 +22,8 @@ module.exports = function(object, callback) {
     var details = { "username": detailsArray[0],
                     "repo": detailsArray[1] }
     details.repoURI = baseURL + details.username + "/"
-                    + details.repo + "/contents/"
-                    + "add-" + details.username
+                    + details.repo + "/contents/contributors/"
+                    + "add-" + details.username + ".txt"
 
     console.log(new Date(), details.username, "added Reporobot as a collaborator.")
     asciiArt(details)
