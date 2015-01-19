@@ -21,9 +21,10 @@ module.exports = function(object, callback) {
     var detailsArray = subject.split(" added you to ")
     var details = { "username": detailsArray[0],
                     "repo": detailsArray[1] }
-    details.repoURI = baseURL + details.username + "/"
+    details.fileURI = baseURL + details.username + "/"
                     + details.repo + "/contents/contributors/"
                     + "add-" + details.username + ".txt"
+    var forSHA = "?ref=add-" + details.username
 
     console.log(new Date(), details.username, "added Reporobot as a collaborator.")
     asciiArt(details)
@@ -44,7 +45,7 @@ module.exports = function(object, callback) {
 
     var options = {
       headers: reqHeaders,
-      url: details.repoURI,
+      url: details.fileURI + forSHA,
       json: true,
       body: {
         "branch": "add-" + details.username,
@@ -61,6 +62,7 @@ module.exports = function(object, callback) {
       console.log("body on sha req", body)
       if (res.statusCode !== 200) return console.log("Didn't get SHA", body.message)
       options.body.sha = body.sha
+      options.url = details.fileURI
       request.put(options, function(err, res, body) {
         if (err) return callback(err, "Error collabing on forked repo.")
         if (res.statusCode !== 200) return console.log("Didn't collab", body.message)
