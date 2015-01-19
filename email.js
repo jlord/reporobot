@@ -1,10 +1,12 @@
 var Github = require('github-api')
 var asciify = require('asciify')
 var btoa = require('btoa')
+var request = require('request')
 
 module.exports = function(object, callback) {
   // if it's not an email, return
   if (!object.headers) return
+  console.log(object)
   getDetails(object)
 
   function getDetails(object) {
@@ -21,7 +23,7 @@ module.exports = function(object, callback) {
     var details = { "username": detailsArray[0],
                     "repo": detailsArray[1] }
     details.repoURI = baseURL + details.username + "/"
-                    + details.repo + "/contents"
+                    + details.repo + "/contents/"
                     + "add-" + details.username
 
     console.log(new Date(), details.username, "added Reporobot as a collaborator.")
@@ -60,6 +62,7 @@ module.exports = function(object, callback) {
       options.body.sha = body.sha
       request.put(options, function(err, res, body) {
         if (err) return callback(err, "Error collabing on forked repo.")
+        if (res.statusCode !== 200) return console.log("Didn't collab", res)
         console.log(new Date(), "Commited to a repo")
       })
     })
