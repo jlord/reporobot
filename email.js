@@ -48,7 +48,6 @@ module.exports = function(object, callback) {
       json: true,
       body: {
         "branch": "add-" + details.username,
-        "path": "contributors/" + "add-" + details.username + ".txt",
         "committer": {
           "name": "reporobot",
           "email": "60ebe73fdad8ee59d45c@cloudmailin.net" },
@@ -56,6 +55,7 @@ module.exports = function(object, callback) {
         "content": btoa(artwork),
         "message": "drew a picture :art:" }}
 
+    console.log("opts", options)
     request.get(options, function(err, res, body) {
       if (err) return callback(err, "Error fetching SHA")
       console.log("body on sha req", body)
