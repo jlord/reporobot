@@ -24,7 +24,8 @@ module.exports = function(object, callback) {
     details.fileURI = baseURL + details.username + "/"
                     + details.repo + "/contents/contributors/"
                     + "add-" + details.username + ".txt"
-    var forSHA = "?ref=add-" + details.username
+
+    details.forSHA = "?ref=add-" + details.username
 
     console.log(new Date(), details.username, "added Reporobot as a collaborator.")
     asciiArt(details)
@@ -45,7 +46,7 @@ module.exports = function(object, callback) {
 
     var options = {
       headers: reqHeaders,
-      url: details.fileURI + forSHA,
+      url: details.fileURI + details.forSHA,
       json: true,
       body: {
         "branch": "add-" + details.username,
