@@ -20,6 +20,8 @@ var q = async.queue(function (pullreq, callback) {
   })
 }, 1)
 
+console.log("QUEUE LENGTH", q.length())
+
 q.drain = function() {console.log("Queue drain")}
 
 module.exports = function(onHook) {
