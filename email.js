@@ -57,10 +57,8 @@ module.exports = function(object, callback) {
         "content": btoa(artwork),
         "message": "drew a picture :art:" }}
 
-    console.log("opts", options)
     request.get(options, function(err, res, body) {
       if (err) return callback(err, "Error fetching SHA")
-      console.log("body on sha req", body)
       if (res.statusCode !== 200) return console.log("Didn't get SHA", body.message)
       options.body.sha = body.sha
       options.url = details.fileURI
