@@ -19,7 +19,7 @@ module.exports = function(stats, callback) {
       if (err) return callback(err, "Error writing new contribs file")
 
       var lastUser = array[array.length - 1]
-      if (lastUser) console.log(new Date(), "Added user " + lastUser.username + " to contributors.json")
+      if (lastUser) console.log(new Date(), "Added user " + lastUser.user + " to contributors.json")
       else console.log('no last user')
       return buildPage(callback)
     })
