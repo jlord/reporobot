@@ -77,7 +77,7 @@ module.exports = function(callback) {
       options.body.sha = body.sha
       request.put(options, function(err, res, body) {
         if (err) return callback(err, "Error writing new index to Patchwork")
-        callback(null, "Rebuilt index with " + username, body)
+        callback(null, "Rebuilt index with " + username)
       })
     })
   }

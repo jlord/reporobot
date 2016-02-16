@@ -1,7 +1,7 @@
 var rebuildpage = require('./buildpage.js')
 
-rebuildpage(function done(error, message, body){
+rebuildpage(function done(error, message){
   if (error) return console.log(error, message)
-  console.log(error, message, body)
+  if (message) console.log(message)
   console.log("Finished rebuilding page.")
 })
