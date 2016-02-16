@@ -30,7 +30,8 @@ module.exports = function(callback) {
   function organizeData(data) {
     var everyone = JSON.parse(data)
     var newest = everyone[everyone.length - 1]
-    var stats = {featured: newest, everyone: everyone.reverse(), total: everyone.length}
+    var topHundred = everyone.reverse().slice(0, 100)
+    var stats = {featured: newest, everyone: topHundred, total: everyone.length}
     return getTemplate(stats, everyone)
   }
 
