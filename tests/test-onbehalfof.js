@@ -9,13 +9,16 @@ module.exports = function(sourceAccount, viaAccount) {
   })
   
   deleteViaBranch()
+  // checkBranch()
 
   // get repository
   function cleanOrignal() {
+    console.log("Cleaning original")
     var repo = github.getRepo(sourceAccount, 'patchwork')
 
     // make sure file doesn't already exist, if it does, delete it
     repo.delete('gh-pages', 'contributors/add-' + viaAccount + '.txt', function(err) {
+      if (err) return console.log(err, "err deleting file on " + sourceAccount)
       console.log("Deleted file contributors/add-" + viaAccount + '.txt on source ' + sourceAccount)
       checkBranch(repo)
     })
@@ -47,8 +50,8 @@ module.exports = function(sourceAccount, viaAccount) {
     var repo = github.getRepo(viaAccount, 'patchwork')
     
     repo.branch('gh-pages', 'add-' + viaAccount, function(err) {
-      console.log("Create branch add-" + viaAccount + "on " + viaAccount)
-      if (err) return console.log(err, "error creating branch on via")
+      console.log("Creating branch add-" + viaAccount + " on " + viaAccount)
+      if (err) return console.log(err, "error creating branch on " + viaAccount)
       createArt()
     })
   }
@@ -92,14 +95,27 @@ module.exports = function(sourceAccount, viaAccount) {
   
   function deleteViaBranch() {
     var repo = github.getRepo(viaAccount, 'patchwork') 
+    repo.listBranches(function(err, branches) {
+      if (err) return console.log(err, "err getting branches on " + viaAccount)
+
+      branches.forEach(function(branch) {
+        if (!branch.match(viaAccount)) {
+          console.log("no match, returning")
+          return cleanOrignal()
+        } 
+      })
+      delBranch()
+    })
     
+  }
+
+  function delBranch() {
     repo.deleteRef('heads/add-' + viaAccount, function(err) {
-      if (err) console.log("error deleting ref on via")
-      console.log('Deleted branch on ' + viaAccount)
-      cleanOrignal()
+        if (err) return console.log("error deleting ref on via")
+        console.log('Deleted branch on ' + viaAccount)
+        cleanOrignal()
     })
   }
-  
 
 }
 
