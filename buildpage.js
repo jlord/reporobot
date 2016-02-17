@@ -29,9 +29,10 @@ module.exports = function(callback) {
 
   function organizeData(data) {
     var everyone = JSON.parse(data)
+    var everyoneCommas = everyone.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     var newest = everyone[everyone.length - 1]
     var topHundred = everyone.reverse().slice(0, 100)
-    var stats = {featured: newest, everyone: topHundred, total: everyone.length}
+    var stats = {featured: newest, everyone: topHundred, total: everyoneCommas}
     return getTemplate(stats, everyone)
   }
 
