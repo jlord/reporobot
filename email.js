@@ -13,6 +13,7 @@ module.exports = function(object, callback) {
     var subject = object.headers.Subject
     console.log(new Date(), "Recieved email:", subject)
 
+    // TODO new subject line: ElizabethN invited you to ElizabethN/patchwork
     if (!subject.match("added you to patchwork")) {
       console.log(new Date(), "non relevant email")
       return
