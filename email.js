@@ -13,13 +13,12 @@ module.exports = function(object, callback) {
     var subject = object.headers.Subject
     console.log(new Date(), "Recieved email:", subject)
 
-    // TODO new subject line: ElizabethN invited you to ElizabethN/patchwork
-    if (!subject.match("added you to patchwork")) {
+    if (!subject.match("invited you to")) {
       console.log(new Date(), "non relevant email")
       return
     }
 
-    var detailsArray = subject.split(" added you to ")
+    var detailsArray = subject.split(" invited you to ")
     var details = { "username": detailsArray[0],
                     "repo": detailsArray[1] }
     details.fileURI = baseURL + details.username + "/"
