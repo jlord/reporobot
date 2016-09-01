@@ -7,19 +7,18 @@ var request = require('request')
 // called by: checkPR(username, function(err, pr){ prStatus(res, err, pr) })
 // call back includes a function which sends the pr boolean on as a response
 
-module.exports = function(username, callback) {
-
+module.exports = function (username, callback) {
   var baseURL = 'https://api.github.com/repos/jlord/patchwork/issues?state=closed'
   var options = {
-      url: baseURL,
-      json: true,
-      headers: {
-          'User-Agent': 'request',
-          'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-      }
+    url: baseURL,
+    json: true,
+    headers: {
+      'User-Agent': 'request',
+      'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+    }
   }
 
-  function getIssues(error, response, body) {
+  function getIssues (error, response, body) {
     if (error) return callback(error, null)
 
     var issues = body
@@ -32,7 +31,7 @@ module.exports = function(username, callback) {
       var prStatus = issue.pull_request.html_url
       if (user.match(username.toLowerCase()) && prStatus != null) {
         pr = true
-        console.log(new Date(), username, " made a pull request.")
+        console.log(new Date(), username, 'made a pull request.')
         return callback(null, pr)
       }
     }
