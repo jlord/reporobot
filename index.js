@@ -88,7 +88,11 @@ module.exports = function (onHook) {
 
   function handleEmail (req, res) {
     req.pipe(concat(function (buff) {
-      var emailObj = JSON.parse(buff)
+      try {
+        var emailObj = JSON.parse(buff)
+      } catch (e) {
+        return console.log(new Date(), 'Error parsing email JSON')
+      }
 
       if (onHook) {
         onHook(emailObj, function (err, message) {
