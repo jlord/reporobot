@@ -6,17 +6,16 @@ var Github = require('github-api')
 // Called by:
 // checkCollab(username, function(err, collab) { collabStatus(r, e, collab) })
 
-module.exports = function(username, callback) {
-
+module.exports = function (username, callback) {
   var github = new Github({
-      auth: "oauth",
-      token: process.env['REPOROBOT_TOKEN']
+    auth: 'oauth',
+    token: process.env['REPOROBOT_TOKEN']
   })
 
   var repo = github.getRepo(username, 'patchwork')
   var collab = false
 
-  repo.show(function(err, repo) {
+  repo.show(function (err, repo) {
     if (err) return callback(err)
 
     var permissions = repo.permissions
