@@ -1,45 +1,35 @@
 var hbs = require('handlebars')
 var fs = require('fs')
-var Github = require('github-api')
 var request = require('request')
-var btoa =  require('btoa')
+var btoa = require('btoa')
 
-module.exports = function(callback) {
-
-  var github = new Github({
-    auth: "oauth",
-    token: process.env['REPOROBOT_TOKEN']
-  })
-
-  var repo = github.getRepo('jlord', 'patchwork')
-
+module.exports = function (callback) {
   if (process.env['CONTRIBUTORS']) {
-    fs.readFile( process.env['CONTRIBUTORS'], function (err, data) {
-      if (err) return callback(err, "Error reading contribs file for building page.")
+    fs.readFile(process.env['CONTRIBUTORS'], function (err, data) {
+      if (err) return callback(err, 'Error reading contribs file for building page.')
       organizeData(data)
     })
   } else {
-    console.log("Making request for data...")
-    var uri = "http://reporobot.jlord.us/data"
-    request({url: uri, json: true}, function (err, res, body) {
-      if (err) return callback(err, "Fetching latest data for building page")
+    console.log('Making request for data...')
+    var uri = 'http://reporobot.jlord.us/data'
+    request({ url: uri, json: true }, function (err, res, body) {
+      if (err) return callback(err, 'Fetching latest data for building page')
       organizeData(JSON.stringify(body))
     })
   }
 
-  function organizeData(data) {
+  function organizeData (data) {
     var everyone = JSON.parse(data)
-    var everyoneCommas = everyone.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    var everyoneCommas = everyone.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     var newest = everyone[everyone.length - 1]
     var topHundred = everyone.reverse().slice(0, 100)
-    var stats = {featured: newest, everyone: topHundred, total: everyoneCommas}
+    var stats = { featured: newest, everyone: topHundred, total: everyoneCommas }
     return getTemplate(stats, everyone)
   }
 
-  function getTemplate(stats, everyone) {
+  function getTemplate (stats, everyone) {
     fs.readFile('template.hbs', function (err, file) {
-      if (err) return callback(err, "Error reading template file.")
-
+      if (err) return callback(err, 'Error reading template file.')
       file = file.toString()
       var template = hbs.compile(file)
       var HTML = template(stats)
@@ -47,9 +37,8 @@ module.exports = function(callback) {
     })
   }
 
-  function writeRepo(HTML, stats, everyone) {
+  function writeRepo (HTML, stats, everyone) {
     var username = stats.featured.user
-    var commitMes = "rebuilt with @" + username + " added\!"
     var baseURL = 'https://api.github.com/repos/'
 
     var reqHeaders = {
@@ -59,26 +48,26 @@ module.exports = function(callback) {
 
     var options = {
       headers: reqHeaders,
-      url: baseURL + "jlord/patchwork/contents/index.html",
+      url: baseURL + 'jlord/patchwork/contents/index.html',
       json: true,
       body: {
-        "branch": "gh-pages",
-        "committer": {
-          "name": "reporobot",
-          "email": "60ebe73fdad8ee59d45c@cloudmailin.net"
+        'branch': 'gh-pages',
+        'committer': {
+          'name': 'reporobot',
+          'email': '60ebe73fdad8ee59d45c@cloudmailin.net'
         },
-        "sha": "",
-        "content": btoa(HTML),
-        "message": "Rebuilt index with " + username
+        'sha': '',
+        'content': btoa(HTML),
+        'message': 'Rebuilt index with ' + username
       }
     }
 
-    request.get(options, function(err, res, body) {
-      if (err) return callback(err, "Error fetching SHA")
+    request.get(options, function (err, res, body) {
+      if (err) return callback(err, 'Error fetching SHA')
       options.body.sha = body.sha
-      request.put(options, function(err, res, body) {
-        if (err) return callback(err, "Error writing new index to Patchwork")
-        callback(null, "Rebuilt index with " + username)
+      request.put(options, function (err, res, body) {
+        if (err) return callback(err, 'Error writing new index to Patchwork')
+        callback(null, 'Rebuilt index with ' + username)
       })
     })
   }
