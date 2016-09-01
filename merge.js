@@ -1,6 +1,5 @@
 var request = require('request')
 var asciify = require('asciify')
-var fs = require('fs')
 
 var messages = require('./messages.json')
 var addContributor = require('./contributors.js')
@@ -17,8 +16,7 @@ var stats = {}
   // callback(err)
 // })
 
-module.exports = function(pullreq, callback) {
-
+module.exports = function (pullreq, callback) {
   if (pullreq.pull_request) pullreq = pullreq.pull_request
   var prBranch = pullreq.head.ref.toLowerCase()
   stats.user = pullreq.user.login
@@ -31,26 +29,27 @@ module.exports = function(pullreq, callback) {
   }
 
   var options = {
-      url: baseURL +'pulls/' + stats.prNum,
-      json: true,
-      headers: { 'User-Agent': 'request',
-                 'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-      }
+    url: baseURL + 'pulls/' + stats.prNum,
+    json: true,
+    headers: { 'User-Agent': 'request',
+               'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+    }
   }
 
-  function getTime(error, response, body) {
-    if (error) return callback(error, "Error in request on PR via number")
+  function getTime (error, response, body) {
+    if (error) return callback(error, 'Error in request on PR via number')
     // if a test pr is coming in from @RR
-    if (!error && response.statusCode == 200 && pullreq.user.login === "reporobot") {
-      var info = body
+    var info
+    if (!error && response.statusCode === 200 && pullreq.user.login === 'reporobot') {
+      info = body
       stats.time = info.created_at.toLocaleString()
       // RR is PRing on behalf of:
-      console.log(new Date(), "PR " ,  stats.prNum , "Reporobot Pull Request on behalf of " , stats.user)
+      console.log(new Date(), 'PR ', stats.prNum, 'Reporobot Pull Request on behalf of ', stats.user)
       return getFile(stats.prNum)
     }
 
-    if (!error && response.statusCode == 200 && pullreq.user.login != "reporobot") {
-      var info = body
+    if (!error && response.statusCode === 200 && pullreq.user.login !== 'reporobot') {
+      info = body
       stats.time = info.created_at
       return getFile(stats.prNum)
     }
@@ -60,29 +59,29 @@ module.exports = function(pullreq, callback) {
 
   request(options, getTime)
 
-  function getFile(prNum) {
+  function getFile (prNum) {
     var options = {
-        url: baseURL + 'pulls/' + prNum + '/files',
-        json: true,
-        headers: {
-            'User-Agent': 'request',
-            'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-        }
+      url: baseURL + 'pulls/' + prNum + '/files',
+      json: true,
+      headers: {
+        'User-Agent': 'request',
+        'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+      }
     }
 
-    request(options, function returnFiles(error, response, body) {
-      if (error || body.length === 0) return callback(error, "Error finding file in PR")
+    request(options, function returnFiles (error, response, body) {
+      if (error || body.length === 0) return callback(error, 'Error finding file in PR')
 
-      if (!error && response.statusCode == 200) {
+      if (!error && response.statusCode === 200) {
         if (body.length > 1) {
-          console.log(new Date(), "PR " , stats.prNum , "MORE THAN ONE FILE " , stats.user)
+          console.log(new Date(), 'PR ', stats.prNum, 'MORE THAN ONE FILE ', stats.user)
           return writeComment(messages.multi_files, stats.prNum)
         }
 
         var prInfo = body[0]
 
-        if (prInfo === undefined ) {
-          console.log(new Date(), "PR " , stats.prNum , "FILE IS EMPTY " , stats.user)
+        if (prInfo === undefined) {
+          console.log(new Date(), 'PR ', stats.prNum, 'FILE IS EMPTY ', stats.user)
           return writeComment(messages.empty_file, stats.prNum)
         }
 
@@ -93,92 +92,90 @@ module.exports = function(pullreq, callback) {
     })
   }
 
-  function verifyFilename(prInfo) {
+  function verifyFilename (prInfo) {
     var filename = prInfo.filename.toLowerCase()
     if (filename.match('contributors/add-' + stats.user.toLowerCase() + '.txt')) {
-      console.log(new Date(), "PR " , stats.prNum , "Filename: MATCH " , stats.user)
+      console.log(new Date(), 'PR ', stats.prNum, 'Filename: MATCH ', stats.user)
       return verifyContent(prInfo)
-    }
-    else {
+    } else {
       return writeComment(messages.bad_filename, stats.prNum)
     }
   }
 
-  function verifyContent(prInfo) {
+  function verifyContent (prInfo) {
     // pull out the actual pr content
     var patchArray = prInfo.patch.split('@@')
     var patch = patchArray.pop()
     // generate the expected content
-    asciify(stats.user, {font:'isometric2'}, function(err, res){
-      if (err) return callback(err, "Error generating ascii art to test against")
+    asciify(stats.user, { font: 'isometric2' }, function (err, res) {
+      if (err) return callback(err, 'Error generating ascii art to test against')
       console.log(patch)
       console.log(res)
       if (patch !== stats.user) {
         stats.userArt = res
-        console.log(new Date(), "PR " , stats.prNum , "Content: MATCH " , stats.user)
+        console.log(new Date(), 'PR ', stats.prNum, 'Content: MATCH ', stats.user)
         return setTimeout(mergePR(stats.prNum), 5000)
-      }
-      else {
+      } else {
         return writeComment(messages.bad_ascii, stats.prNum)
       }
     })
   }
 
-  function writeComment(message, prNum) {
-    stats.user = stats.user || "a skipped PR"
-    console.log(new Date(), "PR " +  prNum + " Uh oh, writing comment for " + stats.user)
-     var options = {
-        url: baseURL + 'issues/' + prNum + '/comments',
-        headers: {
-            'User-Agent': 'request',
-            'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-        },
-        json: {'body': message}
+  function writeComment (message, prNum) {
+    stats.user = stats.user || 'a skipped PR'
+    console.log(new Date(), 'PR ' + prNum + ' Uh oh, writing comment for ' + stats.user)
+    var options = {
+      url: baseURL + 'issues/' + prNum + '/comments',
+      headers: {
+        'User-Agent': 'request',
+        'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+      },
+      json: {'body': message}
     }
 
-    request.post(options, function doneWriteComment(error, response, body) {
-      if (error) return callback(error, "Error writing comment on PR")
+    request.post(options, function doneWriteComment (error, response, body) {
+      if (error) return callback(error, 'Error writing comment on PR')
       callback()
     })
   }
 
-  function mergePR(prNum) {
+  function mergePR (prNum) {
     var tries = 0
     var limit = 25
 
     tryMerge()
 
-    function tryMerge() {
-      var message = "Merging PR from @" + stats.user
+    function tryMerge () {
+      var message = 'Merging PR from @' + stats.user
       var options = {
-            url: baseURL + 'pulls/' + prNum + '/merge',
-            headers: {
-                'User-Agent': 'request',
-                'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
-            },
-           json: {'commit_message': message}
-       }
-
-        request.put(options, function doneMerge(error, response, body) {
-          if (error) return callback(error, "Error merging PR")
-          if (response.statusCode != 200) {
-            console.log(new Date(), prNum, "ERROR MERGING", response.statusCode, body.message)
-            console.log(new Date(), prNum, "TRYING AGAIN")
-            if (tries <= limit) {
-              tries++
-              return setTimeout(tryMerge(prNum), 3000)
-            } else {
-              callback(null, new Date() + "Could not merge after " + limit + " tries " + prNum)
-            }
-          }
-          if (!error && response.statusCode == 200) {
-            console.log(new Date(), "PR " , prNum , "MERGED" , stats.user)
-            // add contributor to file and then rebuild page
-            return addContributor(stats, callback)
-          } else {
-           callback(error, body)
-          }
-        })
+        url: baseURL + 'pulls/' + prNum + '/merge',
+        headers: {
+          'User-Agent': 'request',
+          'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+        },
+        json: {'commit_message': message}
       }
+
+      request.put(options, function doneMerge (error, response, body) {
+        if (error) return callback(error, 'Error merging PR')
+        if (response.statusCode !== 200) {
+          console.log(new Date(), prNum, 'ERROR MERGING', response.statusCode, body.message)
+          console.log(new Date(), prNum, 'TRYING AGAIN')
+          if (tries <= limit) {
+            tries++
+            return setTimeout(tryMerge(prNum), 3000)
+          } else {
+            callback(null, new Date() + 'Could not merge after ' + limit + ' tries ' + prNum)
+          }
+        }
+        if (!error && response.statusCode === 200) {
+          console.log(new Date(), 'PR ', prNum, 'MERGED', stats.user)
+          // add contributor to file and then rebuild page
+          return addContributor(stats, callback)
+        } else {
+          callback(error, body)
+        }
+      })
     }
+  }
 }
