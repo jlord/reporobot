@@ -91,7 +91,7 @@ module.exports = function (onHook) {
       try {
         var emailObj = JSON.parse(buff)
       } catch (e) {
-        return console.log(new Date(), 'Error parsing email JSON')
+        return console.log(new Date(), 'Error parsing email JSON', [buff.toString()])
       }
 
       if (onHook) {
