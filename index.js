@@ -10,9 +10,9 @@ var checkCollab = require('./collabcheck.js')
 var mergePR = require('./merge.js')
 
 // q to slow it down enough for the GitHub API
-var q = async.queue(function (pullreq, callback) {
-  console.log(new Date(), "QUEUE", pullreq.number)
-  mergePR(pullreq, function donePR(err, message) {
+var q = async.queue(function que (pullreq, callback) {
+  console.log(new Date(), 'QUEUE', pullreq.number)
+  mergePR(pullreq, function donePR (err, message) {
     if (err) console.log(new Date(), message, err)
     // setTimeout(function() { callback(err) }, 1000)
     // what is this cb doing with err
@@ -20,24 +20,22 @@ var q = async.queue(function (pullreq, callback) {
   })
 }, 1)
 
-console.log("QUEUE LENGTH", q.length())
+console.log('QUEUE LENGTH', q.length())
 
-q.drain = function() {console.log("Queue drain")}
+q.drain = function drain () { console.log('Queue drain') }
 
-module.exports = function(onHook) {
-
+module.exports = function (onHook) {
   var server = http.createServer(handler)
 
   // handler routes the requests to RR
   // to the appropriate places
-  function handler(req, res) {
-    console.log(">>>>>", new Date(), req.method, req.url)
-
+  function handler (req, res) {
+    console.log('>>>>>', new Date(), req.method, req.url)
 
     // End point to latest data
     if (req.url === ('/data')) {
-      console.log(new Date(), "Request for data")
-      return fs.readFile(process.env['CONTRIBUTORS'], function(err, data) {
+      console.log(new Date(), 'Request for data')
+      return fs.readFile(process.env['CONTRIBUTORS'], function (err, data) {
         if (err) return console.log(new Date(), err)
         res.statusCode = 200
         res.end(JSON.stringify(JSON.parse(data.toString())))
@@ -58,10 +56,12 @@ module.exports = function(onHook) {
 
     // When Git-it verifies user made a PR
     // Comes from verify step in Git-it challenge #10
+    var queryURL
+    var username
     if (req.url.match('/pr')) {
-      var queryURL = url.parse(req.url, true)
-      var username = queryURL.query.username
-      return checkPR(username, function(err, pr) {
+      queryURL = url.parse(req.url, true)
+      username = queryURL.query.username
+      return checkPR(username, function (err, pr) {
         // where does this res come from? The req.
         prStatus(res, err, pr)
       })
@@ -70,9 +70,9 @@ module.exports = function(onHook) {
     // When Git-it verifies user added RR as collab
     // Comes from verify step in Git-it challenge #8
     if (req.url.match('/collab')) {
-      var queryURL = url.parse(req.url, true)
-      var username = queryURL.query.username
-      return checkCollab(username, function(err, collab) {
+      queryURL = url.parse(req.url, true)
+      username = queryURL.query.username
+      return checkCollab(username, function (err, collab) {
         collabStatus(res, err, collab)
       })
     }
@@ -86,31 +86,33 @@ module.exports = function(onHook) {
     }, true, 2))
   }
 
-  function handleEmail(req, res) {
-    req.pipe(concat(function(buff) {
+  function handleEmail (req, res) {
+    req.pipe(concat(function (buff) {
       var emailObj = JSON.parse(buff)
 
-      if (onHook) onHook(emailObj, function(err, message) {
-        if (err) console.log(new Date(), message, err)
-      })
+      if (onHook) {
+        onHook(emailObj, function (err, message) {
+          if (err) console.log(new Date(), message, err)
+        })
+      }
     }))
 
     res.statusCode = 200
-    res.end("Thank you.")
+    res.end('Thank you.')
   }
 
-  function getPR(req, res) {
-    req.pipe(concat(function(buff) {
+  function getPR (req, res) {
+    req.pipe(concat(function (buff) {
       var pullreq = JSON.parse(buff)
 
       // Check if it's a closed PR
-      if (pullreq.action && pullreq.action === "closed") {
-        console.log("SKIPPING: CLOSED PULL REQUEST")
+      if (pullreq.action && pullreq.action === 'closed') {
+        console.log('SKIPPING: CLOSED PULL REQUEST')
       } else {
         // send open PR to the queue
-        q.push(pullreq, function(err, message) {
+        q.push(pullreq, function (err, message) {
           if (err) console.log(new Date(), message, err)
-          console.log(new Date(), pullreq.number, message, "Finished PR" )
+          console.log(new Date(), pullreq.number, message, 'Finished PR')
         })
       }
 
@@ -120,7 +122,7 @@ module.exports = function(onHook) {
     }))
   }
 
-  function prStatus(res, err, pr) {
+  function prStatus (res, err, pr) {
     if (err) {
       console.log(err)
       res.statusCode = 500
@@ -133,7 +135,7 @@ module.exports = function(onHook) {
     }, true, 2))
   }
 
-  function collabStatus(res, err, collab) {
+  function collabStatus (res, err, collab) {
     if (err) {
       console.log(err)
       res.statusCode = 500
@@ -148,19 +150,19 @@ module.exports = function(onHook) {
   }
 
   // does this ever get called?
-  function mergedPr(res, err) {
-    if (err) {
-      console.log(err)
-      res.statusCode = 500
-      res.end(JSON.stringify({error: err}))
-      return
-    }
-    res.statusCode = 200
-    res.setHeader('content-type', 'application/json')
-    res.end(JSON.stringify({
-      merged: true,
-    }, true, 2))
-  }
+  // function mergedPr (res, err) {
+  //   if (err) {
+  //     console.log(err)
+  //     res.statusCode = 500
+  //     res.end(JSON.stringify({ error: err }))
+  //     return
+  //   }
+  //   res.statusCode = 200
+  //   res.setHeader('content-type', 'application/json')
+  //   res.end(JSON.stringify({
+  //     merged: true
+  //   }, true, 2))
+  // }
 
   return server
 }
