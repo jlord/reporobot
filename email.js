@@ -70,7 +70,7 @@ module.exports = function (object, callback) {
       request.put(options, function commitToRepo (err, res, body) {
         if (err) return callback(err, 'Error collabing on forked repo.')
         if (res.statusCode !== 200) return callback('Didn not collab', body.message)
-        console.log(new Date(), 'Commited to a repo')
+        console.log(new Date(), 'Commited to', details.username, 'repo')
       })
     })
   }
