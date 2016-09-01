@@ -91,7 +91,7 @@ module.exports = function (onHook) {
       try {
         var emailObj = JSON.parse(buff)
       } catch (e) {
-        return console.log(new Date(), 'Error parsing email JSON', [buff.toString()])
+        return console.log(new Date(), 'Error parsing email JSON', req.headers, buff.length, [buff.toString()])
       }
 
       if (onHook) {
@@ -101,8 +101,10 @@ module.exports = function (onHook) {
       }
     }))
 
-    res.statusCode = 200
-    res.end('Thank you.')
+    setTimeout(function () {
+      res.statusCode = 200
+      res.end('Thank you.')
+    }, 1000)
   }
 
   function getPR (req, res) {
