@@ -12,34 +12,39 @@ module.exports = function acceptInvites (callback) {
   }
 
   acceptBatch()
+  var isDone = false
+
+  function thunk (err) {
+    if (isDone) return
+    isDone = true
+    callback(err)
+  }
 
   function acceptBatch () {
     request(options, function gotInvites (err, response, body) {
-      var inviteCount = 0
       var acceptedCount = 0
 
-      if (err) return callback(err)
-      if (!err && response.statusCode == 200) {
-        // Return if there are no pending invites
-        inviteCount = body.lenth
-        if (inviteCount === 0) return callback()
-        console.log(new Date(), 'Accepting', body.length, 'invites')
-        body.forEach(function getID (invite) {
-          var username = invite.inviter.login
-          var inviteID = invite.id
-          // Accept each invite
-          options.url = 'https://api.github.com/user/repository_invitations/' + inviteID
-          request.patch(options, function approved (err, response, body) {
-            if (err) return callback(err)
-            console.log(new Date(), 'Invite', username, inviteID, response.statusCode)
-            acceptedCount++
-            // Once you've accepted 30, the batch max, try again
-            // to see if there are more, else you're done!
-            if (acceptedCount === 30) return acceptBatch()
-            if (acceptedCount === inviteCount) return callback()
-          })
+      if (err) return thunk(err)
+      if (response.statusCode !== 200) return thunk(new Error('Not 200 response'))
+      // Return if there are no pending invites
+      var inviteCount = body.length
+      if (inviteCount === 0) return thunk()
+      console.log(new Date(), 'Accepting', body.length, 'invites')
+      body.forEach(function getID (invite) {
+        var username = invite.inviter.login
+        var inviteID = invite.id
+        // Accept each invite
+        options.url = 'https://api.github.com/user/repository_invitations/' + inviteID
+        request.patch(options, function accepted (err, response, body) {
+          if (err) return thunk(err)
+          console.log(new Date(), 'Accepted invite from', username, inviteID, response.statusCode)
+          acceptedCount++
+          // Once you've accepted 30, the batch max, try again
+          // to see if there are more, else you're done!
+          if (acceptedCount === 30) return acceptBatch()
+          if (acceptedCount === inviteCount) return thunk()
         })
-      }
+      })
     })
   }
 }
