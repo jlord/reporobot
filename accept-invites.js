@@ -26,7 +26,7 @@ module.exports = function acceptInvites (callback) {
         console.log(new Date(), 'Accepting', body.length, 'invites')
         body.forEach(function getID (invite) {
           // Accept each invite
-          options.url = 'https://api.github.com/user/repository_invitations/' + inviteID
+          options.url = 'https://api.github.com/user/repository_invitations/' + body.id
           request.patch(options, function approved (err, response, body) {
             if (err) return callback(err)
             console.log(new Date(), 'Invite', body.repository.owner.login, body.id, response.statusCode)
