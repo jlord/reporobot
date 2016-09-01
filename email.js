@@ -1,45 +1,45 @@
-var Github = require('github-api')
 var asciify = require('asciify')
 var btoa = require('btoa')
 var request = require('request')
+
 var acceptInvites = require('.accept-invites.js')
 
-module.exports = function(object, callback) {
+module.exports = function (object, callback) {
   // if it's not an email, return
   if (!object.headers) return
   getDetails(object)
 
-  function getDetails(object) {
+  function getDetails (object) {
     var baseURL = 'https://api.github.com/repos/'
     var subject = object.headers.Subject
-    console.log(new Date(), "Recieved email:", subject)
+    console.log(new Date(), 'Recieved email:', subject)
 
-    if (!subject.match("invited you to")) {
-      console.log(new Date(), "non relevant email")
+    if (!subject.match('invited you to')) {
+      console.log(new Date(), 'non relevant email')
       return
     }
 
-    var detailsArray = subject.split(" invited you to ")
-    var details = { "username": detailsArray[0],
-                    "repo": detailsArray[1] }
-    details.fileURI = baseURL + details.username + "/"
-                    + details.repo + "/contents/contributors/"
-                    + "add-" + details.username + ".txt"
+    var detailsArray = subject.split(' invited you to ')
+    var details = { 'username': detailsArray[0],
+                    'repo': detailsArray[1] }
+    details.fileURI = baseURL + details.username + '/' +
+                    details.repo + '/contents/contributors/' +
+                    'add-' + details.username + '.txt'
 
-    details.forSHA = "?ref=add-" + details.username
-    console.log(new Date(), details.username, "added Reporobot as a collaborator.")
+    details.forSHA = '?ref=add-' + details.username
+    console.log(new Date(), details.username, 'added Reporobot as a collaborator.')
 
     // When any new invite email comes,
     // go and accept all invites
     acceptInvites(function makeArt (err) {
-      if (err) return callback(err, "Invite error")
+      if (err) return callback(err, 'Invite error')
       asciiArt(details)
     })
   }
 
   function asciiArt (details) {
-    asciify(details.username, {font:'isometric2'}, function(err, res){
-      if (err) return callback(err, "Ascii art error")
+    asciify(details.username, { font: 'isometric2' }, function (err, res) {
+      if (err) return callback(err, 'Ascii art error')
       writeRepo(res, details)
     })
   }
@@ -55,23 +55,23 @@ module.exports = function(object, callback) {
       url: details.fileURI + details.forSHA,
       json: true,
       body: {
-        "branch": "add-" + details.username,
-        "committer": {
-          "name": "reporobot",
-          "email": "60ebe73fdad8ee59d45c@cloudmailin.net" },
-        "sha": "",
-        "content": btoa(artwork),
-        "message": "drew a picture :art:" }}
+        'branch': 'add-' + details.username,
+        'committer': {
+          'name': 'reporobot',
+          'email': '60ebe73fdad8ee59d45c@cloudmailin.net' },
+        'sha': '',
+        'content': btoa(artwork),
+        'message': 'drew a picture :art:' }}
 
     request.get(options, function getSHA (err, res, body) {
-      if (err) return callback(err, "Error fetching SHA")
-      if (res.statusCode !== 200) return callback("Didn't get SHA", body.message)
+      if (err) return callback(err, 'Error fetching SHA')
+      if (res.statusCode !== 200) return callback('Did not get SHA', body.message)
       options.body.sha = body.sha
       options.url = details.fileURI
       request.put(options, function commitToRepo (err, res, body) {
-        if (err) return callback(err, "Error collabing on forked repo.")
-        if (res.statusCode !== 200) return callback("Didn't collab", body.message)
-        console.log(new Date(), "Commited to a repo")
+        if (err) return callback(err, 'Error collabing on forked repo.')
+        if (res.statusCode !== 200) return callback('Didn not collab', body.message)
+        console.log(new Date(), 'Commited to a repo')
       })
     })
   }
