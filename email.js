@@ -2,6 +2,7 @@ var Github = require('github-api')
 var asciify = require('asciify')
 var btoa = require('btoa')
 var request = require('request')
+var acceptInvites = require('.accept-invites.js')
 
 module.exports = function(object, callback) {
   // if it's not an email, return
@@ -26,23 +27,28 @@ module.exports = function(object, callback) {
                     + "add-" + details.username + ".txt"
 
     details.forSHA = "?ref=add-" + details.username
-
     console.log(new Date(), details.username, "added Reporobot as a collaborator.")
-    asciiArt(details)
+
+    // When any new invite email comes,
+    // go and accept all invites
+    acceptInvites(function makeArt (err) {
+      if (err) return callback(err, "Invite error")
+      asciiArt(details)
+    })
   }
 
-  function asciiArt(details) {
+  function asciiArt (details) {
     asciify(details.username, {font:'isometric2'}, function(err, res){
       if (err) return callback(err, "Ascii art error")
       writeRepo(res, details)
     })
   }
 
-  function writeRepo(artwork, details) {
-
+  function writeRepo (artwork, details) {
     var reqHeaders = {
       'User-Agent': 'request',
-      'Authorization': 'token ' + process.env['REPOROBOT_TOKEN'] }
+      'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+    }
 
     var options = {
       headers: reqHeaders,
@@ -57,14 +63,14 @@ module.exports = function(object, callback) {
         "content": btoa(artwork),
         "message": "drew a picture :art:" }}
 
-    request.get(options, function(err, res, body) {
+    request.get(options, function getSHA (err, res, body) {
       if (err) return callback(err, "Error fetching SHA")
-      if (res.statusCode !== 200) return console.log("Didn't get SHA", body.message)
+      if (res.statusCode !== 200) return callback("Didn't get SHA", body.message)
       options.body.sha = body.sha
       options.url = details.fileURI
-      request.put(options, function(err, res, body) {
+      request.put(options, function commitToRepo (err, res, body) {
         if (err) return callback(err, "Error collabing on forked repo.")
-        if (res.statusCode !== 200) return console.log("Didn't collab", body.message)
+        if (res.statusCode !== 200) return callback("Didn't collab", body.message)
         console.log(new Date(), "Commited to a repo")
       })
     })
