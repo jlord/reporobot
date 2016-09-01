@@ -2,7 +2,7 @@ var asciify = require('asciify')
 var btoa = require('btoa')
 var request = require('request')
 
-var acceptInvites = require('.accept-invites.js')
+var acceptInvites = require('./accept-invites.js')
 
 module.exports = function (object, callback) {
   // if it's not an email, return
