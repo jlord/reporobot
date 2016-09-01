@@ -22,12 +22,11 @@ module.exports = function (object, callback) {
     var detailsArray = subject.split(' invited you to ')
     var details = { 'username': detailsArray[0],
                     'repo': detailsArray[1] }
-    details.fileURI = baseURL + details.username + '/' +
-                    details.repo + '/contents/contributors/' +
+    details.fileURI = baseURL + '/' + details.repo + '/contents/contributors/' +
                     'add-' + details.username + '.txt'
 
     details.forSHA = '?ref=add-' + details.username
-    console.log(new Date(), details.username, 'added Reporobot as a collaborator.')
+    console.log(new Date(), details.username, 'invited Reporobot as a collaborator.')
 
     // When any new invite email comes,
     // go and accept all invites
