@@ -22,7 +22,7 @@ module.exports = function (object, callback) {
     var detailsArray = subject.split(' invited you to ')
     var details = { 'username': detailsArray[0],
                     'repo': detailsArray[1] }
-    details.fileURI = baseURL + '/' + details.repo + '/contents/contributors/' +
+    details.fileURI = baseURL + details.repo + '/contents/contributors/' +
                     'add-' + details.username + '.txt'
 
     details.forSHA = '?ref=add-' + details.username
