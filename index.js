@@ -26,12 +26,13 @@ console.log('QUEUE LENGTH', q.length())
 q.drain = function drain () { console.log('Queue drain') }
 
 module.exports = function () {
-  var server = http.createServer(handler)
+  var server = http.createServer(router)
 
-  // handler routes the requests to RR
+  // router routes the requests to RR
   // to the appropriate places
-  function handler (req, res) {
-    console.log('(ノ・∀・)ノ\n', new Date(), req.method, req.url)
+  function router (req, res) {
+    console.log('(ノ・∀・)ノ\n')
+    console.log(new Date(), req.method, req.url)
 
     // End point to latest data
     if (req.url === ('/data')) {
