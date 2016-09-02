@@ -157,20 +157,5 @@ module.exports = function (onHook) {
     }, true, 2))
   }
 
-  // does this ever get called?
-  // function mergedPr (res, err) {
-  //   if (err) {
-  //     console.log(err)
-  //     res.statusCode = 500
-  //     res.end(JSON.stringify({ error: err }))
-  //     return
-  //   }
-  //   res.statusCode = 200
-  //   res.setHeader('content-type', 'application/json')
-  //   res.end(JSON.stringify({
-  //     merged: true
-  //   }, true, 2))
-  // }
-
   return server
 }
