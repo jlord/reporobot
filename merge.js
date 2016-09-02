@@ -79,8 +79,8 @@ module.exports = function (pullreq, callback) {
         }
 
         var prInfo = body[0]
-
-        if (prInfo === undefined) {
+        // TODO do empty files not have a patch property?
+        if (prInfo === undefined || !prInfo.patch) {
           console.log(new Date(), 'PR ', stats.prNum, 'FILE IS EMPTY ', stats.user)
           return writeComment(messages.empty_file, stats.prNum)
         }

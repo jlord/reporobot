@@ -88,7 +88,11 @@ module.exports = function (onHook) {
 
   function handleEmail (req, res) {
     req.pipe(concat(function (buff) {
-      var emailObj = JSON.parse(buff)
+      try {
+        var emailObj = JSON.parse(buff)
+      } catch (e) {
+        return console.log(new Date(), 'Error parsing email JSON', req.headers, buff.length, [buff.toString()])
+      }
 
       if (onHook) {
         onHook(emailObj, function (err, message) {
@@ -97,8 +101,12 @@ module.exports = function (onHook) {
       }
     }))
 
-    res.statusCode = 200
-    res.end('Thank you.')
+    // TODO Why is this needed, and otherwise
+    // cutting off getting the whole request
+    setTimeout(function () {
+      res.statusCode = 200
+      res.end('Thank you.')
+    }, 1000)
   }
 
   function getPR (req, res) {
@@ -107,12 +115,12 @@ module.exports = function (onHook) {
 
       // Check if it's a closed PR
       if (pullreq.action && pullreq.action === 'closed') {
-        console.log('SKIPPING: CLOSED PULL REQUEST')
+        console.log(new Date(), 'SKIPPING: Closed pull request')
       } else {
-        // send open PR to the queue
+        // Send open PR to the queue
         q.push(pullreq, function (err, message) {
           if (err) console.log(new Date(), message, err)
-          console.log(new Date(), pullreq.number, message, 'Finished PR')
+          console.log(new Date(), pullreq.number, 'Finished PR')
         })
       }
 
@@ -148,21 +156,6 @@ module.exports = function (onHook) {
       collab: collab
     }, true, 2))
   }
-
-  // does this ever get called?
-  // function mergedPr (res, err) {
-  //   if (err) {
-  //     console.log(err)
-  //     res.statusCode = 500
-  //     res.end(JSON.stringify({ error: err }))
-  //     return
-  //   }
-  //   res.statusCode = 200
-  //   res.setHeader('content-type', 'application/json')
-  //   res.end(JSON.stringify({
-  //     merged: true
-  //   }, true, 2))
-  // }
 
   return server
 }
