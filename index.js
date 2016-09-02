@@ -8,6 +8,7 @@ var async = require('async')
 var checkPR = require('./prcheck.js')
 var checkCollab = require('./collabcheck.js')
 var mergePR = require('./merge.js')
+var checkEmail = require('./email.js')
 
 // q to slow it down enough for the GitHub API
 var q = async.queue(function que (pullreq, callback) {
@@ -24,13 +25,13 @@ console.log('QUEUE LENGTH', q.length())
 
 q.drain = function drain () { console.log('Queue drain') }
 
-module.exports = function (onHook) {
+module.exports = function () {
   var server = http.createServer(handler)
 
   // handler routes the requests to RR
   // to the appropriate places
   function handler (req, res) {
-    console.log('>>>>>', new Date(), req.method, req.url)
+    console.log('(ノ・∀・)ノ\n', new Date(), req.method, req.url)
 
     // End point to latest data
     if (req.url === ('/data')) {
@@ -94,11 +95,9 @@ module.exports = function (onHook) {
         return console.log(new Date(), 'Error parsing email JSON', req.headers, buff.length, [buff.toString()])
       }
 
-      if (onHook) {
-        onHook(emailObj, function (err, message) {
-          if (err) console.log(new Date(), message, err)
-        })
-      }
+      checkEmail(emailObj, function checkedEmail (err, message) {
+        if (err) console.log(new Date(), message, err)
+      })
     }))
 
     // TODO Why is this needed, and otherwise
