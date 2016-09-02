@@ -101,6 +101,8 @@ module.exports = function (onHook) {
       }
     }))
 
+    // TODO Why is this needed, and otherwise
+    // cutting off getting the whole request
     setTimeout(function () {
       res.statusCode = 200
       res.end('Thank you.')
