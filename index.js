@@ -31,7 +31,7 @@ module.exports = function () {
   // router routes the requests to RR
   // to the appropriate places
   function router (req, res) {
-    console.log('(ノ・∀・)ノ\n')
+    console.log('(ノ・∀・)ノ')
     console.log(new Date(), req.method, req.url)
 
     // End point to latest data
@@ -136,6 +136,7 @@ module.exports = function () {
       res.end(JSON.stringify({ error: err }))
       return
     }
+    console.log(new Date(), 'PR check response:', pr )
     res.statusCode = 200
     res.end(JSON.stringify({
       pr: pr
@@ -150,6 +151,7 @@ module.exports = function () {
       res.end(JSON.stringify({error: err}))
       return
     }
+    console.log(new Date(), 'Collab check response:', collab )
     res.statusCode = 200
     res.setHeader('content-type', 'application/json')
     res.end(JSON.stringify({
@@ -158,9 +160,9 @@ module.exports = function () {
   }
 
   function sendData (res) {
-    console.log(new Date(), 'Request for contributor data')
     fs.readFile(process.env['CONTRIBUTORS'], function readContrData (err, data) {
       if (err) return console.log(new Date(), err)
+      console.log(new Date(), 'Responding with contributor data')
       res.statusCode = 200
       res.end(JSON.stringify(JSON.parse(data.toString())))
     })
