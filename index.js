@@ -7,8 +7,8 @@ var concat = require('concat-stream')
 
 var checkPR = require('./prcheck.js')
 var checkCollab = require('./collabcheck.js')
-var mergePR = require('./merge.js')
 var checkEmail = require('./email.js')
+var mergePR = require('./merge.js')
 
 // q to slow it down enough for the GitHub API
 var q = async.queue(function que (pullreq, callback) {

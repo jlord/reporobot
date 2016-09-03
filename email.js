@@ -12,7 +12,7 @@ module.exports = function (object, callback) {
   function getDetails (object) {
     var baseURL = 'https://api.github.com/repos/'
     var subject = object.headers.Subject
-    console.log(new Date(), 'Recieved email:', subject)
+    console.log(new Date(), 'Received email:', subject)
 
     if (!subject.match('invited you to')) {
       console.log(new Date(), 'non relevant email')
