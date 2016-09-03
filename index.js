@@ -144,9 +144,9 @@ module.exports = function () {
   // Response to Git-it on RR being added as collab
   function collabStatus (res, err, collab) {
     if (err) {
-      console.log(err)
+      console.log(new Date, 'Error getting collab status:', err)
       res.statusCode = 500
-      res.end(JSON.stringify({error: err}))
+      res.end(JSON.stringify({ error: err }))
       return
     }
     console.log(new Date(), 'Collab check response:', collab )
