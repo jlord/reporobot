@@ -14,10 +14,8 @@ var mergePR = require('./merge.js')
 var q = async.queue(function que (pullreq, callback) {
   console.log(new Date(), 'QUEUE', pullreq.number)
   mergePR(pullreq, function donePR (err, message) {
-    if (err) console.log(new Date(), message, err)
-    // setTimeout(function() { callback(err) }, 1000)
-    // what is this cb doing with err
-    callback(err)
+    if (err) return callback(err, message)
+    callback()
   })
 }, 1)
 
@@ -117,7 +115,7 @@ module.exports = function () {
       } else {
         // Send open PR to the queue
         q.push(pullreq, function (err, message) {
-          if (err) console.log(new Date(), message, err)
+          if (err) return console.log(new Date(), message, err)
           console.log(new Date(), pullreq.number, 'Finished PR')
         })
       }
