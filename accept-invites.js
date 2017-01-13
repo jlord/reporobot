@@ -25,7 +25,7 @@ module.exports = function acceptInvites (callback) {
       var acceptedCount = 0
 
       if (err) return thunk(err)
-      if (response.statusCode !== 200) return thunk(new Error('Not 200 response'))
+      if (response.statusCode !== 200) return thunk(new Error(response))
       // Return if there are no pending invites
       var inviteCount = body.length
       if (inviteCount === 0) return thunk()
