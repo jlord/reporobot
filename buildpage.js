@@ -22,7 +22,7 @@ module.exports = function (callback) {
     var everyone = JSON.parse(data)
     // TODO Fix counting this
     var everyoneCount = everyone.length + 12425 // From archive
-    var everyoneCommas = everyoneCount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    var everyoneCommas = everyoneCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     var newest = everyone[everyone.length - 1]
     var topHundred = everyone.reverse().slice(0, 100)
     var stats = { featured: newest, everyone: topHundred, total: everyoneCommas }
