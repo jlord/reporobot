@@ -7,7 +7,8 @@ module.exports = function acceptInvites (callback) {
       url: 'https://api.github.com/user/repository_invitations',
       json: true,
       headers: { 'User-Agent': 'request',
-                 'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
+                 'Authorization': 'token ' + process.env['REPOROBOT_TOKEN'],
+                 'Accept': 'application/vnd.github.swamp-thing-preview+json'
       }
   }
 
@@ -25,7 +26,10 @@ module.exports = function acceptInvites (callback) {
       var acceptedCount = 0
 
       if (err) return thunk(err)
-      if (response.statusCode !== 200) return thunk(new Error('Not 200 response'))
+      if (response.statusCode !== 200) {
+	console.log('Bad invite request', response.statusCode)
+	return thunk(new Error('Not a 200 response'))
+      }
       // Return if there are no pending invites
       var inviteCount = body.length
       if (inviteCount === 0) return thunk()

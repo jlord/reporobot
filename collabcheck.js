@@ -1,3 +1,4 @@
+// TODO use request here instead
 var Github = require('github-api')
 
 // With username parsed from query, check to see if @RR has read/write access
