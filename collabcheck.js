@@ -17,7 +17,7 @@ module.exports = function (username, callback) {
   var collab = false
 
   repo.show(function (err, repo) {
-    if (err) return callback(err)
+    if (err) return callback(err.error)
 
     var permissions = repo.permissions
     if (permissions.push) {
