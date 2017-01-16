@@ -9,7 +9,7 @@ var request = require('request')
 
 module.exports = function (username, callback) {
   var options = {
-    url: 'https://api.github.com/repos/jlord/patchwork/issues?creator=' + username,
+    url: 'https://api.github.com/repos/jlord/patchwork/issues?state=all&creator=' + username,
     json: true,
     headers: {
       'User-Agent': 'request',
@@ -28,30 +28,9 @@ module.exports = function (username, callback) {
 
     for (var i = 0; i < issues.length; i++) {
       var issue = issues[i]
-      // If the issue is not a PR, return
-      if (!issue.pull_request) return
-      else pr = true
+      if (issue.pull_request) pr = true
     }
+    
     callback(null, pr)
   }
-
-
-  // function getIssues (error, response, body) {
-  //   if (error) return callback(error, null)
-  //   var issues = body
-  //   var pr = false
-  //
-  //   for (var i = 0; i < issues.length; i++) {
-  //     var issue = issues[i]
-  //     var user = issue.user.login.toLowerCase()
-  //     // what is the max number of issues that it returns? <30
-  //     // May need to check next page of closed PRs if a lot of
-  //     // people are doing it at once
-  //     if (!issue.pull_request) return callback(null, pr)
-  //     if (user.match(username.toLowerCase())) {
-  //       pr = true
-  //       return callback(null, pr)
-  //     }
-  //   }
-  // }
 }
