@@ -2,8 +2,6 @@ var request = require('request')
 
 // With username parsed from request, check that the user has submitted a
 // PR to jlord/Patchwork.
-// Because PRs are merged so fast by @RR, we loop through each of the closed
-// issues to find the user's PR.
 // called by: checkPR(username, function(err, pr){ prStatus(res, err, pr) })
 // callback includes a function which sends the pr boolean on as a response
 
@@ -30,7 +28,7 @@ module.exports = function (username, callback) {
       var issue = issues[i]
       if (issue.pull_request) pr = true
     }
-    
+
     callback(null, pr)
   }
 }
