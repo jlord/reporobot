@@ -109,8 +109,6 @@ module.exports = function (pullreq, callback) {
     // generate the expected content
     asciify(stats.user, { font: 'isometric2' }, function (err, res) {
       if (err) return callback(err, 'Error generating ascii art to test against')
-      console.log(patch)
-      console.log(res)
       if (patch !== stats.user) {
         stats.userArt = res
         console.log(new Date(), 'PR ', stats.prNum, 'Content: MATCH ', stats.user)
