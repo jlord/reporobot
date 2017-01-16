@@ -21,7 +21,6 @@ module.exports = function (username, callback) {
 
   function getIssues (error, response, body) {
     if (error) return callback(error, null)
-
     var issues = body
     var pr = false
 
@@ -29,14 +28,11 @@ module.exports = function (username, callback) {
       var issue = issues[i]
       var user = issue.user.login.toLowerCase()
       // what is the max number of issues that it returns?
-      var prStatus = issue.pull_request.html_url
-      if (user.match(username.toLowerCase()) && prStatus != null) {
+      if (!issue.pull_request) return callback(null, pr)
+      if (user.match(username.toLowerCase())) {
         pr = true
         return callback(null, pr)
       }
     }
-    // TODO why this here, shouldn't it fail early?
-    // Check for non 200 responses
-    callback(error, pr)
   }
 }
