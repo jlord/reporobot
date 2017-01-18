@@ -41,7 +41,7 @@ module.exports = function deleteFile (callback) {
     }
     request.del(options, function (err, response, body) {
       if (err) return callback(err, 'Did not delete file')
-      console.log(new Date(), 'Deleted' + file.name)
+      console.log(new Date(), 'Deleted ' + file.name)
       callback(null)
     })
   }
