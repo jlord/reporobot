@@ -3,6 +3,8 @@ var fs = require('fs')
 var request = require('request')
 var btoa = require('btoa')
 
+var clearUser = require('./clearuser.js')
+
 module.exports = function (callback) {
   if (process.env['CONTRIBUTORS']) {
     fs.readFile(process.env['CONTRIBUTORS'], function (err, data) {
