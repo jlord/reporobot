@@ -72,7 +72,7 @@ module.exports = function (callback) {
       request.put(options, function (err, res, body) {
         if (err) return callback(err, 'Error writing new index to Patchwork')
         console.log(new Date(), 'Rebuilt index with ' + username)
-        clearUser(callback)
+        clearUser(username, callback)
       })
     })
   }
