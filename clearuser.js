@@ -1,6 +1,6 @@
 // After Reporobot does everything with a sucessful user, it deltes the file
 // they added because turns out lots of people are doing this and the repo
-// gets bulky quickly
+// gets bulky quickly. This file is called from buildpage.js
 
 var request = require('request')
 
@@ -10,9 +10,7 @@ var headers = {
   'Authorization': 'token ' + process.env['REPOROBOT_TOKEN']
 }
 
-module.exports = function deleteFile (callback) {
-  // We could take in username here and delete the specific just-merged-file,
-  // but we might be ok just deleting the last file.
+module.exports = function deleteFile (username, callback) {
   var options = {
     url: baseURL,
     json: true,
@@ -21,7 +19,12 @@ module.exports = function deleteFile (callback) {
   // First get info on the file
   request(options, function (err, response, body) {
     if (err) return callback(err, 'Did not get file info')
-    deleteFile(body[0])
+    console.log('Files in contributors: ' + body.length)
+    body.forEach(function (file) {
+      // leave add-jlord.txt there as a sample file
+      if (file.path.match('add-jlord.txt')) return
+      else deleteFile(file)
+    })
   })
 
   function deleteFile (file) {
@@ -40,7 +43,8 @@ module.exports = function deleteFile (callback) {
       }
     }
     request.del(options, function (err, response, body) {
-      if (err) return callback(err, 'Did not delete file')
+      if (err) return callback(err, 'Error with delete request')
+      if (response.statusCode != 200) return callback(new Error(), 'Did not delete file: ' + response.statusCode)
       console.log(new Date(), 'Deleted ' + file.name)
       callback(null)
     })
