@@ -19,15 +19,20 @@ module.exports = function deleteFile (username, callback) {
   // First get info on the file
   request(options, function (err, response, body) {
     if (err) return callback(err, 'Did not get file info')
-    console.log('Files in contributors: ' + body.length)
-    body.forEach(function (file) {
-      // leave add-jlord.txt there as a sample file
-      if (file.path.match('add-jlord.txt')) return
-      else deleteFile(file)
-    })
+    console.log(new Date(), 'Files in contributors: ' + body.length)
+    loop()
+    function loop () {
+      if (!body.length) return callback(null)
+      var file = body.shift()
+      if (file.path.match('add-jlord.txt')) return loop()
+      deleteFile(file, function (err) {
+        if (err) return callback(err, 'Error deleting file')
+        loop()
+      })
+    }
   })
 
-  function deleteFile (file) {
+  function deleteFile (file, callback) {
     var options = {
       url: baseURL + '/' + file.name,
       json: true,
