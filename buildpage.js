@@ -22,7 +22,6 @@ module.exports = function (callback) {
 
   function organizeData (data) {
     var everyone = JSON.parse(data)
-    // TODO Fix counting this
     var archiveCount = 12425
     var everyoneCount = everyone.length + archiveCount
     var everyoneCommas = everyoneCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
