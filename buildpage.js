@@ -23,7 +23,8 @@ module.exports = function (callback) {
   function organizeData (data) {
     var everyone = JSON.parse(data)
     // TODO Fix counting this
-    var everyoneCount = everyone.length + 12425 // From archive
+    var archiveCount = 12425
+    var everyoneCount = everyone.length + archiveCount
     var everyoneCommas = everyoneCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     var newest = everyone[everyone.length - 1]
     var topHundred = everyone.reverse().slice(0, 100)
