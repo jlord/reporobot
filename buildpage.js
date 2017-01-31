@@ -3,6 +3,8 @@ var fs = require('fs')
 var request = require('request')
 var btoa = require('btoa')
 
+var clearUser = require('./clearuser.js')
+
 module.exports = function (callback) {
   if (process.env['CONTRIBUTORS']) {
     fs.readFile(process.env['CONTRIBUTORS'], function (err, data) {
@@ -20,8 +22,8 @@ module.exports = function (callback) {
 
   function organizeData (data) {
     var everyone = JSON.parse(data)
-    // TODO Fix counting this
-    var everyoneCount = everyone.length + 12425 // From archive
+    var archiveCount = 12425
+    var everyoneCount = everyone.length + archiveCount
     var everyoneCommas = everyoneCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     var newest = everyone[everyone.length - 1]
     var topHundred = everyone.reverse().slice(0, 100)
@@ -69,7 +71,8 @@ module.exports = function (callback) {
       options.body.sha = body.sha
       request.put(options, function (err, res, body) {
         if (err) return callback(err, 'Error writing new index to Patchwork')
-        callback(null, 'Rebuilt index with ' + username)
+        console.log(new Date(), 'Rebuilt index with ' + username)
+        clearUser(username, callback)
       })
     })
   }
