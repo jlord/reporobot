@@ -27,7 +27,7 @@ module.exports = function deleteFile (username, callback) {
       if (file.path.match('add-jlord.txt')) return loop()
       deleteFile(file, function (err) {
         if (err) return callback(err, 'Error deleting file')
-        loop()
+        setTimeout(loop, 5000)
       })
     }
   })
