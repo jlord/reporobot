@@ -1,5 +1,8 @@
 var request = require('request')
 
+// TODO check an invite is to patchwork,
+// then accept invite, then draw the ascii art
+
 // When a new invite email is recieved this is
 // called and all of the pending invites are accepted
 module.exports = function acceptInvites (callback) {

@@ -4,6 +4,9 @@ var request = require('request')
 
 var acceptInvites = require('./accept-invites.js')
 
+// TODO rename file, no more email worries,
+// just draw the ascii art
+
 module.exports = function (object, callback) {
   // if it's not an email, return
   if (!object.headers) return
