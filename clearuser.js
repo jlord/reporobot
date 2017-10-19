@@ -49,8 +49,9 @@ module.exports = function deleteFile (username, callback) {
     }
     request.del(options, function (err, response, body) {
       if (err) return callback(err, 'Error with delete request')
-      // if (response.statusCode != 200) return callback(new Error('Non 200 for delete: ' + response.statusCode))
-      if (response.statusCode != 200) return callback(response, response.statusCode))
+      if (response.statusCode != 200) {
+        return callback(null, 'Non 200 for delete: ' + response.statusCode + ' ' + response.body.message)
+      }
       console.log(new Date(), 'Deleted ' + file.name)
       callback(null)
     })
