@@ -44,6 +44,7 @@ module.exports = function acceptInvites (callback) {
       body.forEach(function getID (invite) {
         // Skip invites that aren't for the patchwork repo
         if (invite.name !== 'patchwork') {
+          console.log(new Date, 'Skipping invite to', invite.name)
           handledCount++
           return
         }
