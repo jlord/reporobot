@@ -1,6 +1,6 @@
 var request = require('request')
 
-var makeAscii = require('ascii.js')
+var makeAscii = require('./ascii.js')
 
 // TODO check an invite is to patchwork,
 // then accept invite, then draw the ascii art

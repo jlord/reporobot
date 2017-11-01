@@ -1,7 +1,7 @@
 var asciify = require('asciify')
 
 var server = require('./index.js')
-var pollForInvites = require('accept-invites.js')
+var pollForInvites = require('./accept-invites.js')
 
 var token = process.env['REPOROBOT_TOKEN']
 if (!token) throw new Error('Missing REPOROBOT_TOKEN')
