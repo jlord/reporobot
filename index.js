@@ -7,7 +7,6 @@ var concat = require('concat-stream')
 
 var checkPR = require('./prcheck.js')
 var checkCollab = require('./collabcheck.js')
-var checkEmail = require('./email.js')
 var mergePR = require('./merge.js')
 
 // q to slow it down enough for the GitHub API
@@ -34,12 +33,6 @@ module.exports = function () {
 
     // End point to latest data
     if (req.url === ('/data')) { return sendData(res) }
-
-    // When RR gets a push from email when added as collab
-    // Email from GitHub -> cloudmail.in -> here
-    if (req.url === '/push') {
-      return handleEmail(req, res)
-    }
 
     // When Git-it verifies user added RR as collab
     // Comes from verify step in Git-it challenge #8
@@ -77,27 +70,6 @@ module.exports = function () {
       error: 404,
       message: 'not_found'
     }, true, 2))
-  }
-
-  function handleEmail (req, res) {
-    req.pipe(concat(function (buff) {
-      try {
-        var emailObj = JSON.parse(buff)
-      } catch (e) {
-        return console.log(new Date(), 'Error parsing email JSON', req.headers, buff.length, [buff.toString()])
-      }
-
-      checkEmail(emailObj, function checkedEmail (err, message) {
-        if (err) console.log(new Date(), message, err)
-      })
-    }))
-
-    // TODO Why is this needed, and otherwise
-    // cutting off getting the whole request
-    setTimeout(function () {
-      res.statusCode = 200
-      res.end('Thank you.')
-    }, 1000)
   }
 
   function handlePR (req, res) {
